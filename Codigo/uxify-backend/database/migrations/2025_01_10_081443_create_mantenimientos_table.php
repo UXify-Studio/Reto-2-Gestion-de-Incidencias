@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('id_maquina')->constrained('maquinas');
             $table->date('duracion')->nullable();
             $table->date('fecha_inicio');
-            $table->date('proxima_fecha')->nullable();
-            $table->foreignId('id_usuario')->nullable()->constrained('users');
-            $table->string('descripcion')->nullable();
-            $table->string('periodo')->nullable();
+            $table->date('proxima_fecha');
+            $table->foreignId('id_usuario')->constrained('users');
+            $table->string('descripcion');
+            $table->string('periodo');
             $table->timestamps();
         });
     }
