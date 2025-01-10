@@ -19,9 +19,9 @@ class MaquinaFactory extends Factory
         return [
             "nombre" => $this->faker->name(),
             "modelo" => $this->faker->name(),
-            "prioridad" => $this->faker->randomNumber(),
+            "prioridad" => $this->faker->randomElement([1,2,3,4]),
             "estado" => $this->faker->numberBetween(0,1),
-            "campus" => $this->faker->name(),
+            "campus" => $this->faker->randomElement(["Nieves Cano", "Arriaga", "Jesus Obreros"]),
             "seccion" => $this->faker->name(),
         ];
     }
