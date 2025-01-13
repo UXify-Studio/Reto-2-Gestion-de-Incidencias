@@ -11,9 +11,15 @@ class Rol extends Model
     protected $fillable = [
         'nombre'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class);
     }
 
 }

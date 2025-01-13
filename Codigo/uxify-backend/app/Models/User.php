@@ -11,13 +11,25 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
-    public function roles()
+    public function rol()
     {
-        return $this->belongsToMany(Rol::class);
+        return $this->belongsTo(Rol::class);
     }
 
     public function hasRole($role) {
-        return $this->roles()->where('nombre', $role)->exists();
+        return $this->rol()->where('nombre', $role)->exists();
+    }
+
+    public function incidencias_creadas(){
+        return $this->hasMany(Incidencia::class);
+    }
+
+    public function incidencias_realizadas(){
+        return $this->belongsToMany(Incidencia::class);
+    }
+
+    public function mantenimientos(){
+        return $this->hasMany(Mantenimiento::class);
     }
 
     /**
