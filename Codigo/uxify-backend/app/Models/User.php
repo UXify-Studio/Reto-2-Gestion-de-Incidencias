@@ -2,39 +2,34 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
-    public function roles()
-    {
-        return $this->belongsToMany(Rol::class);
-    }
-
-    public function hasRole($role) {
-        return $this->roles()->where('nombre', $role)->exists();
-    }
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'id_rol',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -42,7 +37,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -54,23 +49,35 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
     public function getJWTIdentifier()
     {
-        return $this->getKey(); // Esto retorna el ID del usuario
+        return $this->getKey(); // Identificador único del usuario
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
+    // Métod0 obligatorio de la interfaz
     public function getJWTCustomClaims()
     {
-        return []; // Por ahora, no incluimos claims adicionales
+        return []; // Puedes agregar datos personalizados al token si es necesario
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo(Roles::class);
+    }
+
+    public function hasRole($role) {
+        return $this->rol()->where('nombre', $role)->exists();
+    }
+
+    public function incidencias_creadas(){
+        return $this->hasMany(Incidencia::class);
+    }
+
+    public function incidencias_realizadas(){
+        return $this->belongsToMany(Incidencia::class);
+    }
+
+    public function mantenimientos(){
+        return $this->hasMany(Mantenimiento::class);
     }
 }
