@@ -9,7 +9,7 @@ class Maquina extends Model {
     use HasFactory;
 
     protected $fillable = [
-        'nombre', 'modelo', 'prioridad', 'estado', 'campus', 'seccion'
+        'nombre', 'modelo', 'prioridad', 'estado', 'campus', 'id_section'
     ];
 
     protected $casts = [
