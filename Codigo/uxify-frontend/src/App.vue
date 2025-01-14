@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import Nav from './components/Nav.vue'
+
 import Login from './views/Login.vue'
 
 import UserList from './components/UserList.vue';
@@ -8,8 +8,6 @@ import UserList from './components/UserList.vue';
 
 <template>
   <!-- <UserList /> -->
-
-  <Nav />
 
   <main class="form-signin">
     <RouterView />
