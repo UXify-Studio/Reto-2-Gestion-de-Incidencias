@@ -71,25 +71,25 @@ export default {
 
 <style scoped>
 .form-control {
-    color: black; /* Cambia el color del texto a negro */
-    background-color: white; /* Asegura que el fondo sea blanco */
+    color: black;
+    background-color: white;
 }
 
 .form-floating {
-    margin-bottom: 1rem; /* Añade un margen inferior para separar los campos */
+    margin-bottom: 1rem;
 }
 
 .form-control::placeholder {
-    color: #6c757d; /* Cambia el color del placeholder a un gris oscuro */
+    color: #6c757d;
 }
 
 .btn-primary {
-    background-color: #007bff; /* Color de fondo del botón */
-    border-color: #007bff; /* Color del borde del botón */
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3; /* Color de fondo del botón al pasar el ratón */
-    border-color: #0056b3; /* Color del borde del botón al pasar el ratón */
+    background-color: #0056b3;
+    border-color: #0056b3;
 }
 </style>
