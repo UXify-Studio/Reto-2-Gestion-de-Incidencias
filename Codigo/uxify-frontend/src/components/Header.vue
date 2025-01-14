@@ -1,58 +1,46 @@
 <template>
-    <header class="header bg-head-color">
-      <div class="container">
-        <div class="d-flex align-items-center">
-          <h1 class="ms-2 mb-0"><router-link to="/" class="navbar-brand">UXify Workshop Software</router-link></h1>
+  <header class="bg-head-color text-white py-2">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6 d-flex align-items-center">
+          <h1 class="ms-2 mb-0 fs-5">
+            <router-link to="/" class="navbar-brand text-white text-decoration-none">
+              UXify Workshop Software
+            </router-link>
+          </h1>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-bell me-3">
+              <img src="../assets/Notifi.png" class="icon" alt="Notification">
+            </i>
+            <router-link to="/register" class="text-white me-3">
+              <i class="bi bi-gear">
+                <img src="../assets/Config.png" class="icon" alt="Settings">
+              </i>
+            </router-link>
+            <router-link to="/login" class="text-white">
+              <i class="bi bi-power">
+                <img src="../assets/Session.png" class="icon" alt="Logout">
+              </i>
+            </router-link>
+          </div>
         </div>
       </div>
-      <div class="icon-group">
-        <i class="bi bi-bell"><img src="../assets/Notifi.png" class="icon"></i>
-        <i class="bi bi-gear"><router-link to="/register" class="nav-link"><img src="../assets/Config.png" class="icon"></router-link></i>
-        <i class="bi bi-power"><router-link to="/login" class="nav-link"><img src="../assets/Session.png" class="icon"></router-link></i>
-      </div>
-    </header>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Header',
-  };
-  </script>
-  
-  <style scoped>
-    .header {
-      background-color: #6345FB;
-      color: white;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      max-height: 60px;
-      gap: 200px; /* Espacio entre el título y el grupo de iconos */
-    }
+    </div>
+  </header>
+</template>
 
-    .header h1 {
-      font-size: 20px;
-    }
+<script>
+export default {
+  name: 'Header',
+};
+</script>
 
-    .header .icon-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px; /* Espacio entre los iconos */
-    }
-
-    .header .icon-group .icon {
-      width: 18px;
-      height: 18px;
-      margin-left: 15px; /* Espacio entre cada icono. Puedes ajustar o eliminar si usas gap */
-      cursor: pointer;
-    }
-
-    .header .icon-group .icon:hover {
-      opacity: 0.8;
-    }
-  </style>
+<style scoped>
+.icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+</style>

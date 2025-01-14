@@ -1,79 +1,96 @@
 <template>
-    <aside class="sidebar">
-      <div class="user-info">
-        <img src="../assets/example.png" alt="Foto de perfil" class="profile-image">
-        <p class="user-name">Juan La Matina</p>
+  <aside class="sidebar bg-light border-end">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
+          <img src="../assets/example.png" alt="Foto de perfil"
+            class="profile-image rounded-circle mb-2 border border-secondary">
+          <p class="user-name text-primary fw-bold mb-4">Juan La Matina</p>
+        </div>
       </div>
       <nav class="menu">
-         <router-link to="/" class="menu-item">
-           <i class="bi bi-house"><img src="../assets/Inicio.png"></i> Inicio
-         </router-link>
-        <router-link to="/incidencias" class="menu-item">
-          <i class="bi bi-exclamation-triangle"><img src="../assets/Incidencias.png"></i> Incidencias
+        <router-link to="/" class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-house me-2">
+              <img src="../assets/Inicio.png" alt="Inicio" class="menu-icon">
+            </i>
+          </div>
+          <div class="col">
+            <span>Inicio</span>
+          </div>
         </router-link>
-        <router-link to="/tipos-de-activo" class="menu-item">
-          <i class="bi bi-gear"><img src="../assets/Maquinas.png"></i> Tipos de activo
+        <router-link to="/incidencias"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-exclamation-triangle me-2">
+              <img src="../assets/Incidencias.png" alt="Incidencias" class="menu-icon">
+            </i>
+          </div>
+          <div class="col">
+            <span>Incidencias</span>
+          </div>
         </router-link>
-        <router-link to="/administracion" class="menu-item">
-          <i class="bi bi-list"><img src="../assets/Administracion.png"></i> Administración
+        <router-link to="/tipos-de-activo"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-gear me-2">
+              <img src="../assets/Maquinas.png" alt="Tipos de activo" class="menu-icon">
+            </i>
+          </div>
+          <div class="col">
+            <span>Tipos de activo</span>
+          </div>
         </router-link>
-        <router-link to="/ayuda" class="menu-item">
-          <i class="bi bi-question-circle"><img src="../assets/Ayuda.png"></i> Ayuda
+        <router-link to="/administracion"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-list me-2">
+              <img src="../assets/Administracion.png" alt="Administración" class="menu-icon">
+            </i>
+          </div>
+          <div class="col">
+            <span>Administración</span>
+          </div>
+        </router-link>
+        <router-link to="/ayuda"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-question-circle me-2">
+              <img src="../assets/Ayuda.png" alt="Ayuda" class="menu-icon">
+            </i>
+          </div>
+          <div class="col">
+            <span>Ayuda</span>
+          </div>
         </router-link>
       </nav>
-    </aside>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Sidebar',
-  };
-  </script>
-  
-  <style scoped>
-  .sidebar {
-  background-color: #F8F9FA;
-  color: blue;
-  width: 250px;
-  padding: 20px;
-  position: fixed;
-  top: 56px;
-  left: 0;
-  height: calc(100vh - 56px); /* Corregido: 100vh, no 1000vh */
-  overflow-y: auto;
-}
+    </div>
+  </aside>
+</template>
 
-.sidebar .user-info {
+<script>
+export default {
+  name: 'Sidebar',
+};
+</script>
+
+<style scoped>
+.sidebar {
+  width: 220px;
+  height: 100vh;
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
 }
 
-.sidebar .user-info .profile-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
+.menu-item:hover {
+  background-color: #e9ecef;
 }
 
-.sidebar .user-info .user-name {
-  font-weight: bold;
+.menu-icon {
+  width: 16px;
+  /* Adjust icon size */
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
 }
-
-.sidebar .menu .menu-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-  color: #007BFF;
-  text-decoration: none;
-}
-
-.sidebar .menu .menu-item i {
-  margin-right: 10px;
-  font-size: 1.2rem;
-}
-
-.sidebar .menu .menu-item.router-link-active {
-  font-weight: bold;
-}
-  </style>
+</style>
