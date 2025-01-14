@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
 
                 $num_maquinas = rand(0, 3);
 
-                for ($j = 0; $j < $num_maquinas; $j++) {
+                for ($k = 0; $k < $num_maquinas; $k++) {
                     Maquina::factory()->create([
                         'id_section' => $section->id,
                     ]);
