@@ -19,7 +19,7 @@ class SectionFactory extends Factory
         return [
             'nombre' => $this->faker->word(),
             'n_seccion' => $this->faker->numberBetween(1, 10),
-            'id_campus' => $this->faker->numberBetween(1, 5),
+            //'id_campus' => $this->faker->numberBetween(1, 5),
         ];
     }
 }

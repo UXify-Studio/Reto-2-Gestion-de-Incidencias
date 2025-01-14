@@ -10,7 +10,7 @@ class Section extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombre'
+        'nombre', 'n_seccion'
     ];
 
     protected $casts = [
@@ -20,5 +20,9 @@ class Section extends Model
 
     public function campuses(){
         return $this->belongsTo(Campus::class);
+    }
+
+    public function maquinas(){
+        return $this->hasMany(Maquina::class);
     }
 }
