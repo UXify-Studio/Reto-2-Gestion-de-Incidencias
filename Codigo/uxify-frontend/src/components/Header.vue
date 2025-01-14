@@ -20,5 +20,39 @@
   </script>
   
   <style scoped>
+    .header {
+      background-color: #6345FB;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      max-height: 60px;
+      gap: 200px; /* Espacio entre el título y el grupo de iconos */
+    }
 
+    .header h1 {
+      font-size: 20px;
+    }
+
+    .header .icon-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px; /* Espacio entre los iconos */
+    }
+
+    .header .icon-group .icon {
+      width: 18px;
+      height: 18px;
+      margin-left: 15px; /* Espacio entre cada icono. Puedes ajustar o eliminar si usas gap */
+      cursor: pointer;
+    }
+
+    .header .icon-group .icon:hover {
+      opacity: 0.8;
+    }
   </style>
