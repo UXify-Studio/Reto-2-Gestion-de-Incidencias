@@ -1,5 +1,5 @@
 <template>
-    <header class="header">
+    <header class="header bg-head-color">
       <div class="container">
         <div class="d-flex align-items-center">
           <h1 class="ms-2 mb-0"><router-link to="/" class="navbar-brand">UXify Workshop Software</router-link></h1>
@@ -19,41 +19,6 @@
   };
   </script>
   
-  <style lang="scss" scoped>
-  
-  .header {
-  background-color: #6345FB;
-  color: white;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  position: fixed; /* Para que la barra esté fija en la parte superior */
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000; // Asegura que el header esté por encima de otros elementos
-  max-height: 60px;
-  gap: 200px;
-  
-  h1{
-    font-size:20px;
-  }
+  <style scoped>
 
-  .icon-group {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-
-    .icon { // Estilos para las imágenes de los iconos
-      width: 18px; // Ajusta el tamaño según sea necesario
-      height: 18px;
-      margin-left: 15px;
-      cursor: pointer;
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-  }
-}
   </style>

@@ -1,4 +1,4 @@
-import './assets/bootstrap-5.3.3/dist/css/style.css';
+import './assets/bootstrap-5.2.3/dist/css/style.css';
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
