@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('prioridad');
             $table->integer('estado');
             $table->string('campus');
-            $table->string('seccion');
             $table->timestamps();
         });
     }
