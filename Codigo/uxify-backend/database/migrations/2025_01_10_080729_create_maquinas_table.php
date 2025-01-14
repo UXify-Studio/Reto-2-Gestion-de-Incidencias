@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('modelo');
             $table->integer('prioridad');
             $table->integer('estado');
-            $table->string('campus');
-            $table->string('seccion');
+
+            $table->foreignId('id_section')->references('sections')->on('id')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

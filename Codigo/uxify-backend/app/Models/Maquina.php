@@ -9,7 +9,7 @@ class Maquina extends Model {
     use HasFactory;
 
     protected $fillable = [
-        'nombre', 'modelo', 'prioridad', 'estado', 'campus', 'seccion'
+        'nombre', 'modelo', 'prioridad', 'estado', 'id_section'
     ];
 
     protected $casts = [
@@ -23,5 +23,9 @@ class Maquina extends Model {
 
     public function mantenimientos(){
         return $this->hasMany(Mantenimiento::class);
+    }
+
+    public function section(){
+        return $this->belongsTo(Section::class);
     }
 }
