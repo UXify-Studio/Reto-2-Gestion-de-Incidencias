@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('id_rol')->nullable()->constrained('roles');
+            $table->boolean('desabilitado')->default(0);
             $table->timestamps();
         });
 
