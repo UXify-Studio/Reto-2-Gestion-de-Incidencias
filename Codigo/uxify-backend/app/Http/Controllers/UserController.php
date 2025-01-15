@@ -11,6 +11,11 @@ class UserController extends Controller
         $users = User::with('rol')->get();
         return response()->json($users);
     }
+//    public function index() {
+//        $users = User::with('rol')->paginate(10);
+//        return response()->json($users);
+//    }
+
 
     public function store(Request $request) {
         // Validar los datos del usuario
