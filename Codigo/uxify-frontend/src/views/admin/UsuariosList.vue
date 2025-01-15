@@ -11,7 +11,7 @@ export default {
         Sidebar,
         CuadrosDatosUsuarios,
         UserList,
-    }
+    },
 };
 </script>
 
