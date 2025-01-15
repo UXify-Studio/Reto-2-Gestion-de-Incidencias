@@ -12,7 +12,8 @@ class MaquinaController extends Controller
      */
     public function index()
     {
-        //
+        $maquinas = Maquina::with('section.campus')->get();
+        return response()->json($maquinas);
     }
 
     /**
