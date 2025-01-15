@@ -1,6 +1,5 @@
 <template>
-  <aside class="sidebar bg-light border-end">
-    <div class="container-fluid">
+      <div class="container-fluid bg-light border-end vh-100">
       <div class="row">
         <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
           <img src="../assets/example.png" alt="Foto de perfil"
@@ -65,7 +64,7 @@
         </router-link>
       </nav>
     </div>
-  </aside>
+  
 </template>
 
 <script>
