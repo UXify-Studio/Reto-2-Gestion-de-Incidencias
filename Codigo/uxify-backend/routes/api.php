@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CampusController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\MaquinaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -12,6 +15,18 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/users', [UserController::class, 'index']);
+});
+
+Route::controller(CategoriaController::class)->group(function () {
+    Route::get('/categorias', [CategoriaController::class, 'index']);
+});
+
+Route::controller(MaquinaController::class)->group(function () {
+    Route::get('/maquinas', [MaquinaController::class, 'index']);
+});
+
+Route::controller(CampusController::class)->group(function () {
+    Route::get('/campus', [CampusController::class, 'index']);
 });
 
 Route::get('/roles', [RolController::class, 'index']);
