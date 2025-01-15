@@ -19,11 +19,11 @@
                 <img src="../assets/Config.png" class="icon" alt="Settings">
               </i>
             </router-link>
-            <router-link to="/login" class="text-white">
+            <a @click.prevent="logout" class="text-white" href="#">
               <i class="bi bi-power">
                 <img src="../assets/Session.png" class="icon" alt="Logout">
               </i>
-            </router-link>
+            </a>
           </div>
         </div>
       </div>
@@ -32,15 +32,25 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+
 export default {
-  name: 'Header',
+  setup() {
+    const router = useRouter();
+    const toast = useToast();
+
+    const logout = () => {
+      sessionStorage.removeItem('token');
+      router.push('/login');
+      toast.success('Logout Exitoso', {
+        position: 'top-right',
+      });
+    };
+
+    return {
+      logout,
+    };
+  },
 };
 </script>
-
-<style scoped>
-.icon {
-  width: 16px;
-  height: 16px;
-  vertical-align: middle;
-}
-</style>

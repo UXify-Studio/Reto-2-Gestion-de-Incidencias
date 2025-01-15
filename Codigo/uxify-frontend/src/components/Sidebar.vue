@@ -9,7 +9,7 @@
         </div>
       </div>
       <nav class="menu">
-        <router-link to="/" class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+        <router-link to="/home" class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
           <div class="col-auto">
             <i class="bi bi-house me-2">
               <img src="../assets/Inicio.png" alt="Inicio" class="menu-icon">
