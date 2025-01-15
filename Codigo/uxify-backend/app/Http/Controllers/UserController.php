@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function index() {
-        $users = User::all();
+        $users = User::with('rol')->get();
         return response()->json($users);
     }
 
