@@ -1,6 +1,5 @@
 <template>
-  <aside class="sidebar bg-light border-end">
-    <div class="container-fluid">
+      <div class="container-fluid bg-light border-end vh-100">
       <div class="row">
         <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
           <img src="../assets/example.png" alt="Foto de perfil"
@@ -9,7 +8,7 @@
         </div>
       </div>
       <nav class="menu">
-        <router-link to="/" class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+        <router-link to="/home" class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
           <div class="col-auto">
             <i class="bi bi-house me-2">
               <img src="../assets/Inicio.png" alt="Inicio" class="menu-icon">
@@ -65,7 +64,7 @@
         </router-link>
       </nav>
     </div>
-  </aside>
+  
 </template>
 
 <script>

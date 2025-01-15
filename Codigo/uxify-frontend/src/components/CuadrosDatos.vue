@@ -6,32 +6,42 @@
             <button @click="addTicket" class="btn btn-primary">Añadir Ticket</button>
           </div>
           <div class="col-12">
-            <div class="d-flex gap-4 " >
-              <div class="card text-white text-center p-4 bg-danger justify-content-center align-items-center">
-                <img src="../assets/Prioridad.png" alt="Icono" class="mb-2">
-                <p class="mb-0">Tickets Prioridad 1</p>
-                <h3 class="card-title mb-0">20</h3>
-              </div>
-              <div class="card text-white text-center p-4 bg-warning justify-content-center align-items-center">
-                  <img src="../assets/Prioridad.png" alt="Icono" class="mb-2">
-                <p class="mb-0">Tickets Prioridad 2</p>
-                <h3 class="card-title mb-0">2</h3>
-              </div>
-              <div class="card text-white text-center p-4 bg-success justify-content-center align-items-center">
-                  <img src="../assets/Prioridad.png" alt="Icono" class="mb-2">
-                <p class="mb-0">Tickets Prioridad 3</p>
-                <h3 class="card-title mb-0">2</h3>
-              </div>
-              <div class="card text-white text-center p-4 bg-info justify-content-center align-items-center">
-                  <img src="../assets/resuelto.png" alt="Icono" class="mb-2">
-                <p class="mb-0">Tickets Resueltos</p>
-                <h3 class="card-title mb-0">56</h3>
-              </div>
-               <div class="card text-white text-center p-2 bg-secondary justify-content-center align-items-center">
-                  <img src="../assets/Ticket.png" alt="Icono" class="mb-2">
-                <p class="mb-0">Tickets Mantenimiento</p>
-                <h3 class="card-title mb-0">56</h3>
-              </div>
+            <div class="d-flex gap-2 " >
+                <router-link to="/prioridad1" class="card text-white bg-danger w-100 text-decoration-none">
+                    <div class="card-body text-center p-2 d-flex flex-column justify-content-center">
+                        <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                        <p class="mb-1">Tickets Prioridad 1</p>
+                        <h3 class="card-title mb-0 display-6">20</h3>
+                    </div>
+                </router-link>
+                <router-link to="/prioridad2" class="card text-white bg-warning w-100 text-decoration-none">
+                    <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
+                        <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                        <p class="mb-1">Tickets Prioridad 2</p>
+                        <h3 class="card-title mb-0 display-6">2</h3>
+                    </div>
+                </router-link>
+                <router-link to="/prioridad3" class="card text-white bg-success w-100 text-decoration-none"> 
+                    <div class="card-body text-center p-3 d-flex flex-column justify-content-center ">
+                        <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                        <p class="mb-1">Tickets Prioridad 3</p>
+                        <h3 class="card-title mb-0 display-6">2</h3>
+                    </div>
+                </router-link>
+                <router-link to="/Resueltos" class="card text-white bg-resueltos w-100 text-decoration-none">
+                    <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
+                        <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                        <p class="mb-1">Tickets Resueltos</p>
+                        <h3 class="card-title mb-0 display-6">56</h3>
+                    </div>
+                </router-link>
+                <router-link to="/Mantenimiento" class="card text-white bg-mantenimiento w-100 text-decoration-none"> 
+                    <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
+                        <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                        <p class="mb-1">Tickets Mantenimiento</p>
+                        <h3 class="card-title mb-0 display-6">45</h3>
+                    </div>
+                </router-link>
             </div>
           </div>
         </div>
@@ -46,8 +56,10 @@
   </script>
   
   <style scoped>
-    img {
-        max-width: 32px;
-        max-height: 32px;
+    .icono-tarjeta {
+        width: 24px;
+        height: 24px;
+        margin: 0 auto;
+        display: block;
     }
   </style>
