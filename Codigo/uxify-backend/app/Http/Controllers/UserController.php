@@ -7,10 +7,37 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index() {
-        $users = User::with('rol')->get();
+//    public function index() {
+//        $users = User::with('rol')->get();
+//        return response()->json($users);
+//    }
+
+//    public function index() {
+//        $users = User::with('rol')->paginate(12);
+//        return response()->json($users);
+//    }
+
+    public function index(Request $request) {
+        // Obtener el filtro de rol (si existe)
+        $role = $request->query('role');
+
+        // Comenzar la consulta para obtener usuarios con su rol
+        $query = User::with('rol');
+
+        // Filtrar por rol si se pasa el parámetro 'role'
+        if ($role) {
+            $query->whereHas('rol', function($q) use ($role) {
+                $q->where('nombre', $role); // Ajusta esto si estás filtrando por id en lugar de nombre
+            });
+        }
+
+        // Paginación de usuarios
+        $users = $query->paginate(12);
+
+        // Retornar los usuarios paginados en formato JSON
         return response()->json($users);
     }
+
 
     public function store(Request $request) {
         // Validar los datos del usuario

@@ -4,7 +4,7 @@
       <div class="row align-items-center">
         <div class="col-md-6 d-flex align-items-center">
           <h1 class="ms-2 mb-0 fs-5">
-            <router-link to="/" class="navbar-brand text-white text-decoration-none">
+            <router-link to="/home" class="navbar-brand text-white text-decoration-none">
               UXify Workshop Software
             </router-link>
           </h1>
