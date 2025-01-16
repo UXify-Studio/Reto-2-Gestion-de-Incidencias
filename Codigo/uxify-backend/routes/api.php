@@ -31,6 +31,8 @@ Route::controller(CampusController::class)->group(function () {
 
 Route::get('/roles', [RolController::class, 'index']);
 
+Route::get('incidencias/prioridad', [CategoriaController::class, 'getIncidenciasPorPrioridad']);
+
 Route::controller(AuthController::class)->prefix('auth')->group(function()  {
     Route::post('login', 'login');
     Route::post('register', 'register')->middleware('auth:api', 'admin');
