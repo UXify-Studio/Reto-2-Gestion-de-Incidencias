@@ -1,19 +1,22 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
 
-import Login from './views/Login.vue'
-
-import UserList from './components/UserList.vue';
+import Header from "./components/Header.vue";
+import Sidebar from "./components/Sidebar.vue";
 </script>
 
 <template>
-  <!-- <UserList /> -->
-
-  <main class="form-signin">
-    <RouterView />
+  <Header />
+  <main>
+    <div class="row">
+      <div class="col-2 p-0">
+        <Sidebar />
+      </div>
+      <div class="col-10 p-0">
+        <RouterView />
+      </div>
+    </div>
   </main>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

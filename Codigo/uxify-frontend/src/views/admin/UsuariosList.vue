@@ -18,15 +18,11 @@ export default {
 <template>
     <div class="container-fluid">
         <!-- Header -->
-        <div class="row">
-            <Header />
-        </div>
+        
 
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-2 bg-light p-0 vh-100">
-                <Sidebar />
-            </div>
+            
 
             <!-- Main Content -->
             <div class="col-10 p-4">
