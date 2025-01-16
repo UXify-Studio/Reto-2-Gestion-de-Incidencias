@@ -10,9 +10,15 @@ class MaquinaController extends Controller
     /**
      * Display a listing of the resource.
      */
+//    public function index()
+//    {
+//        $maquinas = Maquina::with('section.campus')->get();
+//        return response()->json($maquinas);
+//    }
+
     public function index()
     {
-        $maquinas = Maquina::with('section.campus')->get();
+        $maquinas = Maquina::with('section.campus')->paginate(12); // Adjust the number of items per page as needed
         return response()->json($maquinas);
     }
 

@@ -32,7 +32,7 @@ const router = createRouter({
     },
     { 
       path: '/gestion/maquinas', 
-      component: () => import('../views/admin/MaquinasList.vue') ,
+      component: () => import('../views/admin/MaquinasListView.vue') ,
       //meta: { requiresAdmin: true },
     },
     { 
