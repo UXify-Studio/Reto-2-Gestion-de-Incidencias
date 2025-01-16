@@ -1,6 +1,7 @@
 <template>
   <div class="container mt-2">
     <h2 class="text-primary mb-1 fs-4">Últimos tickets</h2>
+    <hr>
     <table class="table table-bordered table-striped">
       <thead class="table-light">
         <tr>
@@ -40,7 +41,7 @@ export default {
           prioridad: 'Alta',
           estado: 'Abierta',
           asignado: 'Pablo Gómez',
-          fechaCreacion: '20/06/2019 22:56',
+          fechaCreacion: '20/06/2019',
           categoria: 'Electromecanica'
         },
         {
@@ -49,7 +50,7 @@ export default {
           prioridad: 'Normal',
           estado: 'Abierta',
           asignado: 'Pablo Gómez',
-          fechaCreacion: '22/07/2019 12:30',
+          fechaCreacion: '22/07/2019',
           categoria: 'Eléctrico'
         },
         {
@@ -58,7 +59,7 @@ export default {
           prioridad: 'Baja',
           estado: 'Petición',
           asignado: 'Pablo Gómez',
-          fechaCreacion: '22/07/2019 13:01',
+          fechaCreacion: '22/07/2019',
           categoria: 'Otra categoría'
         },
          // Agrega más tickets aquí

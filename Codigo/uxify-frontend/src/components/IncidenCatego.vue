@@ -1,6 +1,7 @@
 <template>
-    <div class="container mt-4">
-      <h2 class="text-primary mb-1 fs-4">Incidencias por Categoría</h2>
+    <div class="container mt-1">
+      <h2 class="text-primary mb-1 fs-4 ">Incidencias por Categoría</h2>
+      <hr>
       <table class="table table-bordered table-striped">
         <thead class="table-light"> 
           <tr>
