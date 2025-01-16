@@ -1,22 +1,37 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
+import { ref, watch } from "vue";
 
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
+
+const route = useRoute();
+const router = useRouter();
+const showHeaderAndSidebar = ref(route.path !== '/login');
+
+watch(route, (newRoute) => {
+  showHeaderAndSidebar.value = newRoute.path !== '/login';
+});
 </script>
 
 <template>
-  <Header />
-  <main>
-    <div class="row">
-      <div class="col-2 p-0">
-        <Sidebar />
+  <div class="container-fluid p-0">
+    <Header v-if="showHeaderAndSidebar" />
+    <main class="d-flex">
+      <div class="row w-100 m-0">
+        <div class="col-2 p-0" v-if="showHeaderAndSidebar">
+          <Sidebar />
+        </div>
+        <div :class="showHeaderAndSidebar ? 'col-10 p-0' : 'col-12 p-0'">
+          <RouterView />
+        </div>
       </div>
-      <div class="col-10 p-0">
-        <RouterView />
-      </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container-fluid {
+  max-width: 100%;
+}
+</style>
