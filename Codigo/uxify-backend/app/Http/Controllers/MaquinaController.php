@@ -18,7 +18,7 @@ class MaquinaController extends Controller
 
     public function index()
     {
-        $maquinas = Maquina::with('section.campus')->paginate(12); // Adjust the number of items per page as needed
+        $maquinas = Maquina::with('section.campus')->paginate(8); // Adjust the number of items per page as needed
         return response()->json($maquinas);
     }
 
