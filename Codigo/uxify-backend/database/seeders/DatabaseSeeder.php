@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\CategoriaController;
 use App\Models\Campus;
 use App\Models\Maquina;
 use App\Models\Section;
@@ -37,7 +38,28 @@ class DatabaseSeeder extends Seeder
 //        ]);
 
 
+        // DATOS ROLES, USUARIOS
+        //$this->call(RolSeeder::class);
+        //$this->call(UserSeeder::class);
+
         // DATOS PARA CAMPUS, SECCION, MAQUINAS
+        //$this->call(CampusSeeder::class);
+        //$this->call(SectionSeeder::class);
+        //$this->call(MaquinaSeeder::class);
+
+        // DATOS CATEGORIAS, INCIDENCIAS
+        //$this->call(CategoriaSeeder::class);
+        //$this->call(IncidenciaSeeder::class);
+
+        // DATOS MANTENIMIENTOS
+        $this->call(MantenimientoSeeder::class);
+
+        // DATOS TABLA N-M
+        $this->call(IncidenciaTecnicoSeeder::class);
+        $this->call(MantenimientoTecnicoSeeder::class);
+
+
+        /*
         for ($i = 0; $i < 5; $i++) {
             $campus = Campus::factory()->create();
 
@@ -59,6 +81,9 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+        */
+
+
 
 
 
