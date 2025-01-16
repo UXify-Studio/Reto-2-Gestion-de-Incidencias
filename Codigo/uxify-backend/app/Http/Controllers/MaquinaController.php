@@ -63,4 +63,9 @@ class MaquinaController extends Controller
     {
         //
     }
+
+    public function countMaquinasPrioridad(){
+        $maquinasPrioridad1 = Maquina::where('prioridad', 1)->count();
+        return response()->json($maquinasPrioridad1);
+    }
 }
