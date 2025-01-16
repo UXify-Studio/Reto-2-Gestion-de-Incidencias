@@ -1,6 +1,4 @@
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import CuadrosDatosUsuarios from '@/components/CuadrosDatosUsuarios.vue';
 import UserList from '@/components/UserList.vue';
 
@@ -8,23 +6,7 @@ export default {
     components: {
         CuadrosDatosUsuarios,
         UserList,
-    },
-    setup() {
-        const users = ref([]);
-
-        onMounted(async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/users');
-                users.value = response.data;
-            } catch (error) {
-                console.error('Error al obtener los usuarios:', error);
-            }
-        });
-
-        return {
-            users,
-        };
-    },
+    }
 };
 </script>
 
@@ -43,7 +25,7 @@ export default {
         </div>
         <div class="row">
             <div class="col">
-                <UserList :users="users" />
+                <UserList />
             </div>
         </div>
     </div>

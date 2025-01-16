@@ -40,7 +40,7 @@ const router = createRouter({
       component: () => import('../views/admin/CategoriasList.vue') ,
       //meta: { requiresAdmin: true },
     },
-    { 
+    {
       path: '/gestion/campus', 
       component: () => import('../views/admin/CampusList.vue') ,
       //meta: { requiresAdmin: true },

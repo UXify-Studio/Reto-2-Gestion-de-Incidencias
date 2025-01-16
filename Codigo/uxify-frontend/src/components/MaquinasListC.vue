@@ -36,22 +36,22 @@ export default {
 
 <template>
     <div>
-        <table class="table table-striped">
-            <thead>
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <th>Nombre</th>
-                    <th>Modelo</th>
-                    <th>Prioridad</th>
-                    <th>Sección</th>
-                    <th>Campus</th>
-                    <th>Acciones</th>
+                    <th class="align-middle">Modelo</th>
+                    <th class="align-middle">Nombre</th>
+                    <th class="align-middle">Prioridad</th>
+                    <th class="align-middle">Sección</th>
+                    <th class="align-middle">Campus</th>
+                    <th class="align-middle">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="maquina in maquinas" :key="maquina.id">
-                    <td>{{ maquina.modelo }}</td>
-                    <td>{{ maquina.nombre }}</td>
-                    <td>
+                    <td class="align-middle">{{ maquina.modelo }}</td>
+                    <td class="align-middle">{{ maquina.nombre }}</td>
+                    <td class="align-middle">
                         <span class="badge text-bg-warning" v-if="maquina.prioridad === 1">
                             {{ maquina.prioridad }}
                         </span>
@@ -62,21 +62,21 @@ export default {
                             {{ maquina.prioridad }}
                         </span>
                     </td>
-                    <td>{{ maquina.section.n_seccion }}</td>
-                    <td>{{ maquina.section.campus.nombre }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-secondary me-2">
-                            <i class="bi bi-pencil"></i>
+                    <td class="align-middle">{{ maquina.section.n_seccion }}</td>
+                    <td class="align-middle">{{ maquina.section.campus.nombre }}</td>
+                    <td class="align-middle">
+                        <button class="btn btn-sm">
+                            <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                         </button>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-trash3"></i>
+                        <button class="btn btn-sm">
+                            <img src="../assets/eliminar.svg" alt="Eliminar" class="icon-small">
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
         <nav aria-label="Page navigation">
-            <ul class="pagination">
+            <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
                     <a class="page-link" href="#" @click.prevent="fetchMaquinas(currentPage - 1)">Anterior</a>
                 </li>
@@ -92,11 +92,8 @@ export default {
 </template>
 
 <style scoped>
-.table {
-    width: 100%;
-}
-
-.pagination {
-    justify-content: center;
+.icon-small {
+    width: 35px;
+    height: 35px;
 }
 </style>
