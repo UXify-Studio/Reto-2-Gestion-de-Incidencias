@@ -18,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <div class="container-fluid bg-light border-end vh-100">
+  <div class="container-fluid bg-light border-end vh-100 height-100">
     <div class="row">
       <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
         <img src="../assets/example.png" alt="Foto de perfil"
