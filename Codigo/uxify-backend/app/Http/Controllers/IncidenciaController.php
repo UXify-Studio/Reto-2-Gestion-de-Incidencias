@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Incidencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IncidenciaController extends Controller
 {
@@ -62,5 +63,28 @@ class IncidenciaController extends Controller
     public function destroy(Incidencia $incidencia)
     {
         //
+    }
+
+    public function getUltimasIncidenciasPorPrioridad()
+    {
+        $result = DB::table('incidencias as i')
+            ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
+            ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
+            ->select('i.*', 'm.prioridad', 'm.nombre as nombre_maquina', 'c.nombre as categoria')
+            ->orderBy('i.created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        if ($result->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
     }
 }

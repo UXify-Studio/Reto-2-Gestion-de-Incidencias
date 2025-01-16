@@ -1,21 +1,24 @@
 <script>
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 export default {
-    data() {
+    setup() {
+        const categorias = ref([]);
+
+        onMounted(async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/categorias');
+                categorias.value = response.data;
+            } catch (error) {
+                console.error('Error al obtener las categorías:', error);
+            }
+        });
+
         return {
-            categorias: []
+            categorias,
         };
     },
-    created() {
-        axios.get('http://127.0.0.1:8000/api/categorias')
-            .then(response => {
-                this.categorias = response.data;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
 };
 </script>
 
@@ -26,7 +29,7 @@ export default {
                 <tr>
                     <th>Nombre</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th class="text-end px-4 ">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,7 +39,7 @@ export default {
                         <span class="badge bg-success" v-if="categoria.deshabilitado === 0">Habilitada</span>
                         <span class="badge bg-danger" v-if="categoria.deshabilitado === 1">Deshabilitada</span>
                     </td>
-                    <td>
+                    <td class="text-end">
                         <button class="btn btn-sm">
                             <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                         </button>
