@@ -1,48 +1,73 @@
 <template>
-    <div class="container mt-1">
-      <h2 class="text-primary mb-1 fs-4 ">Incidencias por Categoría</h2>
-      <hr>
-      <table class="table table-bordered table-striped">
-        <thead class="table-light"> 
-          <tr>
-            <th class="p-1 text-center align-middle">Categoría</th>
-            <th class="p-1 text-center align-middle">Prioridad Baja</th>
-            <th class="p-1 text-center align-middle">Prioridad Media</th>
-            <th class="p-1 text-center align-middle">Prioridad Alta</th>
-            <th class="p-1 text-center align-middle">Incumplidos</th>
-            <th class="p-1 text-center align-middle">En proceso</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="categoria in categorias" :key="categoria.nombre">
-            <td class="text-center align-middle">{{ categoria.nombre }}</td>
-            <td class="text-center align-middle">{{ categoria.baja }}</td>
-            <td class="text-center align-middle">{{ categoria.media }}</td>
-            <td class="text-center align-middle">{{ categoria.alta }}</td>
-            <td class="text-center align-middle">{{ categoria.incumplidos }}</td>
-            <td class="text-center align-middle">{{ categoria.enProceso }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'IncidenciasPorCategoria',
-    data() {
-      return {
-        categorias: [
-          { nombre: 'Eléctrico', baja: 2, media: 0, alta: 0, incumplidos: 0, enProceso: 0 },
-          { nombre: 'Mecánico', baja: 22, media: 1, alta: 0, incumplidos: 16, enProceso: 5 },
-          { nombre: 'Categoría 3', baja: 1, media: 0, alta: 0, incumplidos: 2, enProceso: 0 },
-          { nombre: 'Categoría 4', baja: 0, media: 0, alta: 0, incumplidos: 0, enProceso: 0 },
-        ],
-      };
-    },
-  };
-  </script>
-  
-  <style scoped>
-  
-  </style>
+  <div class="container mt-1">
+    <h2 class="text-primary mb-1 fs-4">Incidencias por Categoría</h2>
+    <hr>
+    <table class="table table-bordered table-striped">
+      <thead class="table-light">
+        <tr>
+          <th class="p-1 text-center align-middle">Categoría</th>
+          <th class="p-1 text-center align-middle">Prioridad 1</th>
+          <th class="p-1 text-center align-middle">Prioridad 2</th>
+          <th class="p-1 text-center align-middle">Prioridad 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(categoria, nombre) in categoriasPorNombre" :key="nombre">
+          <td class="text-center align-middle">{{ nombre }}</td>
+          <td class="text-center align-middle">{{ getCantidadIncidencias(categoria, 1) }}</td>
+          <td class="text-center align-middle">{{ getCantidadIncidencias(categoria, 2) }}</td>
+          <td class="text-center align-middle">{{ getCantidadIncidencias(categoria, 3) }}</td>
+          
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
+
+export default {
+  name: 'IncidenciasPorCategoria',
+  data() {
+    return {
+      incidencias: []
+    };
+  },
+  computed: {
+    categoriasPorNombre() {
+      const categorias = {};
+      if (this.incidencias && this.incidencias.data) { // Verificar si existen datos.
+         this.incidencias.data.forEach(incidencia => {
+            if (!categorias[incidencia.nombre]) {
+                categorias[incidencia.nombre] = [];
+            }
+            categorias[incidencia.nombre].push(incidencia);
+        });
+      }
+      
+      return categorias;
+    }
+  },
+  methods: {
+    getCantidadIncidencias(incidenciasCategoria, prioridad) {
+      if (!incidenciasCategoria) return 0; // Manejar el caso donde no hay incidencias para una categoría
+      return incidenciasCategoria.filter(incidencia => incidencia.prioridad === prioridad)
+                                 .reduce((sum, incidencia) => sum + incidencia.cantidad_incidencias, 0);
+
+
+    }
+  },
+  created() {
+    axios.get('http://127.0.0.1:8000/api/incidencias/prioridad')
+      .then(response => {
+        this.incidencias = response.data;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+};
+</script>

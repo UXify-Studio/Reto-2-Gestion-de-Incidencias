@@ -9,20 +9,18 @@
           <th class="p-1 text-center align-middle">Título</th>
           <th class="p-1 text-center align-middle">Prioridad</th>
           <th class="p-1 text-center align-middle">Estado</th>
-          <th class="p-1 text-center align-middle">Asignado</th>
           <th class="p-1 text-center align-middle">Fec. creación</th>
           <th class="p-1 text-center align-middle">Categoría</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="ticket in tickets" :key="ticket.id">
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.id }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.titulo }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.prioridad }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.estado }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.asignado }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.fechaCreacion }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ ticket.categoria }}</td>
+        <tr v-for="incidencias in incidencias" :key="incidencias.id">
+          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.id }}</td>
+          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.titulo }}</td>
+          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.prioridad }}</td>
+          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.estado }}</td>
+          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.fecha_creacion }}</td>
+          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.categoria }}</td>
         </tr>
       </tbody>
     </table>
@@ -30,42 +28,24 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 export default {
   name: 'UltimosTickets',
   data() {
-    return {
-      tickets: [
-        {
-          id: 54921,
-          titulo: 'VPN caída',
-          prioridad: 'Alta',
-          estado: 'Abierta',
-          asignado: 'Pablo Gómez',
-          fechaCreacion: '20/06/2019',
-          categoria: 'Electromecanica'
-        },
-        {
-          id: 15002,
-          titulo: 'Impresora departamento atascada',
-          prioridad: 'Normal',
-          estado: 'Abierta',
-          asignado: 'Pablo Gómez',
-          fechaCreacion: '22/07/2019',
-          categoria: 'Eléctrico'
-        },
-        {
-          id: 15004,
-          titulo: 'Error en fichero de resumen',
-          prioridad: 'Baja',
-          estado: 'Petición',
-          asignado: 'Pablo Gómez',
-          fechaCreacion: '22/07/2019',
-          categoria: 'Otra categoría'
-        },
-         // Agrega más tickets aquí
-      ]
-    };
-  }
+        return {
+            incidencias: []
+        };
+    },
+    created() {
+        axios.get('http://127.0.0.1:8000/api/incidencias')
+            .then(response => {
+                this.incidencias = response.data;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 };
 </script>
 <style scoped>
