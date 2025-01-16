@@ -32,7 +32,7 @@
                         <span class="badge text-bg-success" v-if="user.rol.nombre === 'Tecnico'">
                             {{ user.rol.nombre }}
                         </span>
-                        <span class="badge text-bg-resueltos" v-if="user.rol.nombre === 'Operario'">
+                        <span class="badge text-bg-resueltos text-white" v-if="user.rol.nombre === 'Operario'">
                             {{ user.rol.nombre }}
                         </span>
                     </td>
