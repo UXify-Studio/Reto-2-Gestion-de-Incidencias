@@ -1,5 +1,5 @@
 <template>
-    <Container class="bg-primary text-white py-2">
+    <Container class="text-white py-2">
       <div class="container-fluid">
         <div class="row align-items-center p-2" >
           <div class="col-md-12 d-flex justify-content-end pb-3" >
