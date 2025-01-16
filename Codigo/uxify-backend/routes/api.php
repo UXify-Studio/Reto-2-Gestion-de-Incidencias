@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\MaquinaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,12 @@ Route::controller(MaquinaController::class)->group(function () {
 Route::controller(CampusController::class)->group(function () {
     Route::get('/campus', [CampusController::class, 'index']);
 });
+
+Route::controller(IncidenciaController::class)->group(function () {
+    Route::get('/incidencias', [IncidenciaController::class, 'index']);
+});
+
+
 
 Route::get('/roles', [RolController::class, 'index']);
 

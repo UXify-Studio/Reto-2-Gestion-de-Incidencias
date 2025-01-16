@@ -12,7 +12,8 @@ class IncidenciaController extends Controller
      */
     public function index()
     {
-        //
+        $incidencias = Incidencia::all();
+        return response()->json($incidencias);
     }
 
     /**
