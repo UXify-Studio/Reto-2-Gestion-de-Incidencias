@@ -10,7 +10,7 @@ import Graficos from "../components/Graficos.vue";
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12">  <!-- CuadrosDatos ocupa todo el ancho -->
+      <div class="col-12">
         <CuadrosDatos />
       </div>
     </div>
@@ -18,15 +18,15 @@ import Graficos from "../components/Graficos.vue";
       <div class="col-md-8 p-2">
         <UltimosTickets />
       </div>
-      <div class="col-md-4 p-0"> <!-- Ajustado a col-md-5 -->
+      <div class="col-md-4 p-0">
         <SituacionTick />
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-8 p-0">
         <IncidenCatego />
       </div>
-      <div class="col-md-4">  <!-- Ajustado a col-md-5 -->
+      <div class="col-md-4 p-0">
         <Graficos />
       </div>
     </div>

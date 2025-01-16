@@ -1,27 +1,26 @@
 <template>
-    <div class="container my-1">
-      <h2 class=" text-primary mb-1 fs-4">Estadísticas de Tickets</h2>
-      <hr>
-      <!-- Leyenda -->
-      
+    <div class="container my-1 p-0">
+      <h2 class="text-primary mb-1 fs-4">Estadísticas de Tickets</h2>
+      <hr>  
   
-      <!-- Gráfico -->
-      <div class="d-flex justify-content-center">
-        <div class="chart-container" style="max-width: 200px;">
+      <!-- Contenedor principal con gráfico y botones -->
+      <div class="d-flex justify-content-center align-items-center">
+        <!-- Gráfico -->
+        <div class="chart-container me-3" style="max-width: 230px;">
           <canvas ref="chartCanvas"></canvas>
         </div>
-      </div>
   
-      <!-- Botones para cambiar tipo de gráfico -->
-      <div class="d-flex justify-content-center mt-4">
-        <button 
-          v-for="type in chartTypes" 
-          :key="type" 
-          @click="changeChartType(type)" 
-          class="btn btn-primary mx-2"
-        >
-          {{ type }}
-        </button>
+        <!-- Botones para cambiar tipo de gráfico -->
+        <div class="btn-group d-flex flex-column p-0" role="group" aria-label="Tipos de gráfico">
+          <button 
+            v-for="type in chartTypes" 
+            :key="type" 
+            @click="changeChartType(type)" 
+            class="btn btn-primary mb-2"
+          >
+            {{ type }}
+          </button>
+        </div>
       </div>
     </div>
   </template>
@@ -68,8 +67,7 @@
                 display: false, // Oculta la leyenda (ya se muestra arriba)
               },
               title: {
-                display: true,
-                text: "Estadísticas de Tickets",
+                display: false,
               },
             },
           },
@@ -85,5 +83,3 @@
     },
   };
   </script>
-  
-      
