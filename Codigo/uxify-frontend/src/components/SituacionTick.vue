@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <h3>Situación tickets</h3>
+    <div class="containet mt-2">
+      <h class="text-primary mb-1 fs-4">Situación tickets</h>
       <hr>
       <p><span class="font-weight-bold">{{ tickets.activas }}</span> Incidencias Activas</p>
       <p><span class="font-weight-bold">{{ tickets.pendientes }}</span> Incidencias Pendientes</p>
