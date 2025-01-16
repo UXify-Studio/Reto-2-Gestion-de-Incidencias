@@ -1,6 +1,4 @@
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import CuadrosDatosMaquinas from '@/components/CuadrosDatosMaquinas.vue';
 import MaquinasListC from '@/components/MaquinasListC.vue';
 
@@ -8,22 +6,6 @@ export default {
     components: {
         CuadrosDatosMaquinas,
         MaquinasListC,
-    },
-    setup() {
-        const maquinas = ref([]);
-
-        onMounted(async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/maquinas');
-                maquinas.value = response.data;
-            } catch (error) {
-                console.error('Error al obtener las máquinas:', error);
-            }
-        });
-
-        return {
-            maquinas,
-        };
     },
 };
 </script>
