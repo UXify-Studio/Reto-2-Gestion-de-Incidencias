@@ -7,10 +7,10 @@ import Sidebar from "./components/Sidebar.vue";
 
 const route = useRoute();
 const router = useRouter();
-const showHeaderAndSidebar = ref(route.path !== '/login');
+const showHeaderAndSidebar = ref(route.path !== '/login' && route.path !== '/');
 
 watch(route, (newRoute) => {
-  showHeaderAndSidebar.value = newRoute.path !== '/login';
+  showHeaderAndSidebar.value = newRoute.path !== '/login' && newRoute.path !== '/';
 });
 </script>
 
@@ -33,5 +33,8 @@ watch(route, (newRoute) => {
 <style scoped>
 .container-fluid {
   max-width: 100%;
+}
+.col-10, .col-12 {
+  padding-right: 0;
 }
 </style>
