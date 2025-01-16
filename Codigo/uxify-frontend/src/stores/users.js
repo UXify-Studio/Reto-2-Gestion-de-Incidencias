@@ -3,16 +3,19 @@ import axios from 'axios';
 
 export const useUsersStore = defineStore('users', {
   state: () => ({
-    usersTotal: [],
+    usersTotal: 0,
   }),
   actions: {
     async fetchUsersTotal() {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/usersTotal');
-        this.usersTotal = response.data;
+        console.log('Usuarios totales recibidos:', response.data);
+        this.usersTotal = response.data.total;
       } catch (error) {
-        console.error(error);
+        console.error('Error al obtener usuarios totales:', error);
       }
     },
   },
 });
+
+

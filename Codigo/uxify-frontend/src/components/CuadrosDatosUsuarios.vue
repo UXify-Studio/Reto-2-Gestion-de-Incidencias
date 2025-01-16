@@ -18,7 +18,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Usuarios Totales</p>
-                <h3 class="card-title mb-0 display-6">{{ usersTotal.length }}</h3>
+                <h3 class="card-title mb-0 display-6">{{ usersTotal > 0 ? usersTotal : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -100,15 +100,12 @@ export default {
 
   // Usamos setup() para trabajar con Pinia
   setup() {
-    // Llamamos al store de Pinia
     const usersStore = useUsersStore();
-    
-    // Hacemos la llamada para obtener los datos
+
+    // Llama al método para obtener los datos
     usersStore.fetchUsersTotal();
 
-    // Retornamos la propiedad reactive del store
     return {
-      // Accedemos a los datos de usersTotal del store
       usersTotal: usersStore.usersTotal,
     };
   },
