@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('nombre');
-            $table->boolean('desabilitado')->default(0);
+            $table->boolean('deshabilitado')->default(0);
 
             $table->timestamps();
         });
