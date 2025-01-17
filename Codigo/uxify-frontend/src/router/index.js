@@ -21,6 +21,11 @@ const router = createRouter({
       component: () => import('../views/Home.vue') 
     },
     { 
+      path: '/estadisticas',
+      name: 'estadisticas',
+      component: () => import('../views/Estadisticas.vue') 
+    },
+    { 
       path: '/register', 
       component: () => import('../views/Register.vue'),
       meta: { requiresAdmin: true },

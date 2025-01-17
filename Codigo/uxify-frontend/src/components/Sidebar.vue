@@ -38,15 +38,15 @@ export default {
           <span>Inicio</span>
         </div>
       </router-link>
-      <router-link to="/incidencias"
+      <router-link to="/estadisticas"
         class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
         <div class="col-auto">
           <i class="bi bi-exclamation-triangle me-2">
-            <img src="../assets/Incidencias.png" alt="Incidencias" class="menu-icon">
+            <img src="../assets/Incidencias.png" alt="Estadisticas" class="menu-icon">
           </i>
         </div>
         <div class="col">
-          <span>Incidencias</span>
+          <span>Estadisticas</span>
         </div>
       </router-link>
       <router-link to="/tipos-de-activo"

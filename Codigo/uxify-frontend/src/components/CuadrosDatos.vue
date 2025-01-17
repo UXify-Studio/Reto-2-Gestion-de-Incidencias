@@ -10,35 +10,35 @@
                 <router-link to="/prioridad1" class="card text-white bg-danger w-100 text-decoration-none">
                     <div class="card-body text-center p-2 d-flex flex-column justify-content-center">
                         <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                        <p class="mb-1">Tickets Prioridad 1</p>
+                        <p class="mb-1">Incidencias Prioridad 1</p>
                         <h3 class="card-title mb-0 display-6">20</h3>
                     </div>
                 </router-link>
                 <router-link to="/prioridad2" class="card text-white bg-warning w-100 text-decoration-none">
                     <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
                         <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                        <p class="mb-1">Tickets Prioridad 2</p>
+                        <p class="mb-1">Incidencias Prioridad 2</p>
                         <h3 class="card-title mb-0 display-6">2</h3>
                     </div>
                 </router-link>
                 <router-link to="/prioridad3" class="card text-white bg-success w-100 text-decoration-none"> 
                     <div class="card-body text-center p-3 d-flex flex-column justify-content-center ">
                         <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                        <p class="mb-1">Tickets Prioridad 3</p>
+                        <p class="mb-1">Incidencias Prioridad 3</p>
                         <h3 class="card-title mb-0 display-6">2</h3>
                     </div>
                 </router-link>
                 <router-link to="/Resueltos" class="card text-white bg-resueltos w-100 text-decoration-none">
                     <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
                         <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                        <p class="mb-1">Tickets Resueltos</p>
+                        <p class="mb-1">Incidencias Resueltos</p>
                         <h3 class="card-title mb-0 display-6">56</h3>
                     </div>
                 </router-link>
                 <router-link to="/Mantenimiento" class="card text-white bg-mantenimiento w-100 text-decoration-none"> 
                     <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
                         <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                        <p class="mb-1">Tickets Mantenimiento</p>
+                        <p class="mb-1">Mantenimientos Preventivos</p>
                         <h3 class="card-title mb-0 display-6">45</h3>
                     </div>
                 </router-link>
