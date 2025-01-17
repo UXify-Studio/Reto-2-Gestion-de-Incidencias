@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mantenimientos_preventivos', function (Blueprint $table) {
+        Schema::create('mantenimientos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_usuario')->constrained('users');
             $table->foreignId('id_maquina')->constrained('maquinas');
+            $table->string('descripcion');
             $table->date('duracion')->nullable();
             $table->date('fecha_inicio');
             $table->date('proxima_fecha');
-            $table->foreignId('id_usuario')->constrained('users');
-            $table->string('descripcion');
             $table->string('periodo');
             $table->timestamps();
         });

@@ -18,7 +18,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Usuarios Totales</p>
-                <h3 class="card-title mb-0 display-6">20</h3>
+                <h3 class="card-title mb-0 display-6">{{ usersTotal > 0 ? usersTotal : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -83,6 +83,8 @@
 </template>
 
 <script>
+import { useUsersStore } from '../stores/users';
+
 export default {
   name: "CuadrosDatosUsuarios",
   data() {
@@ -94,6 +96,18 @@ export default {
     '$route.query.role': function (newRole) {
       this.selectedRole = newRole || 'Todos'; // Actualizar el valor cuando cambia la URL
     },
+  },
+
+  // Usamos setup() para trabajar con Pinia
+  setup() {
+    const usersStore = useUsersStore();
+
+    // Llama al método para obtener los datos
+    usersStore.fetchUsersTotal();
+
+    return {
+      usersTotal: usersStore.usersTotal,
+    };
   },
 };
 </script>

@@ -2,24 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Maquina;
+use App\Models\MantenimientoTecnico;
 use Illuminate\Http\Request;
 
-class MaquinaController extends Controller
+class MantenimientoTecnicoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-//    public function index()
-//    {
-//        $maquinas = Maquina::with('section.campus')->get();
-//        return response()->json($maquinas);
-//    }
-
     public function index()
     {
-        $maquinas = Maquina::with('section.campus')->paginate(8); // Adjust the number of items per page as needed
-        return response()->json($maquinas);
+        //
     }
 
     /**
@@ -41,7 +34,7 @@ class MaquinaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Maquina $maquina)
+    public function show(MantenimientoTecnico $mantenimientoTecnico)
     {
         //
     }
@@ -49,7 +42,7 @@ class MaquinaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Maquina $maquina)
+    public function edit(MantenimientoTecnico $mantenimientoTecnico)
     {
         //
     }
@@ -57,7 +50,7 @@ class MaquinaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Maquina $maquina)
+    public function update(Request $request, MantenimientoTecnico $mantenimientoTecnico)
     {
         //
     }
@@ -65,13 +58,8 @@ class MaquinaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Maquina $maquina)
+    public function destroy(MantenimientoTecnico $mantenimientoTecnico)
     {
         //
-    }
-
-    public function countMaquinasPrioridad(){
-        $maquinasPrioridad1 = Maquina::where('prioridad', 1)->count();
-        return response()->json($maquinasPrioridad1);
     }
 }

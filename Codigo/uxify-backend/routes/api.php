@@ -16,6 +16,7 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/users', [UserController::class, 'index']);
+    Route::get('/usersTotal', [UserController::class, 'countUsersTotal']);
 });
 
 Route::controller(CategoriaController::class)->group(function () {

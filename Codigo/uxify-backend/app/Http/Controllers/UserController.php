@@ -83,4 +83,9 @@ class UserController extends Controller
         // Retornar la respuesta en formato JSON con el token
         return response()->json(['token' => $token, 'user' => $user], 200);
     }
+
+    public function countUsersTotal() {
+        $usersTotal = User::count();
+        return response()->json(['total' => $usersTotal]);
+    }
 }

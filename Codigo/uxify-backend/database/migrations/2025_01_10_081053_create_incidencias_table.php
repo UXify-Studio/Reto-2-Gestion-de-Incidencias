@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('incidencias', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_usuario')->constrained('users');
-            $table->foreignId('id_maquina')->constrained('maquinas');
+            $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade');
+            $table->foreignId('id_maquina')->constrained('maquinas')->onDelete('cascade');
+            $table->foreignId('id_categoria')->constrained('categorias')->onDelete('cascade');
+            $table->integer('estado_maquina');
             $table->string('titulo');
-            $table->date('fecha_creacion');
             $table->text('descripcion');
-            $table->integer('estado');
-            $table->foreignId('id_categoria')->constrained('categorias');
-            $table->boolean('resuelta')->default(false);
+            $table->date('fecha_creacion');
+            $table->integer('estado_incidencia');
+            $table->boolean('resuelta')->default(0);
             $table->timestamps();
         });
     }

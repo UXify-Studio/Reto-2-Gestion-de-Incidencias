@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Maquina;
+use App\Models\IncidenciaTecnico;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class MaquinaSeeder extends Seeder
+class IncidenciaTecnicoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Maquina::factory(15)->create();
+        IncidenciaTecnico::factory(10)->create();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Campus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,8 +19,8 @@ class SectionFactory extends Factory
     {
         return [
             'nombre' => $this->faker->word(),
-            'n_seccion' => $this->faker->numberBetween(1, 10),
-            //'id_campus' => $this->faker->numberBetween(1, 5),
+            'n_seccion' => $this->faker->numberBetween(10, 50),
+            'id_campus' => Campus::pluck('id')->random(),
         ];
     }
 }

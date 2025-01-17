@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Incidencia extends Model {
+    use HasFactory;
     protected $fillable = [
         'id_usuario', 'id_maquina',	'titulo',	'descripcion', 'estado', 'id_categoria', 'resuelta'
     ];
