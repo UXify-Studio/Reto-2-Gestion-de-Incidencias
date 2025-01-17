@@ -18,6 +18,7 @@
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Rol</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -37,11 +38,20 @@
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm">
+                        <span class="badge text-bg-success" v-if="user.deshabilitado === 0">
+                            Habilitado
+                        </span>
+                        <span class="badge text-bg-danger" v-if="user.deshabilitado === 1">
+                            Deshabilitado
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" @click="$emit('edit-user', user)">
                             <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                         </button>
-                        <button class="btn btn-sm">
-                            <img src="../assets/person-lock.svg" alt="Eliminar" class="icon-small-2">
+                        <button class="btn btn-sm" @click="$emit('toggle-user-status', user)">
+                            <img src="../assets/person-lock.svg"
+                                :alt="user.deshabilitado === 0 ? 'Deshabilitar' : 'Habilitar'" class="icon-small-2">
                         </button>
                     </td>
                 </tr>
@@ -78,14 +88,24 @@
 import axios from 'axios';
 
 export default {
-    data() {
-        return {
-            users: [],
-            pagination: {
+    name: 'UserList',
+    props: {
+        users: {
+            type: Array,
+            required: true
+        },
+        pagination: {
+            type: Object,
+            required: true,
+            default: () => ({
                 current_page: 1,
                 last_page: 1,
-                per_page: 10,
-            },
+                per_page: 10
+            })
+        }
+    },
+    data() {
+        return {
             selectedRole: this.$route.query.role || '', // Obtener el filtro desde la URL
         };
     },
@@ -102,7 +122,7 @@ export default {
     methods: {
         fetchUsers(page = 1) {
             let url = `http://127.0.0.1:8000/api/users?page=${page}`;
-            
+
             // Si hay un rol seleccionado, añadirlo como parámetro de la URL
             if (this.selectedRole) {
                 url += `&role=${this.selectedRole}`;
@@ -111,10 +131,12 @@ export default {
             axios
                 .get(url)
                 .then((response) => {
-                    this.users = response.data.data;
-                    this.pagination.current_page = response.data.current_page;
-                    this.pagination.last_page = response.data.last_page;
-                    this.pagination.per_page = response.data.per_page;
+                    this.$emit('update:users', response.data.data);
+                    this.$emit('update:pagination', {
+                        current_page: response.data.current_page,
+                        last_page: response.data.last_page,
+                        per_page: response.data.per_page
+                    });
                 })
                 .catch((error) => {
                     console.error(error);
@@ -133,12 +155,12 @@ export default {
 
 <style scoped>
 .icon-small {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
 }
 
 .icon-small-2 {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
 }
 </style>
