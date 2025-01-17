@@ -42,6 +42,7 @@ export default {
                     <th class="align-middle">Modelo</th>
                     <th class="align-middle">Nombre</th>
                     <th class="align-middle">Prioridad</th>
+                    <th class="align-middle">Estado</th>
                     <th class="align-middle">Sección</th>
                     <th class="align-middle">Campus</th>
                     <th class="align-middle">Acciones</th>
@@ -60,6 +61,14 @@ export default {
                         </span>
                         <span class="badge text-bg-resueltos text-white" v-if="maquina.prioridad === 3">
                             {{ maquina.prioridad }}
+                        </span>
+                    </td>
+                    <td class="align-middle">
+                        <span class="badge text-bg-danger" v-if="maquina.estado === 0">
+                            {{ maquina.estado }}
+                        </span>
+                        <span class="badge text-bg-success" v-if="maquina.estado === 1">
+                            {{ maquina.estado }}
                         </span>
                     </td>
                     <td class="align-middle">{{ maquina.section.n_seccion }}</td>

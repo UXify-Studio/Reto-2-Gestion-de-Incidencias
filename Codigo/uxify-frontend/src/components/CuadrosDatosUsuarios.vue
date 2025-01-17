@@ -84,6 +84,7 @@
 
 <script>
 import { useUsersStore } from '../stores/users';
+import { computed, onMounted } from 'vue';
 
 export default {
   name: "CuadrosDatosUsuarios",
@@ -103,10 +104,15 @@ export default {
     const usersStore = useUsersStore();
 
     // Llama al método para obtener los datos
-    usersStore.fetchUsersTotal();
+    onMounted(() => {
+      usersStore.fetchUsersTotal();
+    });
+
+    // Computed para acceder al estado de manera reactiva
+    const usersTotal = computed(() => usersStore.usersTotal);
 
     return {
-      usersTotal: usersStore.usersTotal,
+      usersTotal,
     };
   },
 };
