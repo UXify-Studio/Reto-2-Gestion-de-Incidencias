@@ -62,4 +62,10 @@ class SectionController extends Controller
     {
         //
     }
+
+    public function getSectionsByCampus($campus){
+        $seccionesPorCampus = Section::where('id_campus', $campus)->get();
+
+        return response()->json(['sections' => $seccionesPorCampus]);
+    }
 }

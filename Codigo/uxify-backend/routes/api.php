@@ -5,6 +5,7 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\MaquinaController;
+use App\Http\Controllers\SectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -16,7 +17,7 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/usersTotal', [UserController::class, 'countUsersTotal']);
+    Route::get('/usersCount', [UserController::class, 'countUsers']);
 });
 
 Route::controller(CategoriaController::class)->group(function () {
@@ -29,6 +30,10 @@ Route::controller(MaquinaController::class)->group(function () {
 
 Route::controller(CampusController::class)->group(function () {
     Route::get('/campus', [CampusController::class, 'index']);
+});
+
+Route::controller(SectionController::class)->group(function () {
+    Route::get('/sectionByCampus/{campus}', [SectionController::class, 'getSectionsByCampus']);
 });
 
 Route::controller(IncidenciaController::class)->group(function () {
