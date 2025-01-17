@@ -1,27 +1,70 @@
-<script lang="js">
-import { reactive } from 'vue';
+<template>
+    <div class="container-fluid p-4">
+        <div class="row mb-4">
+            <CuadrosDatosUsuarios />
+        </div>
+        <div class="row mb-3">
+            <div class="col d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Gestión de Usuarios</h3>
+                <button class="btn btn-dark" @click="showModal = true">
+                    <i class="bi bi-person-plus me-2"></i> Nuevo Usuario
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <UserList />
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <Modal :show="showModal" title="Registro de Nuevo Usuario" @close="showModal = false">
+            <form @submit.prevent="submit">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="name" v-model="data.name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nombre de Usuario</label>
+                    <input type="text" class="form-control" id="username" v-model="data.username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email" v-model="data.email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" v-model="data.password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Rol</label>
+                    <select v-model="data.id_rol" class="form-control" required>
+                        <option disabled value="">Seleccione un rol</option>
+                        <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.nombre }}</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </Modal>
+    </div>
+</template>
+
+<script>
+import { ref, reactive } from 'vue';
+import { useToast } from 'vue-toastification';
+import CuadrosDatosUsuarios from '@/components/CuadrosDatosUsuarios.vue';
+import UserList from '@/components/UserList.vue';
+import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 
 export default {
-    name: 'Register',
-
-    data() {
-        return {
-            roles: []
-        };
+    components: {
+        CuadrosDatosUsuarios,
+        UserList,
+        Modal
     },
-
-    created() {
-        axios.get('http://127.0.0.1:8000/api/roles')
-            .then(response => {
-                this.roles = response.data;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    },
-
     setup() {
+        const showModal = ref(false);
         const data = reactive({
             name: '',
             username: '',
@@ -29,6 +72,8 @@ export default {
             password: '',
             id_rol: ''
         });
+
+        const toast = useToast();
 
         const submit = async () => {
             try {
@@ -49,85 +94,44 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                alert('Registration successful');
+                toast.success('Registro exitoso');
+                showModal.value = false;
             } catch (error) {
                 if (error.response) {
                     console.error('Error data:', error.response.data);
-                    console.error('Error status:', error.response.status);
-                    console.error('Error headers:', error.response.headers);
+                    toast.error('Error al registrar el usuario: ' + error.response.data.message);
                 } else {
-                    console.error('Error message:', error.message);
+                    console.error('Error:', error.message);
+                    toast.error('Error al registrar el usuario');
                 }
             }
         };
 
         return {
+            showModal,
             data,
-            submit
+            submit,
         };
+    },
+    data() {
+        return {
+            roles: []
+        };
+    },
+    created() {
+        axios.get('http://127.0.0.1:8000/api/roles')
+            .then(response => {
+                this.roles = response.data;
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 };
 </script>
 
-<template>
-    <form @submit.prevent="submit">
-        <h1 class="h3 mb-3 fw-normal">Please register</h1>
-
-        <div class="form-floating">
-            <input v-model="data.name" type="text" class="form-control" placeholder="Nombre">
-        </div>
-        <div class="form-floating">
-            <input v-model="data.username" type="text" class="form-control" placeholder="Nombre de Usuario">
-        </div>
-        <div class="form-floating">
-            <input v-model="data.email" type="email" class="form-control" placeholder="Email">
-        </div>
-        <div class="form-floating">
-            <input v-model="data.password" type="password" class="form-control" placeholder="Contraseña">
-        </div>
-        <div class="form-floating">
-            <select v-model="data.id_rol" class="form-control">
-                <option disabled value="">Seleccione un rol</option>
-                <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.nombre }}</option>
-            </select>
-        </div>
-
-        <button class="btn btn-primary w-100 py-2" type="submit">Register</button>
-        <p class="mt-5 mb-3 text-body-secondary">&copy; 2017-2024</p>
-    </form>
-</template>
-
 <style scoped>
-.form-control {
-    color: black; /* Cambia el color del texto a negro */
-    background-color: white; /* Asegura que el fondo sea blanco */
-}
-
-.form-floating {
-    margin-bottom: 1rem; /* Añade un margen inferior para separar los campos */
-}
-
-.form-control::placeholder {
-    color: #6c757d; /* Cambia el color del placeholder a un gris oscuro */
-}
-
-select.form-control {
-    color: black; /* Cambia el color del texto del select a negro */
-    background-color: white; /* Asegura que el fondo del select sea blanco */
-}
-
-option {
-    color: black; /* Cambia el color del texto de las opciones a negro */
-    background-color: white; /* Asegura que el fondo de las opciones sea blanco */
-}
-
-.btn-primary {
-    background-color: #007bff; /* Color de fondo del botón */
-    border-color: #007bff; /* Color del borde del botón */
-}
-
-.btn-primary:hover {
-    background-color: #0056b3; /* Color de fondo del botón al pasar el ratón */
-    border-color: #0056b3; /* Color del borde del botón al pasar el ratón */
+.container-fluid {
+    max-width: 100%;
 }
 </style>
