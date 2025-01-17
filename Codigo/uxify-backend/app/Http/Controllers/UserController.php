@@ -88,4 +88,39 @@ class UserController extends Controller
         $usersTotal = User::count();
         return response()->json(['total' => $usersTotal]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'username' => 'sometimes|required|string|max:255|unique:users,username,' . $id,
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'sometimes|required|string|min:8',
+            'id_rol' => 'sometimes|required|integer|exists:roles,id',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->update($validatedData);
+
+        return response()->json($user, 200);
+    }
+
+    public function enable($id)
+    {
+        $user = User::findOrFail($id);
+        $user->deshabilitado = 0;
+        $user->save();
+
+        return response()->json(['message' => 'User enabled successfully'], 200);
+    }
+
+    public function disable($id)
+    {
+        $user = User::findOrFail($id);
+        $user->deshabilitado = 1;
+        $user->save();
+
+        return response()->json(['message' => 'User disabled successfully'], 200);
+    }
 }

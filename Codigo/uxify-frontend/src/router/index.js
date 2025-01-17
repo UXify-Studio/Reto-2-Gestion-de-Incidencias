@@ -32,7 +32,7 @@ const router = createRouter({
     },
     { 
       path: '/gestion/users', 
-      component: () => import('../views/admin/UsuariosList.vue') ,
+      component: () => import('../views/admin/UsuariosListView.vue') ,
       //meta: { requiresAdmin: true },
     },
     { 

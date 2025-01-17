@@ -49,7 +49,12 @@ Route::controller(AuthController::class)->prefix('auth')->group(function()  {
     Route::get('me', 'me')->middleware('auth:api');
 });
 
-Route::post('/store', [UserController::class, 'store']);
+Route::controller(UserController::class)->group(function () {
+    Route::post('/store', 'store')->middleware('auth:api', 'admin');
+    Route::put('/users/{id}', 'update')->middleware('auth:api', 'admin');
+    Route::put('/users/{id}/enable', [UserController::class, 'enable'])->middleware('auth:api', 'admin');
+    Route::put('/users/{id}/disable', [UserController::class, 'disable'])->middleware('auth:api', 'admin');
+});
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
