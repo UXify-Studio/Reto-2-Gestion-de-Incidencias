@@ -20,7 +20,7 @@ export default {
         </div>
         <div class="row mb-3">
             <div class="col d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">Gestión de Usuarios</h3>
+                <h3 class="mb-0">Gestión de Categorias</h3>
                 <button class="btn btn-dark">
                     <i class="bi bi-person-plus me-2"></i> Nuevo Usuario
                 </button>
