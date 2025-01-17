@@ -2,56 +2,34 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
+import CuadrosDatos from '@/components/CuadrosDatos.vue';
+import CategoriasList from '@/components/CategoriasList.vue';
+
 export default {
-    data() {
-        return {
-            categorias: []
-        };
+    components: {
+        CuadrosDatos,
+        CategoriasList,
     },
-    created() {
-        axios.get('http://127.0.0.1:8000/api/categorias')
-            .then(response => {
-                this.categorias = response.data;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
 };
 </script>
 
 <template>
-    <div class="container">
-        <div class="row">
-            <h3>Gestión de Categorías</h3>
-            <button>
-                <i class="bi bi-person-plus"></i>
-                Nueva Categoría
-            </button>
+    <div class="container-fluid p-4">
+        <div class="row mb-4">
+            <CuadrosDatos />
+        </div>
+        <div class="row mb-3">
+            <div class="col d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Gestión de Usuarios</h3>
+                <button class="btn btn-dark">
+                    <i class="bi bi-person-plus me-2"></i> Nuevo Usuario
+                </button>
+            </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="categoria in categorias" :key="categoria.id">
-                            <td>{{ categoria.nombre }}</td>
-                            <td>{{ categoria.descripcion }}</td>
-                            <td>
-                                <i class="bi bi-pencil"></i>
-                                <i class="bi bi-trash3"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col">
+                <CategoriasList />
             </div>
         </div>
     </div>
-    
 </template>

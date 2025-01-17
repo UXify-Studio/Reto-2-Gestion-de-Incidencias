@@ -32,16 +32,16 @@
                         <span class="badge text-bg-success" v-if="user.rol.nombre === 'Tecnico'">
                             {{ user.rol.nombre }}
                         </span>
-                        <span class="badge text-bg-resueltos" v-if="user.rol.nombre === 'Operario'">
+                        <span class="badge text-bg-resueltos text-white" v-if="user.rol.nombre === 'Operario'">
                             {{ user.rol.nombre }}
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-outline-secondary me-2">
-                            <i class="bi bi-pencil"></i>
+                        <button class="btn btn-sm">
+                            <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                         </button>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-trash3"></i>
+                        <button class="btn btn-sm">
+                            <img src="../assets/eliminar.svg" alt="Eliminar" class="icon-small">
                         </button>
                     </td>
                 </tr>
@@ -132,5 +132,8 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos opcionales para la tabla o el filtro */
+.icon-small {
+    width: 35px;
+    height: 35px;
+}
 </style>

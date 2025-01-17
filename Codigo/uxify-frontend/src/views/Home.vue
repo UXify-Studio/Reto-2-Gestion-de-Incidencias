@@ -1,24 +1,34 @@
 <script setup>
-import Header from '../components/Header.vue';
-import Sidebar from '../components/Sidebar.vue';
 import CuadrosDatos from '../components/CuadrosDatos.vue';
+import UltimosTickets from '../components/UltimosTickets.vue';
+import IncidenCatego from '../components/IncidenCatego.vue';
+import SituacionTick from '../components/SituacionTick.vue';
+import Graficos from "../components/Graficos.vue";
+
 </script>
 
 <template>
   <div class="container-fluid">
     <div class="row">
-        <Header />
+      <div class="col-12">
+        <CuadrosDatos />
+      </div>
     </div>
     <div class="row">
-      <div class="col-2 p-0">
-        <Sidebar />
+      <div class="col-md-8 p-2">
+        <UltimosTickets />
       </div>
-      <div class="col-10 p-0">
-        <div class="row-auto">
-          <CuadrosDatos />
-        </div>
+      <div class="col-md-4 p-0">
+        <SituacionTick />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 p-0">
+        <IncidenCatego />
+      </div>
+      <div class="col-md-4 p-0">
+        <Graficos />
       </div>
     </div>
   </div>
 </template>
-

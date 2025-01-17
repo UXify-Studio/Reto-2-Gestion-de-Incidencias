@@ -32,7 +32,7 @@ class UserController extends Controller
         }
 
         // Paginación de usuarios
-        $users = $query->paginate(12);
+        $users = $query->paginate(7);
 
         // Retornar los usuarios paginados en formato JSON
         return response()->json($users);

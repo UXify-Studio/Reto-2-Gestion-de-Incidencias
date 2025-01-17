@@ -18,8 +18,9 @@ return new class extends Migration
             $table->integer('prioridad');
             $table->integer('estado');
 
+
             $table->foreignId('id_section')->references('id')->on('sections')->onDelete('cascade');
-            $table->boolean('desabilitado')->default(0);
+            $table->boolean('deshabilitado')->default(0);
 
             $table->timestamps();
         });
