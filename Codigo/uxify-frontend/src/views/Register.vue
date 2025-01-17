@@ -50,88 +50,81 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
-import { useToast } from 'vue-toastification';
-import CuadrosDatosUsuarios from '@/components/CuadrosDatosUsuarios.vue';
-import UserList from '@/components/UserList.vue';
-import Modal from '@/components/Modal.vue';
-import axios from 'axios';
-
-export default {
-    components: {
-        CuadrosDatosUsuarios,
-        UserList,
-        Modal
-    },
+  import { ref, reactive } from 'vue';
+  import { useToast } from 'vue-toastification';
+  import axios from 'axios';
+  
+  export default {
     setup() {
-        const showModal = ref(false);
-        const data = reactive({
-            name: '',
-            username: '',
-            email: '',
-            password: '',
-            id_rol: ''
-        });
-
-        const toast = useToast();
-
-        const submit = async () => {
-            try {
-                console.log(data);
-                const token = sessionStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
-                }
-                await axios.post('http://127.0.0.1:8000/api/auth/register', {
-                    name: data.name,
-                    username: data.username,
-                    email: data.email,
-                    password: data.password,
-                    id_rol: data.id_rol
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                toast.success('Registro exitoso');
-                showModal.value = false;
-            } catch (error) {
-                if (error.response) {
-                    console.error('Error data:', error.response.data);
-                    toast.error('Error al registrar el usuario: ' + error.response.data.message);
-                } else {
-                    console.error('Error:', error.message);
-                    toast.error('Error al registrar el usuario');
-                }
+      const showModal = ref(false);
+      const data = reactive({
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+        id_rol: ''
+      });
+  
+      const toast = useToast();
+  
+      const submit = async () => {
+        try {
+          console.log(data);
+          const token = sessionStorage.getItem('token');
+          if (!token) {
+            throw new Error('No token found');
+          }
+          await axios.post('http://127.0.0.1:8000/api/auth/register', {
+            name: data.name,
+            username: data.username,
+            email: data.email,
+            password: data.password,
+            id_rol: data.id_rol
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             }
-        };
-
-        return {
-            showModal,
-            data,
-            submit,
-        };
+          });
+          toast.success('Registro exitoso');
+          showModal.value = false;
+        } catch (error) {
+          if (error.response) {
+            console.error('Error data:', error.response.data);
+            toast.error('Error al registrar el usuario: ' + error.response.data.message);
+          } else {
+            console.error('Error:', error.message);
+            toast.error('Error al registrar el usuario');
+          }
+        }
+      };
+  
+      return {
+        showModal,
+        data,
+        submit,
+      };
     },
     data() {
-        return {
-            roles: []
-        };
+      return {
+        roles: []
+      };
     },
     created() {
-        axios.get('http://127.0.0.1:8000/api/roles')
-            .then(response => {
-                this.roles = response.data;
-            })
-            .catch(error => {
-                console.error(error);
-            });
+      axios.get('http://127.0.0.1:8000/api/roles')
+        .then(response => {
+          this.roles = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
-};
-</script>
+  };
+  </script>
 
 <style scoped>
 .container-fluid {
     max-width: 100%;
 }
 </style>
+

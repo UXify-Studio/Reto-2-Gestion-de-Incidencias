@@ -41,7 +41,7 @@
                             <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                         </button>
                         <button class="btn btn-sm">
-                            <img src="../assets/eliminar.svg" alt="Eliminar" class="icon-small">
+                            <img src="../assets/person-lock.svg" alt="Eliminar" class="icon-small-2">
                         </button>
                     </td>
                 </tr>
@@ -133,7 +133,12 @@ export default {
 
 <style scoped>
 .icon-small {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+}
+
+.icon-small-2 {
+    width: 20px;
+    height: 20px;
 }
 </style>

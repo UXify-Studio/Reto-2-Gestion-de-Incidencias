@@ -1,5 +1,5 @@
 <template>
-  <Container class="text-white py-2">
+  <div class="text-white py-2">
     <div class="container-fluid">
       <div class="row align-items-center p-2">
         <div class="col-12">
@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-  </Container>
+  </div>
 </template>
 
 <script>
