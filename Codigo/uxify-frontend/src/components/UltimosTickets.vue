@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-2">
+  <div class="container mt-2z">
     <h2 class="text-primary mb-1 fs-4">Últimos tickets</h2>
     <hr>
     <table class="table table-bordered table-striped">
