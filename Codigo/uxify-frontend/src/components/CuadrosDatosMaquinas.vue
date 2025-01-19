@@ -83,6 +83,9 @@
 </template>
 
 <script>
+import { usemaquinasStore } from '../stores/maquinas';
+import { computed, onMounted } from 'vue';
+
 export default {
   name: "CuadrosDatosMaquinas",
   data() {
@@ -94,6 +97,26 @@ export default {
     '$route.query.prioridad': function (newPriority) {
       this.selectedPriority = newPriority || 'Todos'; // Actualizar el valor cuando cambia la URL
     },
+  },
+
+  // Usamos setup() para trabajar con Pinia
+  setup() {
+    const maquinasStore = usemaquinasStore();
+
+    // Llama al método para obtener los datos
+    onMounted(() => {
+      maquinasStore.fetchMaquinasTotal();
+    });
+
+    // Computed para acceder al estado de manera reactiva
+    const maquinasTotal = computed(() => usersStore.maquinasTotal);
+    const maqPrioridad1 = computed(() => usersStore.maqPrioridad1);
+    const maqPrioridad2 = computed(() => usersStore.maqPrioridad2);
+    const maqPrioridad3 = computed(() => usersStore.maqPrioridad3);
+
+    return {
+      maquinasTotal, maqPrioridad1, maqPrioridad2, maqPrioridad3
+    };
   },
 };
 </script>

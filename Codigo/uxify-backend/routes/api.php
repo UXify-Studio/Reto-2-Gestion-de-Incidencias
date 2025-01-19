@@ -26,6 +26,7 @@ Route::controller(CategoriaController::class)->group(function () {
 
 Route::controller(MaquinaController::class)->group(function () {
     Route::get('/maquinas', [MaquinaController::class, 'index']);
+    Route::get('/maquinasCount', [MaquinaController::class, 'countMaquinas']);
 });
 
 Route::controller(CampusController::class)->group(function () {
