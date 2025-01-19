@@ -18,7 +18,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Totales</p>
-                <h3 class="card-title mb-0 display-6">20</h3>
+                <h3 class="card-title mb-0 display-6">{{ maquinasTotal > 0 ? maquinasTotal : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -36,7 +36,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Prioridad 1</p>
-                <h3 class="card-title mb-0 display-6">2</h3>
+                <h3 class="card-title mb-0 display-6">{{ maqPrioridad1 > 0 ? maqPrioridad1 : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -54,7 +54,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Prioridad 2</p>
-                <h3 class="card-title mb-0 display-6">2</h3>
+                <h3 class="card-title mb-0 display-6">{{ maqPrioridad2 > 0 ? maqPrioridad2 : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -72,7 +72,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Prioridad 3</p>
-                <h3 class="card-title mb-0 display-6">56</h3>
+                <h3 class="card-title mb-0 display-6">{{ maqPrioridad3 > 0 ? maqPrioridad3 : 'Cargando...' }}</h3>
               </div>
             </router-link>
           </div>
