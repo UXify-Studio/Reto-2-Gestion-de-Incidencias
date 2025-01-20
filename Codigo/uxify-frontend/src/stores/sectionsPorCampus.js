@@ -9,7 +9,7 @@ export const useSectionsStore = defineStore('sections', {
   actions: {
     async fetchSectionsByCampus() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/sectionByCampus/${campus}');
+        const response = await axios.get(`http://127.0.0.1:8000/api/sectionByCampus/${this.campus}`);
         console.log('Campus: ', this.campus);
         console.log('Secciones: ', response.data);
 
