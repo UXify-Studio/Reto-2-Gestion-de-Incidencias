@@ -15,8 +15,27 @@ class IncidenciaController extends Controller
      */
     public function index()
     {
-        $incidencias = Incidencia::all();
-        return response()->json($incidencias);
+        $result = DB::table('incidencias as i')
+            ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
+            ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
+            ->select('i.*', 'm.prioridad', 'm.estado as gravedad_incidencia', 'm.nombre as nombre_maquina', 'c.nombre as categoria')
+            ->where('resuelta', 0)
+            ->orderBy('m.estado', 'desc')
+            ->orderBy('m.prioridad', 'asc')
+            ->orderBy('i.fecha_creacion', 'desc')
+            ->get();
+
+        if ($result->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
     }
 
     /**
@@ -91,13 +110,6 @@ class IncidenciaController extends Controller
     }
 
     public function countIncidenciasPorPrioridad(){
-        /*
-        $result = DB::table('incidencias as inc');
-        $result->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id');
-        $result->select('inc.*');
-        $result->where('maq.prioridad', '=', 1);
-        $result->get();
-        */
 
         $mantenimientos = Mantenimiento::count();
         $incidenciasResueltas = Incidencia::where('resuelta', 1)->count();
