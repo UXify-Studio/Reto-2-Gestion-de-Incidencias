@@ -36,7 +36,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Usuarios Administradores</p>
-                <h3 class="card-title mb-0 display-6">2</h3>
+                <h3 class="card-title mb-0 display-6">{{ usersAdmin > 0 ? usersAdmin : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -54,7 +54,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Usuarios Técnicos</p>
-                <h3 class="card-title mb-0 display-6">2</h3>
+                <h3 class="card-title mb-0 display-6">{{ usersTecnico > 0 ? usersTecnico : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -72,7 +72,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Usuarios Operarios</p>
-                <h3 class="card-title mb-0 display-6">56</h3>
+                <h3 class="card-title mb-0 display-6">{{ usersOperario > 0 ? usersOperario : 'Cargando...' }}</h3>
               </div>
             </router-link>
           </div>
@@ -110,9 +110,12 @@ export default {
 
     // Computed para acceder al estado de manera reactiva
     const usersTotal = computed(() => usersStore.usersTotal);
+    const usersAdmin = computed(() => usersStore.usersAdmin);
+    const usersTecnico = computed(() => usersStore.usersTenico);
+    const usersOperario = computed(() => usersStore.usersOperario);
 
     return {
-      usersTotal,
+      usersTotal, usersAdmin, usersTecnico, usersOperario
     };
   },
 };

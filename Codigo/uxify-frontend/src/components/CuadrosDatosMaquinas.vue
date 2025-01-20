@@ -18,7 +18,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Totales</p>
-                <h3 class="card-title mb-0 display-6">20</h3>
+                <h3 class="card-title mb-0 display-6">{{ maquinasTotal > 0 ? maquinasTotal : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -36,7 +36,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Prioridad 1</p>
-                <h3 class="card-title mb-0 display-6">2</h3>
+                <h3 class="card-title mb-0 display-6">{{ maqPrioridad1 > 0 ? maqPrioridad1 : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -54,7 +54,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Prioridad 2</p>
-                <h3 class="card-title mb-0 display-6">2</h3>
+                <h3 class="card-title mb-0 display-6">{{ maqPrioridad2 > 0 ? maqPrioridad2 : 'Cargando...' }}</h3>
               </div>
             </router-link>
 
@@ -72,7 +72,7 @@
                   class="icono-tarjeta mb-2"
                 />
                 <p class="mb-1">Maquinas Prioridad 3</p>
-                <h3 class="card-title mb-0 display-6">56</h3>
+                <h3 class="card-title mb-0 display-6">{{ maqPrioridad3 > 0 ? maqPrioridad3 : 'Cargando...' }}</h3>
               </div>
             </router-link>
           </div>
@@ -83,6 +83,9 @@
 </template>
 
 <script>
+import { usemaquinasStore } from '../stores/maquinas';
+import { computed, onMounted } from 'vue';
+
 export default {
   name: "CuadrosDatosMaquinas",
   data() {
@@ -94,6 +97,26 @@ export default {
     '$route.query.prioridad': function (newPriority) {
       this.selectedPriority = newPriority || 'Todos'; // Actualizar el valor cuando cambia la URL
     },
+  },
+
+  // Usamos setup() para trabajar con Pinia
+  setup() {
+    const maquinasStore = usemaquinasStore();
+
+    // Llama al método para obtener los datos
+    onMounted(() => {
+      maquinasStore.fetchMaquinasTotal();
+    });
+
+    // Computed para acceder al estado de manera reactiva
+    const maquinasTotal = computed(() => usersStore.maquinasTotal);
+    const maqPrioridad1 = computed(() => usersStore.maqPrioridad1);
+    const maqPrioridad2 = computed(() => usersStore.maqPrioridad2);
+    const maqPrioridad3 = computed(() => usersStore.maqPrioridad3);
+
+    return {
+      maquinasTotal, maqPrioridad1, maqPrioridad2, maqPrioridad3
+    };
   },
 };
 </script>

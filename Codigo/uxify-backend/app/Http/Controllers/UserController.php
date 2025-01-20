@@ -84,9 +84,19 @@ class UserController extends Controller
         return response()->json(['token' => $token, 'user' => $user], 200);
     }
 
-    public function countUsersTotal() {
+    public function countUsers() {
         $usersTotal = User::count();
-        return response()->json(['total' => $usersTotal]);
+        $usersAdmin = User::where('id_rol', 1)->count();
+        $usersTecnico = User::where('id_rol', 2)->count();
+        $usersOperario = User::where('id_rol', 3)->count();
+
+        return response()
+            ->json([
+                'total' => $usersTotal,
+                'admin' => $usersAdmin,
+                'tecnico' => $usersTecnico,
+                'operario' => $usersOperario,
+                ]);
     }
 
     public function update(Request $request, $id)
