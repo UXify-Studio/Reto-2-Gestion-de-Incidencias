@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <!-- Selector de Campus -->
@@ -14,7 +13,8 @@
     </select>
 
     <!-- Selector de Secciones -->
-    <select name="sections">
+    <select name="sections" @change="handleSectionChange($event)">
+      <option disabled selected value="">Selecciona una sección</option>
       <option v-for="section in sections" :key="section.id" :value="section.id">
         {{ section.nombre }}
       </option>
@@ -28,42 +28,45 @@ import { useSectionsStore } from '../stores/sectionsPorCampus';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
 
-export default{
+export default {
   data() {
-      return {
-          campuses: [],
-      };
+    return {
+      campuses: [],
+    };
   },
   created() {
-      axios.get(`${API_BASE_URL}/campus`)
-          .then(response => {
-              this.campuses = response.data;
-              console.log('Campuses:', response.data);
-          })
-          .catch(error => {
-              console.error(error);
-          });
+    axios
+      .get(`${API_BASE_URL}/campus`)
+      .then((response) => {
+        this.campuses = response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   },
-  // Usamos setup() para trabajar con Pinia
-  setup() {
-    // Vinculamos el store
+  setup(props, { emit }) {
     const sectionsStore = useSectionsStore();
 
-    // Función para manejar el cambio de campus
-    //onMounted(() => {});
+    // Funciones para manejar el cambio de campus y sección
     const handleCampusChange = (event) => {
-      const selectedCampus = event.target.value; // ID del campus seleccionado
-      sectionsStore.campus = selectedCampus; // Actualizamos el estado en el store
-      sectionsStore.fetchSectionsByCampus(); // Llamamos la acción para obtener secciones
+      const selectedCampus = event.target.value;
+      sectionsStore.campus = selectedCampus;
+      sectionsStore.fetchSectionsByCampus();
+      emit('campus-selected', selectedCampus); // Emite el evento al componente padre
+    };
+
+    const handleSectionChange = (event) => {
+      const selectedSection = event.target.value;
+      emit('section-selected', selectedSection); // Emite el evento al componente padre
     };
 
     const sections = computed(() => sectionsStore.sections);
 
     return {
-      sections, // Obtenemos las secciones del store
+      sections,
       handleCampusChange,
+      handleSectionChange,
     };
   },
 };
-
 </script>
