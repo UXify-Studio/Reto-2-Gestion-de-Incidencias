@@ -1,90 +1,145 @@
-<!-- TicketForm.vue -->
+<!-- IncidenciaForm.vue -->
 <template>
-  <form @submit.prevent="submitTicket">
+  <form @submit.prevent="submitIncidencia">
     <div class="mb-3">
       <label for="titulo" class="form-label text-primary">Título *</label>
-      <input type="text" class="form-control" id="titulo" v-model="ticket.titulo" required>
+      <input type="text" class="form-control" id="titulo" v-model="incidencia.titulo" required>
     </div>
 
     <div class="mb-3">
       <label for="descripcion" class="form-label text-primary">Descripción *</label>
-      <textarea class="form-control" id="descripcion" rows="3" v-model="ticket.descripcion" required></textarea>
+      <textarea class="form-control" id="descripcion" rows="3" v-model="incidencia.descripcion" required></textarea>
     </div>
 
     <div class="mb-3">
-      <label for="categoria" class="form-label text-primary">Categoría *</label>
-      <select class="form-select" id="categoria" v-model="ticket.categoria" required>
+      <label for="categoria" class="form-label text-primary">categoria *</label>
+      <select class="form-select" id="categoria" v-model="incidencia.categoria" required>
         <option value="" disabled selected>Selecciona una categoría</option>
-        <option v-for="categoria in categorias" :key="categoria" :value="categoria">{{ categoria }}</option>
+        <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">{{ categoria.nombre }}</option>
       </select>
     </div>
 
+
     <div class="mb-3">
-      <label for="centro" class="form-label text-primary">Centro *</label>
-      <select class="form-select" id="centro" v-model="ticket.centro" required>
-        <option value="" disabled selected>Selecciona un centro</option>
-        <option v-for="centro in centros" :key="centro" :value="centro">{{ centro }}</option>
+      <label for="maquina" class="form-label text-primary">Maquina *</label>
+      <select class="form-select" id="maquina" v-model="incidencia.maquina" required @change="cargarEstados">
+        <option value="" disabled selected>Selecciona una Maquina</option>
+        <option v-for="maquina in maquinas" :key="maquina.id" :value="maquina.id">{{ maquina.codigo }} - {{ maquina.nombre }}</option>
       </select>
     </div>
 
-    <div class="mb-3">
-      <label for="estado" class="form-label text-primary">Estado *</label>
-      <select class="form-select" id="estado" v-model="ticket.estado" required>
-        <option value="" disabled selected>Selecciona un estado</option>
-        <option v-for="estado in estados" :key="estado" :value="estado">{{ estado }}</option>
-      </select>
+    <div class="mb-3" v-if="incidencia.maquina">
+        <label for="estado" class="form-label text-primary">Selecciona un estado</label>
+        <select class="form-select" id="estado" v-model="incidencia.estado" required>
+            <option :value="0">Parada</option>
+            <option :value="1">En marcha</option>
+            <option :value="2">Mantenimiento</option>
+        </select>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label text-primary">Prioridad *</label><br>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input text-primary" type="radio" id="alta" value="Alta" v-model="ticket.prioridad" required>
-        <label class="form-check-label text-primary" for="alta">Alta</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input text-primary" type="radio" id="media" value="Media" v-model="ticket.prioridad">
-        <label class="form-check-label text-primary" for="media">Media</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input text-primary" type="radio" id="baja" value="Baja" v-model="ticket.prioridad">
-        <label class="form-check-label text-primary" for="baja">Baja</label>
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary w-100" style="background-color: #512888; border-color: #512888;">Publicar Ticket</button>
+    
+    <button type="submit" class="btn btn-primary w-100" style="background-color: #512888; border-color: #512888;">Publicar Incidencia</button>
   </form>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
-      ticket: {
+      incidencia: {
         titulo: '',
         descripcion: '',
         categoria: '',
-        centro: '',
-        estado: '',
-        prioridad: ''
+        maquina: '',
+        estado: ''
       },
-      categorias: ['Hardware', 'Software', 'Red', 'Otro'],
-      centros: ['Centro 1', 'Centro 2', 'Centro 3'],
-      estados: ['Abierto', 'En proceso', 'Cerrado']
+      categorias: [],
+      maquinas: [],
+      estadosNumeros: {
+          0: 'Parada',
+          1: 'En marcha',
+          2: 'Mantenimiento'
+      },
+      estadoActualNombre: null
     };
   },
+  created() {
+    Promise.all([
+      axios.get('http://127.0.0.1:8000/api/categorias'),
+      axios.get('http://127.0.0.1:8000/api/maquinasTD')
+    ])
+    .then(responses => {
+      this.categorias = responses[0].data;
+      this.maquinas = responses[1].data;
+    })
+    .catch(error => {
+      console.error("Error al cargar datos iniciales:", error);
+    });
+  },
   methods: {
-    submitTicket() {
-      this.$emit('ticket-submitted', this.ticket);
+    cargarEstados() {
+        if (this.incidencia.maquina) {
+            axios.get(`http://127.0.0.1:8000/api/maquinas/${this.incidencia.maquina}/estados`)
+                .then(response => {
+                    const maquina = response.data;
+                    this.incidencia.estado = maquina.estado;
+                    this.estadoActualNombre = this.nombreEstado(this.incidencia.estado);
+                })
+                .catch(error => {
+                    console.error("Error al cargar el estado:", error);
+                    this.incidencia.estado = null;
+                    this.estadoActualNombre = 'Desconocido';
+                });
+        } else {
+            this.incidencia.estado = null;
+            this.estadoActualNombre = 'Desconocido';
+        }
+    },
+    nombreEstado(estadoNumero) {
+        return this.estadosNumeros[estadoNumero] || 'Desconocido';
+    },
+    async submitIncidencia() {
+      try {
+          const token = sessionStorage.getItem('token');
+          if (!token) {
+              throw new Error('No se encontró el token.');
+          }
 
-      // Reset the form fields after submitting
-      this.ticket = {
-        titulo: '',
-        descripcion: '',
-        categoria: '',
-        centro: '',
-        estado: '',
-        prioridad: ''
-      };
+          const response = await axios.post('http://127.0.0.1:8000/api/incidencias', this.incidencia, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              }
+          });
+
+          console.log("Incidencia creada:", response.data);
+          this.$emit('incidencia-submitted', response.data); // Emitir la respuesta completa
+
+          // Reiniciar formulario y mostrar mensaje de éxito
+          this.incidencia = {
+              titulo: '',
+              descripcion: '',
+              categoria: '',
+              maquina: '',
+              estado: '',
+          };
+          alert('Incidencia creada correctamente.');
+
+          // ... código para actualizar la lista de incidencias si es necesario ...
+
+      } catch (error) {
+          if (error.response) {
+              console.error('Error data:', error.response.data);
+              alert('Error al crear la incidencia: ' + error.response.data.message);
+          } else if (error.message === 'No se encontró el token.') {
+              alert('No has iniciado sesión. Por favor, inicia sesión para crear una incidencia.');
+              // ... redirige al login si es necesario ...
+          } else {
+              console.error('Error:', error.message);
+              alert('Error al crear la incidencia.');
+          }
+      }
     }
   }
 };
