@@ -87,7 +87,7 @@ export default {
         const customCodigo = ref('');
 
         const codigoMaquina = computed(() => {
-            return `${campusId.value}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-${customCodigo.value}`;
+            return `${campusId.value}${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}${customCodigo.value}`;
         });
 
         const toast = useToast();
