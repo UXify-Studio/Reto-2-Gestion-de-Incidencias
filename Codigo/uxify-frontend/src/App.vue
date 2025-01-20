@@ -1,52 +1,40 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
+import { ref, watch } from "vue";
 
-import Login from './views/Login.vue'
+import Header from "./components/Header.vue";
+import Sidebar from "./components/Sidebar.vue";
 
-import UserList from './components/UserList.vue';
+const route = useRoute();
+const router = useRouter();
+const showHeaderAndSidebar = ref(route.path !== '/login' && route.path !== '/');
+
+watch(route, (newRoute) => {
+  showHeaderAndSidebar.value = newRoute.path !== '/login' && newRoute.path !== '/';
+});
 </script>
 
 <template>
-  <!-- <UserList /> -->
-
-  <main class="form-signin">
-    <RouterView />
-  </main>
+  <div class="container-fluid p-0">
+    <Header v-if="showHeaderAndSidebar" />
+    <main class="d-flex">
+      <div class="row w-100 m-0">
+        <div class="col-2 p-0" v-if="showHeaderAndSidebar">
+          <Sidebar />
+        </div>
+        <div :class="showHeaderAndSidebar ? 'col-10 p-0' : 'col-12 p-0'">
+          <RouterView />
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
 
 <style scoped>
-.form-signin {
-  width: 100%;
-  max-width: 336px;
-  padding: 15px;
-  margin: auto;
+.container-fluid {
+  max-width: 100%;
 }
-
-.form-signin .checkbox {
-  font-weight: 400;
-}
-
-.form-signin .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form-signin .form-control:focus {
-  z-index: 2;
-}
-
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+.col-10, .col-12 {
+  padding-right: 0;
 }
 </style>

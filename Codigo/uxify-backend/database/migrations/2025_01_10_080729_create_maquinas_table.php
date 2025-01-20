@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('maquinas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('modelo');
+            $table->string('codigo_maquina');
             $table->integer('prioridad');
             $table->integer('estado');
 
-            $table->foreignId('id_section')->references('sections')->on('id')->onDelete('cascade');
+            $table->foreignId('id_section')->references('id')->on('sections')->onDelete('cascade');
+            $table->boolean('deshabilitado')->default(0);
 
             $table->timestamps();
         });

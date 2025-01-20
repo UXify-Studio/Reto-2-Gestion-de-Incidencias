@@ -13,6 +13,6 @@ class MaquinaSeeder extends Seeder
      */
     public function run(): void
     {
-        Maquina::factory(10)->create();
+        Maquina::factory(15)->create();
     }
 }

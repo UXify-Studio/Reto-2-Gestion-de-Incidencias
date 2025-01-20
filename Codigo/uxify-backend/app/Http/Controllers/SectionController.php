@@ -12,7 +12,8 @@ class SectionController extends Controller
      */
     public function index()
     {
-        //
+        $secciones = Section::all();
+        return response()->json($secciones);
     }
 
     /**
@@ -61,5 +62,11 @@ class SectionController extends Controller
     public function destroy(Section $seccion)
     {
         //
+    }
+
+    public function getSectionsByCampus($campus){
+        $seccionesPorCampus = Section::where('id_campus', $campus)->get();
+
+        return response()->json(['sections' => $seccionesPorCampus]);
     }
 }

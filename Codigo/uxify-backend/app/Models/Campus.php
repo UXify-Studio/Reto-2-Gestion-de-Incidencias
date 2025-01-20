@@ -19,6 +19,6 @@ class Campus extends Model
     ];
 
     public function sections(){
-        return $this->hasMany(Section::class);
+        return $this->hasMany(Section::class, 'id_campus');
     }
 }

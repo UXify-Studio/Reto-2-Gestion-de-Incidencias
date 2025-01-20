@@ -12,7 +12,8 @@ class CampusController extends Controller
      */
     public function index()
     {
-        //
+        $campus = Campus::all();
+        return response()->json($campus);
     }
 
     /**

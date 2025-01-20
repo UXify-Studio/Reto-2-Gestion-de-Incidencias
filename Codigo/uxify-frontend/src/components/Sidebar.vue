@@ -1,79 +1,149 @@
+<script>
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const showGestionSubmenu = ref(false);
+
+    const toggleGestionSubmenu = () => {
+      showGestionSubmenu.value = !showGestionSubmenu.value;
+    };
+
+    return {
+      showGestionSubmenu,
+      toggleGestionSubmenu,
+    };
+  },
+};
+</script>
+
 <template>
-    <aside class="sidebar">
-      <div class="user-info">
-        <img src="../assets/example.png" alt="Foto de perfil" class="profile-image">
-        <p class="user-name">Juan La Matina</p>
+  <div class="container-fluid bg-light border-end vh-100 height-100">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
+        <img src="../assets/example.png" alt="Foto de perfil"
+          class="profile-image rounded-circle mb-2 border border-secondary">
+        <p class="user-name text-primary fw-bold mb-4">Juan La Matina</p>
       </div>
-      <nav class="menu">
-         <router-link to="/" class="menu-item">
-           <i class="bi bi-house"><img src="../assets/Inicio.png"></i> Inicio
-         </router-link>
-        <router-link to="/incidencias" class="menu-item">
-          <i class="bi bi-exclamation-triangle"><img src="../assets/Incidencias.png"></i> Incidencias
+    </div>
+    <nav class="menu">
+      <router-link to="/home"
+        class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+        <div class="col-auto">
+          <i class="bi bi-house me-2">
+            <img src="../assets/Inicio.png" alt="Inicio" class="menu-icon">
+          </i>
+        </div>
+        <div class="col">
+          <span>Inicio</span>
+        </div>
+      </router-link>
+      <router-link to="/estadisticas"
+        class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+        <div class="col-auto">
+          <i class="bi bi-exclamation-triangle me-2">
+            <img src="../assets/Incidencias.png" alt="Estadisticas" class="menu-icon">
+          </i>
+        </div>
+        <div class="col">
+          <span>Estadisticas</span>
+        </div>
+      </router-link>
+      <router-link to="/tipos-de-activo"
+        class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+        <div class="col-auto">
+          <i class="bi bi-gear me-2">
+            <img src="../assets/Maquinas.png" alt="Tipos de activo" class="menu-icon">
+          </i>
+        </div>
+        <div class="col">
+          <span>Tipos de activo</span>
+        </div>
+      </router-link>
+      <div class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary cursor-pointer"
+        @click="toggleGestionSubmenu">
+        <div class="col-auto">
+          <i class="bi bi-list me-2">
+            <img src="../assets/Administracion.png" alt="Administración" class="menu-icon">
+          </i>
+        </div>
+        <div class="col">
+          <span>Administración</span>
+        </div>
+        <div class="col-auto">
+          <i :class="showGestionSubmenu ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+        </div>
+      </div>
+      <div v-if="showGestionSubmenu" class="submenu pl-4">
+        <router-link to="/gestion/users"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-person"></i>
+          </div>
+          <div class="col">
+            <span>Gestión de Usuarios</span>
+          </div>
         </router-link>
-        <router-link to="/tipos-de-activo" class="menu-item">
-          <i class="bi bi-gear"><img src="../assets/Maquinas.png"></i> Tipos de activo
+        <router-link to="/gestion/maquinas"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-cpu"></i>
+          </div>
+          <div class="col">
+            <span>Gestión de Máquinas</span>
+          </div>
         </router-link>
-        <router-link to="/administracion" class="menu-item">
-          <i class="bi bi-list"><img src="../assets/Administracion.png"></i> Administración
+        <router-link to="/gestion/categorias"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-tags"></i>
+          </div>
+          <div class="col">
+            <span>Gestión de Categorías</span>
+          </div>
         </router-link>
-        <router-link to="/ayuda" class="menu-item">
-          <i class="bi bi-question-circle"><img src="../assets/Ayuda.png"></i> Ayuda
+        <router-link to="/gestion/campus"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-building"></i>
+          </div>
+          <div class="col">
+            <span>Gestión de Campus</span>
+          </div>
         </router-link>
-      </nav>
-    </aside>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Sidebar',
-  };
-  </script>
-  
-  <style scoped>
-  .sidebar {
-  background-color: #F8F9FA;
-  color: blue;
-  width: 250px;
-  padding: 20px;
-  position: fixed;
-  top: 56px;
-  left: 0;
-  height: calc(100vh - 56px); /* Corregido: 100vh, no 1000vh */
-  overflow-y: auto;
-}
+        <router-link to="/gestion/secciones"
+          class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+          <div class="col-auto">
+            <i class="bi bi-diagram-3"></i>
+          </div>
+          <div class="col">
+            <span>Gestión de Secciones</span>
+          </div>
+        </router-link>
+      </div>
+      <router-link to="/ayuda"
+        class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
+        <div class="col-auto">
+          <i class="bi bi-question-circle me-2">
+            <img src="../assets/Ayuda.png" alt="Ayuda" class="menu-icon">
+          </i>
+        </div>
+        <div class="col">
+          <span>Ayuda</span>
+        </div>
+      </router-link>
+    </nav>
+  </div>
+</template>
 
-.sidebar .user-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+<style scoped>
+.sidebar {
+  width: 100%;
 }
-
-.sidebar .user-info .profile-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
+.menu-item {
+  cursor: pointer;
 }
-
-.sidebar .user-info .user-name {
-  font-weight: bold;
+.submenu {
+  padding-left: 1rem;
 }
-
-.sidebar .menu .menu-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-  color: #007BFF;
-  text-decoration: none;
-}
-
-.sidebar .menu .menu-item i {
-  margin-right: 10px;
-  font-size: 1.2rem;
-}
-
-.sidebar .menu .menu-item.router-link-active {
-  font-weight: bold;
-}
-  </style>
+</style>

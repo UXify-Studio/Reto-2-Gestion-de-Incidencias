@@ -18,11 +18,11 @@ class Section extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function campuses(){
-        return $this->belongsTo(Campus::class);
+    public function campus(){
+        return $this->belongsTo(Campus::class, 'id_campus');
     }
 
     public function maquinas(){
-        return $this->hasMany(Maquina::class);
+        return $this->hasMany(Maquina::class, 'id_section');
     }
 }

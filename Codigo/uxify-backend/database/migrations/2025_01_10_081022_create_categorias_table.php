@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('descripcion');
+            //$table->string('descripcion');
+            $table->boolean('deshabilitado')->default(0);
+          
             $table->timestamps();
         });
     }

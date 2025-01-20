@@ -7,10 +7,37 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index() {
-        $users = User::all();
+//    public function index() {
+//        $users = User::with('rol')->get();
+//        return response()->json($users);
+//    }
+
+//    public function index() {
+//        $users = User::with('rol')->paginate(12);
+//        return response()->json($users);
+//    }
+
+    public function index(Request $request) {
+        // Obtener el filtro de rol (si existe)
+        $role = $request->query('role');
+
+        // Comenzar la consulta para obtener usuarios con su rol
+        $query = User::with('rol');
+
+        // Filtrar por rol si se pasa el parámetro 'role'
+        if ($role) {
+            $query->whereHas('rol', function($q) use ($role) {
+                $q->where('nombre', $role); // Ajusta esto si estás filtrando por id en lugar de nombre
+            });
+        }
+
+        // Paginación de usuarios
+        $users = $query->paginate(7);
+
+        // Retornar los usuarios paginados en formato JSON
         return response()->json($users);
     }
+
 
     public function store(Request $request) {
         // Validar los datos del usuario
@@ -55,5 +82,55 @@ class UserController extends Controller
 
         // Retornar la respuesta en formato JSON con el token
         return response()->json(['token' => $token, 'user' => $user], 200);
+    }
+
+    public function countUsers() {
+        $usersTotal = User::count();
+        $usersAdmin = User::where('id_rol', 1)->count();
+        $usersTecnico = User::where('id_rol', 2)->count();
+        $usersOperario = User::where('id_rol', 3)->count();
+
+        return response()
+            ->json([
+                'total' => $usersTotal,
+                'admin' => $usersAdmin,
+                'tecnico' => $usersTecnico,
+                'operario' => $usersOperario,
+                ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'username' => 'sometimes|required|string|max:255|unique:users,username,' . $id,
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'sometimes|required|string|min:8',
+            'id_rol' => 'sometimes|required|integer|exists:roles,id',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->update($validatedData);
+
+        return response()->json($user, 200);
+    }
+
+    public function enable($id)
+    {
+        $user = User::findOrFail($id);
+        $user->deshabilitado = 0;
+        $user->save();
+
+        return response()->json(['message' => 'User enabled successfully'], 200);
+    }
+
+    public function disable($id)
+    {
+        $user = User::findOrFail($id);
+        $user->deshabilitado = 1;
+        $user->save();
+
+        return response()->json(['message' => 'User disabled successfully'], 200);
     }
 }

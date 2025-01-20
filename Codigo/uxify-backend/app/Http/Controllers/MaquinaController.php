@@ -10,9 +10,33 @@ class MaquinaController extends Controller
     /**
      * Display a listing of the resource.
      */
+//    public function index()
+//    {
+//        $maquinas = Maquina::with('section.campus')->get();
+//        return response()->json($maquinas);
+//    }
+
     public function index()
     {
-        //
+        $maquinas = Maquina::with('section.campus')->paginate(8); // Adjust the number of items per page as needed
+        return response()->json($maquinas);
+    }
+    public function getMaquinasTD(){
+        $maquinasTodas = Maquina::all();
+        return response()->json($maquinasTodas);
+    }
+    public function estdoMaquinaPorId(Request $request, $id)
+    {
+        try {
+            $maquina = Maquina::findOrFail($id);
+
+            // Devolver el estado directamente
+            return response()->json(['estado' => $maquina->estado], 200);
+
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el estado de la máquina: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -28,7 +52,29 @@ class MaquinaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'codigo' => 'required|string|max:255',
+                'prioridad' => 'required|integer',
+                'estado' => 'required|integer',
+                'id_section' => 'required|exists:sections,id',
+                'deshabilitado' => 'boolean'
+            ]);
+
+            $maquina = new Maquina();
+            $maquina->nombre = $request->nombre;
+            $maquina->codigo = $request->codigo;
+            $maquina->prioridad = $request->prioridad;
+            $maquina->estado = $request->estado;
+            $maquina->id_section = $request->id_section;
+            $maquina->deshabilitado = $request->deshabilitado ?? 0;
+            $maquina->save();
+
+            return response()->json(['message' => 'Maquina created successfully', 'maquina' => $maquina], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error creating Maquina: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -61,5 +107,20 @@ class MaquinaController extends Controller
     public function destroy(Maquina $maquina)
     {
         //
+    }
+
+    public function countMaquinas(){
+        $maquinasTotal = Maquina::count();
+        $maquinas1 = Maquina::where('prioridad', 1)->count();
+        $maquinas2 = Maquina::where('prioridad', 2)->count();
+        $maquinas3 = Maquina::where('prioridad', 3)->count();
+
+        return response()
+            ->json([
+                'total' => $maquinasTotal,
+                'prioridad1' => $maquinas1,
+                'prioridad2' => $maquinas2,
+                'prioridad3' => $maquinas3,
+            ]);
     }
 }

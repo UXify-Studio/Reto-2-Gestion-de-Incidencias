@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Section;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,8 +22,7 @@ class MaquinaFactory extends Factory
             'modelo' => $this->faker->word(),
             'prioridad' => $this->faker->randomElement([1, 2, 3]),
             'estado' => $this->faker->numberBetween(0, 1),
-            //'campus' => $this->faker->randomElement(['Nieves Cano', 'Arriaga', 'Jesus Obreros']),
-            //'id_section' => $this->faker->randomElement([1, 2, 3, 4]),
+            'id_section' => Section::pluck('id')->random(),
         ];
     }
 }

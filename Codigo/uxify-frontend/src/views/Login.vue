@@ -2,6 +2,8 @@
 import { reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     name: 'Login',
@@ -13,27 +15,31 @@ export default {
         });
 
         const router = useRouter();
+        const toast = useToast();
 
         const submit = async () => {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/auth/login', {
+                const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                     email: data.email,
                     password: data.password
                 });
                 const token = response.data.access_token;
-                const expiresIn = 3600; 
+                const expiresIn = 3600;
 
-                sessionStorage.setItem('token', token);
-                sessionStorage.setItem('token_expiration', Date.now() + expiresIn * 1000);
+                if (token != null) {
+                    sessionStorage.setItem('token', token);
+                    router.push('/home');
+                    toast.success('Login Exitoso', {
+                        position: 'top-right',
+                    });
+                }
 
                 setTimeout(() => {
                     sessionStorage.removeItem('token');
                     sessionStorage.removeItem('token_expiration');
-                    alert('Your session has expired. Please log in again.');
                     router.push({ path: '/' });
                 }, expiresIn * 1000);
 
-                alert('Login successful');
             } catch (error) {
                 if (error.response) {
                     console.error('Error data:', error.response.data);
@@ -54,42 +60,59 @@ export default {
 </script>
 
 <template>
-    <form @submit.prevent="submit">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
-        <div class="form-floating">
-            <input v-model="data.email" type="email" class="form-control" placeholder="Email">
+    <div class="d-flex justify-content-center align-items-center vh-100 login-bg">
+        <div class="container" style="max-width: 350px">
+            <div class="row justify-content-center">
+                <div class="col-12 rounded p-4 shadow form-container">
+                    <form @submit.prevent="submit">
+                        <div class="text-center mb-3">
+                            <div class="rounded-circle profile-image-container d-flex justify-content-center align-items-center">
+                                <img src="/src/assets/Login PFP.svg" alt="Profile" class="rounded-circle profile-image">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input v-model="data.email" type="email" class="form-control input-opaque"
+                                placeholder="Email">
+                        </div>
+                        <div class="mb-3">
+                            <input v-model="data.password" type="password" class="form-control input-opaque"
+                                placeholder="Contraseña">
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-purple-button w-100 py-2" type="submit">Iniciar Sesión</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-floating">
-            <input v-model="data.password" type="password" class="form-control" placeholder="Password">
-        </div>
-
-        <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-        <p class="mt-5 mb-3 text-body-secondary">&copy; 2017-2024</p>
-    </form>
+    </div>
 </template>
 
 <style scoped>
-.form-control {
-    color: black;
-    background-color: white;
+.login-bg {
+    background: linear-gradient(to bottom, #A855F7 0%, #6B21A8 100%);
 }
 
-.form-floating {
-    margin-bottom: 1rem;
+.form-container {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.form-control::placeholder {
-    color: #6c757d;
+.profile-image-container {
+    width: 70px;
+    height: 70px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: auto;
 }
 
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+.profile-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+.input-opaque {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
 }
 </style>

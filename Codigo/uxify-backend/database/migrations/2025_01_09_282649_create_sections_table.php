@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('n_seccion');
 
             $table->foreignId('id_campus')->references('id')->on('campuses')->onDelete('cascade');
+            $table->boolean('deshabilitado')->default(0);
 
             $table->timestamps();
         });

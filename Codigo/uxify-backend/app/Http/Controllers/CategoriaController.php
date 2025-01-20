@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Incidencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoriaController extends Controller
 {
@@ -12,7 +14,8 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        //
+        $categorias = Categoria::all();
+        return response()->json($categorias);
     }
 
     /**
@@ -61,5 +64,29 @@ class CategoriaController extends Controller
     public function destroy(Categoria $categoria)
     {
         //
+    }
+
+    public function getIncidenciasPorPrioridad()
+    {
+        $result = DB::table('incidencias as i')
+            ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
+            ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
+            ->select('c.nombre as nombre', 'm.prioridad', DB::raw('COUNT(*) as cantidad_incidencias'))
+            ->groupBy('c.nombre', 'm.prioridad')
+            ->orderBy('c.nombre')
+            ->orderBy('m.prioridad')
+            ->get();
+
+        if ($result) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
     }
 }
