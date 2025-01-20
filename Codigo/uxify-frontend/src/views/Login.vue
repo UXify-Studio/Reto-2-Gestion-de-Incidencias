@@ -18,7 +18,7 @@ export default {
 
         const submit = async () => {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/auth/login', {
+                const response = await axios.post('http://172.20.228.130:8000/api/auth/login', {
                     email: data.email,
                     password: data.password
                 });
