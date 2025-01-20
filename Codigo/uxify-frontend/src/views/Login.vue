@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     name: 'Login',
@@ -18,7 +19,7 @@ export default {
 
         const submit = async () => {
             try {
-                const response = await axios.post('http://172.20.228.130:8000/api/auth/login', {
+                const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                     email: data.email,
                     password: data.password
                 });

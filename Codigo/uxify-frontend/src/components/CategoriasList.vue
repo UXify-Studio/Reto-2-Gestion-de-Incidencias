@@ -1,6 +1,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     setup() {
@@ -8,7 +9,7 @@ export default {
 
         onMounted(async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/categorias');
+                const response = await axios.get(`${API_BASE_URL}/categorias`);
                 categorias.value = response.data;
             } catch (error) {
                 console.error('Error al obtener las categorías:', error);

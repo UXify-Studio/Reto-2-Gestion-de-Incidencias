@@ -61,7 +61,7 @@ export default {
 
         const fetchMachines = async (page = 1) => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/maquinas?page=${page}`);
+                const response = await axios.get(`${API_BASE_URL}/maquinas?page=${page}`);
                 machines.value = response.data.data;
                 pagination.current_page = response.data.current_page;
                 pagination.last_page = response.data.last_page;

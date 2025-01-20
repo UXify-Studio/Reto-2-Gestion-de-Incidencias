@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     data() {
@@ -8,7 +9,7 @@ export default {
         };
     },
     created() {
-        axios.get('http://127.0.0.1:8000/api/usersTotal')
+        axios.get(`${API_BASE_URL}/usersTotal`)
             .then(response => {
                 this.usersTotal = response.data;
             })

@@ -35,6 +35,7 @@ import { ref, reactive, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import Modal from '@/components/Modal.vue';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     components: {
@@ -104,7 +105,7 @@ export default {
                     throw new Error('No token found');
                 }
                 if (isRegisterMode.value) {
-                    await axios.post('http://127.0.0.1:8000/api/auth/register', {
+                    await axios.post(`${API_BASE_URL}/auth/register`, {
                         name: data.name,
                         username: data.username,
                         email: data.email,
@@ -118,7 +119,7 @@ export default {
                     });
                     toast.success('Registro exitoso');
                 } else {
-                    await axios.put(`http://127.0.0.1:8000/api/users/${data.id}`, {
+                    await axios.put(`${API_BASE_URL}/users/${data.id}`, {
                         name: data.name,
                         username: data.username,
                         email: data.email,
@@ -158,7 +159,7 @@ export default {
         };
     },
     created() {
-        axios.get('http://127.0.0.1:8000/api/roles')
+        axios.get(`${API_BASE_URL}/roles`)
             .then(response => {
                 this.roles = response.data;
             })

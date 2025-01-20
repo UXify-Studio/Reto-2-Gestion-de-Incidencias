@@ -28,6 +28,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 export default {
   name: 'IncidenciasPorCategoria',
@@ -61,7 +62,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://127.0.0.1:8000/api/categorias/prioridad')
+    axios.get(`${API_BASE_URL}/categorias/prioridad`)
       .then(response => {
         this.incidencias = response.data;
       })
