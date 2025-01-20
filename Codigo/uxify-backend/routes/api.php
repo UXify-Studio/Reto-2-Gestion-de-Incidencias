@@ -39,13 +39,13 @@ Route::controller(SectionController::class)->group(function () {
 
 Route::controller(IncidenciaController::class)->group(function () {
     Route::get('/incidencias', [IncidenciaController::class, 'index']);
+    Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
+    Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
 });
 
 Route::get('/roles', [RolController::class, 'index']);
 
 Route::get('categorias/prioridad', [CategoriaController::class, 'getIncidenciasPorPrioridad']);
-
-Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
 
 Route::controller(AuthController::class)->prefix('auth')->group(function()  {
     Route::post('login', 'login');

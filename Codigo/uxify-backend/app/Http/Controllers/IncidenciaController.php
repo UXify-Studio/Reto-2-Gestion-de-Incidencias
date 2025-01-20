@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Incidencia;
+use App\Models\Mantenimiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\containsOnly;
 
 class IncidenciaController extends Controller
 {
@@ -79,6 +81,60 @@ class IncidenciaController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
+    }
+
+    public function countIncidenciasPorPrioridad(){
+        /*
+        $result = DB::table('incidencias as inc');
+        $result->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id');
+        $result->select('inc.*');
+        $result->where('maq.prioridad', '=', 1);
+        $result->get();
+        */
+
+        $mantenimientos = Mantenimiento::count();
+        $incidenciasResueltas = Incidencia::where('resuelta', 1)->count();
+        $incidenciasAltas = 0;
+        $incidenciasMedias = 0;
+        $incidenciasBajas = 0;
+
+        for ($i = 1; $i <= 3; $i++) {
+            $result = DB::table('incidencias as inc')
+                ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
+                ->select('*')
+                ->where('maq.prioridad', $i)
+                ->count();
+
+            switch ($i){
+                case 1:
+                    $incidenciasAltas = $result;
+                    break;
+                case 2:
+                    $incidenciasMedias = $result;
+                    break;
+                case 3:
+                    $incidenciasBajas = $result;
+                    break;
+            }
+        }
+
+        if ($result > 0 ) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'alta' => $incidenciasAltas,
+                    'media' => $incidenciasMedias,
+                    'baja' => $incidenciasBajas,
+                    'resueltas' => $incidenciasResueltas,
+                    'mantenimientos' => $mantenimientos
+                ]
             ]);
         }
 

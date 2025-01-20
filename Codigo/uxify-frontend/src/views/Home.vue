@@ -1,15 +1,18 @@
 <script>
 import SelectCampus from '../components/SelectCampus.vue';
+import CuadrosDatos from '../components/CuadrosDatos.vue';
 
 export default {
   name: 'Home',
   components: {
-    SelectCampus, // Registra el componente aquí
+    SelectCampus,
+    CuadrosDatos,
+
   },
 };
 </script>
 
 <template>
-    <h1>PRUEBA</h1>
+    <CuadrosDatos />
     <SelectCampus />
 </template>
