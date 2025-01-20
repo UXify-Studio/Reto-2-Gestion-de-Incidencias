@@ -62,7 +62,7 @@ export default {
 
         const fetchUsers = async (page = 1) => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/users?page=${page}`);
+                const response = await axios.get(`${API_BASE_URL}/users?page=${page}`);
                 users.value = response.data.data;
                 pagination.current_page = response.data.current_page;
                 pagination.last_page = response.data.last_page;
@@ -79,8 +79,8 @@ export default {
                     throw new Error('No token found');
                 }
                 const url = user.deshabilitado === 0
-                    ? `http://127.0.0.1:8000/api/users/${user.id}/disable`
-                    : `http://127.0.0.1:8000/api/users/${user.id}/enable`;
+                    ? `${API_BASE_URL}/users/${user.id}/disable`
+                    : `${API_BASE_URL}/users/${user.id}/enable`;
                 await axios.put(url, {}, {
                     headers: {
                         'Content-Type': 'application/json',

@@ -32,6 +32,7 @@ import { ref, reactive, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import Modal from '@/components/Modal.vue';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     components: {
@@ -99,7 +100,7 @@ export default {
                     throw new Error('No token found');
                 }
                 if (isRegisterMode.value) {
-                    await axios.post('http://127.0.0.1:8000/api/machines', {
+                    await axios.post(`${API_BASE_URL}/machines`, {
                         name: data.name,
                         type: data.type,
                         location: data.location,
@@ -112,7 +113,7 @@ export default {
                     });
                     toast.success('Registro exitoso');
                 } else {
-                    await axios.put(`http://127.0.0.1:8000/api/machines/${data.id}`, {
+                    await axios.put(`${API_BASE_URL}/machines/${data.id}`, {
                         name: data.name,
                         type: data.type,
                         location: data.location,
