@@ -12,7 +12,8 @@ class SectionController extends Controller
      */
     public function index()
     {
-        //
+        $secciones = Section::all();
+        return response()->json($secciones);
     }
 
     /**
