@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Incidencia;
 use App\Models\Mantenimiento;
+use App\Models\Maquina;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\containsOnly;
 
 class IncidenciaController extends Controller
 {
@@ -36,6 +36,12 @@ class IncidenciaController extends Controller
             'success' => false,
             'message' => 'No se encontraron incidencias.'
         ], 404);
+
+    }
+
+    public function index2(){
+        $incidencias = Incidencia::all();
+        return response()->json($incidencias);
     }
 
     /**
@@ -51,7 +57,29 @@ class IncidenciaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        try {
+            $validatedData = $request->validate([
+                'titulo' => 'required|string',
+                'descripcion' => 'required|string',
+                'categoria' => 'required|integer', // O el tipo de dato que corresponda
+                'maquina' => 'required|integer',
+                'estado' => 'required|integer'
+            ]);
+
+            $incidencia = Incidencia::create($validatedData);
+
+            // Actualizar el estado de la máquina
+            $maquina = Maquina::findOrFail($request->maquina);
+            $maquina->estado = $request->estado;
+            $maquina->save();
+
+
+
+            return response()->json(['message' => 'Incidencia creada correctamente', 'incidencia' => $incidencia], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al crear la incidencia: ' . $e->getMessage()], 500);
+        }
     }
 
     /**

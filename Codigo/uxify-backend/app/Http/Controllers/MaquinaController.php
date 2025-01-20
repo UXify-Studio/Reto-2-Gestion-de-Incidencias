@@ -21,6 +21,23 @@ class MaquinaController extends Controller
         $maquinas = Maquina::with('section.campus')->paginate(8); // Adjust the number of items per page as needed
         return response()->json($maquinas);
     }
+    public function getMaquinasTD(){
+        $maquinasTodas = Maquina::all();
+        return response()->json($maquinasTodas);
+    }
+    public function estdoMaquinaPorId(Request $request, $id)
+    {
+        try {
+            $maquina = Maquina::findOrFail($id);
+
+            // Devolver el estado directamente
+            return response()->json(['estado' => $maquina->estado], 200);
+
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el estado de la máquina: ' . $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.
