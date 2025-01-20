@@ -66,8 +66,8 @@ export default {
   },
   created() {
     Promise.all([
-      axios.get('http://127.0.0.1:8000/api/categorias'),
-      axios.get('http://127.0.0.1:8000/api/maquinasTD')
+      axios.get(`${API_BASE_URL}/categorias`),
+      axios.get(`${API_BASE_URL}/maquinasTD`)
     ])
     .then(responses => {
       this.categorias = responses[0].data;
@@ -80,7 +80,7 @@ export default {
   methods: {
     cargarEstados() {
         if (this.incidencia.maquina) {
-            axios.get(`http://127.0.0.1:8000/api/maquinas/${this.incidencia.maquina}/estados`)
+            axios.get(`${API_BASE_URL}/maquinas/${this.incidencia.maquina}/estados`)
                 .then(response => {
                     const maquina = response.data;
                     this.incidencia.estado = maquina.estado;
@@ -106,7 +106,7 @@ export default {
               throw new Error('No se encontró el token.');
           }
 
-          const response = await axios.post('http://127.0.0.1:8000/api/incidencias', this.incidencia, {
+          const response = await axios.post(`${API_BASE_URL}/incidencias`, this.incidencia, {
               headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${token}`

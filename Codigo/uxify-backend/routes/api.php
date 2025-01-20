@@ -40,7 +40,7 @@ Route::controller(SectionController::class)->group(function () {
 });
 
 Route::controller(IncidenciaController::class)->group(function () {
-    Route::get('/incidencias', [IncidenciaController::class, 'index2']);
+    Route::get('/incidencias', [IncidenciaController::class, 'index']);
     Route::post('/incidencias', [IncidenciaController::class, 'store']);
     Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
     Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
