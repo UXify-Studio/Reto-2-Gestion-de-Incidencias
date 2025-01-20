@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Incidencia;
+use App\Models\Mantenimiento;
 use App\Models\Maquina;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,31 @@ class IncidenciaController extends Controller
      */
     public function index()
     {
+        $result = DB::table('incidencias as i')
+            ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
+            ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
+            ->select('i.*', 'm.prioridad', 'm.estado as gravedad_incidencia', 'm.nombre as nombre_maquina', 'c.nombre as categoria')
+            ->where('resuelta', 0)
+            ->orderBy('m.estado', 'desc')
+            ->orderBy('m.prioridad', 'asc')
+            ->orderBy('i.fecha_creacion', 'desc')
+            ->get();
+
+        if ($result->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
+
+    }
+
+    public function index2(){
         $incidencias = Incidencia::all();
         return response()->json($incidencias);
     }
@@ -102,6 +128,53 @@ class IncidenciaController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
+    }
+
+    public function countIncidenciasPorPrioridad(){
+
+        $mantenimientos = Mantenimiento::count();
+        $incidenciasResueltas = Incidencia::where('resuelta', 1)->count();
+        $incidenciasAltas = 0;
+        $incidenciasMedias = 0;
+        $incidenciasBajas = 0;
+
+        for ($i = 1; $i <= 3; $i++) {
+            $result = DB::table('incidencias as inc')
+                ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
+                ->select('*')
+                ->where('maq.prioridad', $i)
+                ->count();
+
+            switch ($i){
+                case 1:
+                    $incidenciasAltas = $result;
+                    break;
+                case 2:
+                    $incidenciasMedias = $result;
+                    break;
+                case 3:
+                    $incidenciasBajas = $result;
+                    break;
+            }
+        }
+
+        if ($result > 0 ) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'alta' => $incidenciasAltas,
+                    'media' => $incidenciasMedias,
+                    'baja' => $incidenciasBajas,
+                    'resueltas' => $incidenciasResueltas,
+                    'mantenimientos' => $mantenimientos
+                ]
             ]);
         }
 
