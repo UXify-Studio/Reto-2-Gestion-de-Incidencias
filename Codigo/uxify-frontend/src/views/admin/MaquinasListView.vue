@@ -29,6 +29,7 @@ import { ref, reactive } from 'vue';
 import CuadroDatosMaquinas from '@/components/CuadrosDatosMaquinas.vue';
 import MachineList from '@/components/MaquinasListC.vue';
 import MachineModal from '@/components/MachineModal.vue';
+import { API_BASE_URL } from '@/config.js';
 import axios from 'axios';
 
 export default {
