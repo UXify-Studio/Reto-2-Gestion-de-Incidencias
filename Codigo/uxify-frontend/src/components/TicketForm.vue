@@ -99,38 +99,47 @@ export default {
     nombreEstado(estadoNumero) {
         return this.estadosNumeros[estadoNumero] || 'Desconocido';
     },
-    submitIncidencia() {
-      console.log("Incidencia a enviar:", this.incidencia);
-      const token = sessionStorage.getItem('token');
-      axios.post('http://127.0.0.1:8000/api/incidencias', this.incidencia) // Ruta de tu API para crear incidencias
-        .then(response => {
+    async submitIncidencia() {
+      try {
+          const token = sessionStorage.getItem('token');
+          if (!token) {
+              throw new Error('No se encontró el token.');
+          }
+
+          const response = await axios.post('http://127.0.0.1:8000/api/incidencias', this.incidencia, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              }
+          });
+
           console.log("Incidencia creada:", response.data);
-          this.$emit('incidencia-submitted', this.incidencia); // Emitir el evento después de guardar en la BD  
+          this.$emit('incidencia-submitted', response.data); // Emitir la respuesta completa
 
-          // Reiniciar el formulario después del éxito
+          // Reiniciar formulario y mostrar mensaje de éxito
           this.incidencia = {
-            titulo: '',
-            descripcion: '',
-            categoria: '',
-            maquina: '',
-            estado: '',
-            prioridad: '' // Asegúrate de incluir todos los campos
-          },{
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
+              titulo: '',
+              descripcion: '',
+              categoria: '',
+              maquina: '',
+              estado: '',
           };
-
-          // Opcional: mostrar un mensaje de éxito al usuario
           alert('Incidencia creada correctamente.');
 
-        })
-        .catch(error => {
-          console.error("Error al crear la incidencia:", error);
-          // Opcional: mostrar un mensaje de error al usuario
-          alert('Error al crear la incidencia. Por favor, inténtalo de nuevo.');
-        });
+          // ... código para actualizar la lista de incidencias si es necesario ...
+
+      } catch (error) {
+          if (error.response) {
+              console.error('Error data:', error.response.data);
+              alert('Error al crear la incidencia: ' + error.response.data.message);
+          } else if (error.message === 'No se encontró el token.') {
+              alert('No has iniciado sesión. Por favor, inicia sesión para crear una incidencia.');
+              // ... redirige al login si es necesario ...
+          } else {
+              console.error('Error:', error.message);
+              alert('Error al crear la incidencia.');
+          }
+      }
     }
   }
 };
