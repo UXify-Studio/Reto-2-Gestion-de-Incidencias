@@ -9,7 +9,7 @@ export default {
         };
     },
     created() {
-        axios.get('http://127.0.0.1:8000/api/campus')
+        axios.get('http://172.20.228.130:8000/api/campus')
             .then(response => {
                 this.campuses = response.data;
             })
