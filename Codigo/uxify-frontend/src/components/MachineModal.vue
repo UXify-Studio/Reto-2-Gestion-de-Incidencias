@@ -3,40 +3,38 @@
         <form @submit.prevent="submit">
             <div class="mb-3">
                 <label for="campus" class="form-label">Campus</label>
-                <SelectCampus @campus-selected="handleCampusSelected" @section-selected="handleSectionSelected"
-                    :selected-campus="campusId" :selected-section="sectionId" />
+                <SelectCampus @campus-selected="handleCampusSelected" @section-selected="handleSectionSelected" />
             </div>
             <div class="mb-3">
                 <label for="codigo_maquina" class="form-label">Código de la Máquina</label>
                 <div class="codigo-maquina-wrapper">
                     <span class="codigo-maquina-prefix">
-                        {{ campusId || "0" }}-{{ sectionId.padStart(3, '0') || "000" }}-
+                        {{ campusId || "0" }}-{{ sectionId ? sectionId.padStart(3, '0') : "000" }}-
                     </span>
                     <input type="text" class="form-control codigo-maquina-input" id="codigo_maquina"
                         v-model="customCodigo" placeholder="000" maxlength="3" @input="validateCustomCodigo" />
                 </div>
-
             </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre de la Máquina</label>
-                <input type="text" class="form-control" id="name" v-model="data.name" required />
+                <input type="text" class="form-control" id="name" v-model="data.nombre" required>
             </div>
             <div class="mb-3">
                 <label for="prioridad" class="form-label">Prioridad</label>
                 <select v-model="data.prioridad" class="form-control" required>
                     <option disabled value="">Seleccione una prioridad</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
-                    <option value="Baja">Baja</option>
+                    <option value="1">Alta</option>
+                    <option value="2">Media</option>
+                    <option value="3">Baja</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="estado" class="form-label">Estado</label>
                 <select v-model="data.estado" class="form-control" required>
                     <option disabled value="">Seleccione un estado</option>
-                    <option value="Operativa">Operativa</option>
-                    <option value="En Mantenimiento">En Mantenimiento</option>
-                    <option value="Fuera de Servicio">Fuera de Servicio</option>
+                    <option value="1">Operativa</option>
+                    <option value="2">En Mantenimiento</option>
+                    <option value="3">Fuera de Servicio</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">{{ isRegisterMode ? 'Registrar' : 'Actualizar' }}</button>
@@ -45,7 +43,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 import Modal from '@/components/Modal.vue';
 import SelectCampus from '@/components/SelectCampus.vue';
@@ -58,46 +56,81 @@ export default {
         SelectCampus
     },
     props: {
-        show: Boolean,
-        mode: String,
-        machine: Object
+        show: {
+            type: Boolean,
+            required: true
+        },
+        mode: {
+            type: String,
+            required: true
+        },
+        machine: {
+            type: Object,
+            default: () => ({})
+        }
     },
     setup(props, { emit }) {
         const isRegisterMode = ref(props.mode === 'register');
-        const modalTitle = computed(() =>
-            isRegisterMode.value ? 'Registro de Nueva Máquina' : 'Editar Máquina'
-        );
-
+        const modalTitle = ref(isRegisterMode.value ? 'Registro de Nueva Máquina' : 'Editar Máquina');
         const data = reactive({
             id: null,
-            name: '',
+            nombre: '',
+            codigo: '',
             prioridad: '',
             estado: '',
-            id_section: ''
+            id_section: '',
+            deshabilitado: false
         });
 
         const campusId = ref('');
         const sectionId = ref('');
         const customCodigo = ref('');
 
+        const codigoMaquina = computed(() => {
+            return `${campusId.value}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-${customCodigo.value}`;
+        });
+
         const toast = useToast();
 
-        watch(
-            () => props.machine,
-            (newMachine) => {
-                if (newMachine) {
-                    const [campus, section, custom] = newMachine.codigo_maquina.split('-');
-                    campusId.value = campus || 'X';
-                    sectionId.value = section || 'XXX';
-                    customCodigo.value = custom || '';
-                    data.name = newMachine.name || '';
-                    data.prioridad = newMachine.prioridad || '';
-                    data.estado = newMachine.estado || '';
-                    data.id_section = newMachine.id_section || '';
-                }
-            },
-            { immediate: true }
-        );
+        watch(() => props.machine, (newMachine) => {
+            if (newMachine) {
+                data.id = newMachine.id;
+                data.nombre = newMachine.nombre;
+                data.codigo = newMachine.codigo;
+                data.prioridad = newMachine.prioridad;
+                data.estado = newMachine.estado;
+                data.id_section = newMachine.id_section;
+                data.deshabilitado = newMachine.deshabilitado;
+
+                const [campus, section, custom] = newMachine.codigo.split('-');
+                campusId.value = campus;
+                sectionId.value = section;
+                customCodigo.value = custom;
+            }
+        }, { immediate: true });
+
+        watch(() => props.mode, (newMode) => {
+            isRegisterMode.value = newMode === 'register';
+            modalTitle.value = isRegisterMode.value ? 'Registro de Nueva Máquina' : 'Editar Máquina';
+        });
+
+        const resetForm = () => {
+            data.id = null;
+            data.nombre = '';
+            data.codigo = '';
+            data.prioridad = '';
+            data.estado = '';
+            data.id_section = '';
+            data.deshabilitado = false;
+            campusId.value = '';
+            sectionId.value = '';
+            customCodigo.value = '';
+        };
+
+        const close = () => {
+            emit('close');
+            resetForm();
+        };
 
         const handleCampusSelected = (id) => {
             campusId.value = id;
@@ -109,44 +142,85 @@ export default {
         };
 
         const validateCustomCodigo = () => {
-            // Solo números y máximo de 3 caracteres
-            customCodigo.value = customCodigo.value.replace(/\D/g, '').slice(0, 3);
+            customCodigo.value = customCodigo.value.replace(/[^0-9]/g, '').slice(0, 3);
         };
-
 
         const submit = async () => {
             try {
                 const token = sessionStorage.getItem('token');
-                data.codigo_maquina = `${campusId.value || 'X'}-${sectionId.value.padStart(3, '0')}-${customCodigo.value || '000'}`;
+                if (!token) {
+                    throw new Error('No se encontró el token.');
+                }
+                data.codigo = codigoMaquina.value;
+
+                // Verificar los datos antes de enviar
+                console.log('Datos enviados:', {
+                    nombre: data.nombre,
+                    codigo: data.codigo,
+                    prioridad: data.prioridad,
+                    estado: data.estado,
+                    id_section: data.id_section,
+                    deshabilitado: data.deshabilitado
+                });
+
                 if (isRegisterMode.value) {
-                    await axios.post(`${API_BASE_URL}/machines`, { ...data }, {
-                        headers: { Authorization: `Bearer ${token}` }
+                    await axios.post(`${API_BASE_URL}/maquinas`, {
+                        nombre: data.nombre,
+                        codigo: data.codigo,
+                        prioridad: data.prioridad,
+                        estado: data.estado,
+                        id_section: data.id_section,
+                        deshabilitado: data.deshabilitado
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
-                    toast.success('Máquina registrada correctamente');
+                    toast.success('Registro exitoso');
                 } else {
-                    await axios.put(`${API_BASE_URL}/machines/${data.id}`, { ...data }, {
-                        headers: { Authorization: `Bearer ${token}` }
+                    await axios.put(`${API_BASE_URL}/maquinas/${data.id}`, {
+                        nombre: data.nombre,
+                        codigo: data.codigo,
+                        prioridad: data.prioridad,
+                        estado: data.estado,
+                        id_section: data.id_section,
+                        deshabilitado: data.deshabilitado
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
-                    toast.success('Máquina actualizada correctamente');
+                    toast.success('Actualización exitosa');
                 }
                 emit('update-machines');
-                emit('close');
+                close();
             } catch (error) {
-                toast.error('Error al guardar la máquina');
+                if (error.response) {
+                    console.error('Error data:', error.response.data);
+                    alert('Error al registrar la máquina: ' + error.response.data.message);
+                } else if (error.message === 'No se encontró el token.') {
+                    alert('No has iniciado sesión. Por favor, inicia sesión para registrar una máquina.');
+                    // ... redirige al login si es necesario ...
+                } else {
+                    console.error('Error:', error.message);
+                    alert('Error al registrar la máquina.');
+                }
             }
         };
 
         return {
-            modalTitle,
             isRegisterMode,
+            modalTitle,
             data,
-            campusId,
-            sectionId,
-            customCodigo,
+            submit,
+            close,
             handleCampusSelected,
             handleSectionSelected,
-            validateCustomCodigo,
-            submit
+            codigoMaquina,
+            customCodigo,
+            validateCustomCodigo
         };
     }
 };

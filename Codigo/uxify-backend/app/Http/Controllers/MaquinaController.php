@@ -52,7 +52,29 @@ class MaquinaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'codigo' => 'required|string|max:255',
+                'prioridad' => 'required|integer',
+                'estado' => 'required|integer',
+                'id_section' => 'required|exists:sections,id',
+                'deshabilitado' => 'boolean'
+            ]);
+
+            $maquina = new Maquina();
+            $maquina->nombre = $request->nombre;
+            $maquina->codigo = $request->codigo;
+            $maquina->prioridad = $request->prioridad;
+            $maquina->estado = $request->estado;
+            $maquina->id_section = $request->id_section;
+            $maquina->deshabilitado = $request->deshabilitado ?? 0;
+            $maquina->save();
+
+            return response()->json(['message' => 'Maquina created successfully', 'maquina' => $maquina], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error creating Maquina: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
