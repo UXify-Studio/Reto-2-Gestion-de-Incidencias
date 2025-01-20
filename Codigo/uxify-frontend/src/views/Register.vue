@@ -53,6 +53,7 @@
   import { ref, reactive } from 'vue';
   import { useToast } from 'vue-toastification';
   import axios from 'axios';
+  import { API_BASE_URL } from '@/config.js';
   
   export default {
     setup() {
@@ -74,7 +75,7 @@
           if (!token) {
             throw new Error('No token found');
           }
-          await axios.post('http://127.0.0.1:8000/api/auth/register', {
+          await axios.post(`${API_BASE_URL}/auth/register`, {
             name: data.name,
             username: data.username,
             email: data.email,
@@ -111,7 +112,7 @@
       };
     },
     created() {
-      axios.get('http://127.0.0.1:8000/api/roles')
+      axios.get(`${API_BASE_URL}/roles`)
         .then(response => {
           this.roles = response.data;
         })

@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 import { ref } from 'vue';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     props: {
@@ -13,7 +14,7 @@ export default {
 
         const fetchMaquinas = async (page = 1) => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/maquinas?page=${page}`);
+                const response = await axios.get(`${API_BASE_URL}/maquinas?page=${page}`);
                 maquinas.value = response.data.data;
                 currentPage.value = response.data.current_page;
                 totalPages.value = response.data.last_page;

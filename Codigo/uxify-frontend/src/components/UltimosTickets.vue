@@ -35,6 +35,8 @@
 <script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
+
 export default {
   name: 'UltimosTickets',
   data() {
@@ -43,7 +45,7 @@ export default {
         };
     },
     created() {
-        axios.get('http://127.0.0.1:8000/api/incidencias/latest')
+        axios.get(`${API_BASE_URL}/incidencias/latest`)
             .then(response => {
               this.incidencias = response.data.data;
             })

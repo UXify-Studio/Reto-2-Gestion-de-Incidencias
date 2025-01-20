@@ -86,6 +86,7 @@
 
 <script>
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     name: 'UserList',
@@ -121,7 +122,7 @@ export default {
     },
     methods: {
         fetchUsers(page = 1) {
-            let url = `http://127.0.0.1:8000/api/users?page=${page}`;
+            let url = `${API_BASE_URL}/users?page=${page}`;
 
             // Si hay un rol seleccionado, añadirlo como parámetro de la URL
             if (this.selectedRole) {

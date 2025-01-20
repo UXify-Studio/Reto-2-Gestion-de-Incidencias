@@ -2,27 +2,24 @@
     <Modal :show="show" :title="modalTitle" @close="close">
         <form @submit.prevent="submit">
             <div class="mb-3">
-                <label for="name" class="form-label">Nombre</label>
+                <label for="name" class="form-label">Nombre de la Máquina</label>
                 <input type="text" class="form-control" id="name" v-model="data.name" required>
             </div>
             <div class="mb-3">
-                <label for="username" class="form-label">Nombre de Usuario</label>
-                <input type="text" class="form-control" id="username" v-model="data.username" required>
+                <label for="type" class="form-label">Tipo</label>
+                <input type="text" class="form-control" id="type" v-model="data.type" required>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" v-model="data.email" required>
+                <label for="location" class="form-label">Ubicación</label>
+                <input type="text" class="form-control" id="location" v-model="data.location" required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" v-model="data.password"
-                    :required="isRegisterMode">
-            </div>
-            <div class="mb-3">
-                <label for="role" class="form-label">Rol</label>
-                <select v-model="data.id_rol" class="form-control" required>
-                    <option disabled value="">Seleccione un rol</option>
-                    <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.nombre }}</option>
+                <label for="status" class="form-label">Estado</label>
+                <select v-model="data.status" class="form-control" required>
+                    <option disabled value="">Seleccione un estado</option>
+                    <option value="Operativa">Operativa</option>
+                    <option value="En Mantenimiento">En Mantenimiento</option>
+                    <option value="Fuera de Servicio">Fuera de Servicio</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">{{ isRegisterMode ? 'Registrar' : 'Actualizar' }}</button>
@@ -50,47 +47,45 @@ export default {
             type: String,
             required: true
         },
-        user: {
+        machine: {
             type: Object,
             default: () => ({})
         }
     },
     setup(props, { emit }) {
         const isRegisterMode = ref(props.mode === 'register');
-        const modalTitle = ref(isRegisterMode.value ? 'Registro de Nuevo Usuario' : 'Editar Usuario');
+        const modalTitle = ref(isRegisterMode.value ? 'Registro de Nueva Máquina' : 'Editar Máquina');
         const data = reactive({
             id: null,
             name: '',
-            username: '',
-            email: '',
-            password: '',
-            id_rol: ''
+            type: '',
+            location: '',
+            status: ''
         });
 
         const toast = useToast();
 
-        watch(() => props.user, (newUser) => {
-            if (newUser) {
-                data.id = newUser.id;
-                data.name = newUser.name;
-                data.username = newUser.username;
-                data.email = newUser.email;
-                data.id_rol = newUser.id_rol;
+        watch(() => props.machine, (newMachine) => {
+            if (newMachine) {
+                data.id = newMachine.id;
+                data.name = newMachine.name;
+                data.type = newMachine.type;
+                data.location = newMachine.location;
+                data.status = newMachine.status;
             }
         }, { immediate: true });
 
         watch(() => props.mode, (newMode) => {
             isRegisterMode.value = newMode === 'register';
-            modalTitle.value = isRegisterMode.value ? 'Registro de Nuevo Usuario' : 'Editar Usuario';
+            modalTitle.value = isRegisterMode.value ? 'Registro de Nueva Máquina' : 'Editar Máquina';
         });
 
         const resetForm = () => {
             data.id = null;
             data.name = '';
-            data.username = '';
-            data.email = '';
-            data.password = '';
-            data.id_rol = '';
+            data.type = '';
+            data.location = '';
+            data.status = '';
         };
 
         const close = () => {
@@ -105,12 +100,11 @@ export default {
                     throw new Error('No token found');
                 }
                 if (isRegisterMode.value) {
-                    await axios.post(`${API_BASE_URL}/auth/register`, {
+                    await axios.post(`${API_BASE_URL}/machines`, {
                         name: data.name,
-                        username: data.username,
-                        email: data.email,
-                        password: data.password,
-                        id_rol: data.id_rol
+                        type: data.type,
+                        location: data.location,
+                        status: data.status
                     }, {
                         headers: {
                             'Content-Type': 'application/json',
@@ -119,11 +113,11 @@ export default {
                     });
                     toast.success('Registro exitoso');
                 } else {
-                    await axios.put(`${API_BASE_URL}/users/${data.id}`, {
+                    await axios.put(`${API_BASE_URL}/machines/${data.id}`, {
                         name: data.name,
-                        username: data.username,
-                        email: data.email,
-                        id_rol: data.id_rol
+                        type: data.type,
+                        location: data.location,
+                        status: data.status
                     }, {
                         headers: {
                             'Content-Type': 'application/json',
@@ -132,15 +126,15 @@ export default {
                     });
                     toast.success('Actualización exitosa');
                 }
-                emit('update-users');
+                emit('update-machines');
                 close();
             } catch (error) {
                 if (error.response) {
                     console.error('Error data:', error.response.data);
-                    toast.error('Error al registrar el usuario: ' + error.response.data.message);
+                    toast.error('Error al registrar la máquina: ' + error.response.data.message);
                 } else {
                     console.error('Error:', error.message);
-                    toast.error('Error al registrar el usuario');
+                    toast.error('Error al registrar la máquina');
                 }
             }
         };
@@ -152,23 +146,10 @@ export default {
             submit,
             close
         };
-    },
-    data() {
-        return {
-            roles: []
-        };
-    },
-    created() {
-        axios.get(`${API_BASE_URL}/roles`)
-            .then(response => {
-                this.roles = response.data;
-            })
-            .catch(error => {
-                console.error(error);
-            });
     }
 };
 </script>
 
 <style scoped>
+/* Estilos del componente */
 </style>
