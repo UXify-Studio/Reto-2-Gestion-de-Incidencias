@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build
+CMD ["npm", "run", "build"]
 
 # Usa una imagen base de Nginx para servir la aplicación
 FROM nginx:alpine as production-stage
