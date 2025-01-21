@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import axios from 'axios';
 
+import { API_BASE_URL } from '@/config.js';
+
 import { useToast } from 'vue-toastification';
 const toast = useToast();
 
@@ -72,7 +74,7 @@ const fetchUserRole = async () => {
   }
 
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/auth/me', {
+    const response = await axios.get(`${API_BASE_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     userRoleCache = {
