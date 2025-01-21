@@ -1,37 +1,60 @@
 <script>
-import SelectCampus from '../components/SelectCampus.vue';
-import CuadrosDatos from '../components/CuadrosDatos.vue';
 import axios from 'axios';
+import SelectCampus from '@/components/SelectCampus.vue';
+import CuadrosDatos from '@/components/CuadrosDatos.vue';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
   name: 'Home',
   components: {
     SelectCampus,
     CuadrosDatos,
-
   },
   data() {
     return {
-        incidencias: []
+      incidencias: [],
+      selectedCampusId: null, // Agregar propiedad para el ID del campus seleccionado
     };
   },
   created() {
-    axios.get('http://127.0.0.1:8000/api/incidencias')
+    axios.get(`${API_BASE_URL}/incidencias`)
     .then(response => {
         this.incidencias = response.data.data;
     })
     .catch(error => {
         console.error(error);
     });
+  },
+  methods: {
+    fetchIncidencias(campusId = null) {
+      let url = `${API_BASE_URL}/incidencias`;
+      if (campusId) {
+        console.log('campus ID: ', campusId);
+        url += `/campus/${campusId}`;
+        console.log('URL: ', url);
+      }
+      axios.get(url)
+        .then(response => {
+          this.incidencias = response.data.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+
+    aplicarFiltro() {
+      this.fetchIncidencias(this.selectedCampusId);
+    }
   }
 };
 </script>
 
 <template>
-    <CuadrosDatos />
-    <SelectCampus />
+  <CuadrosDatos />
+  <SelectCampus v-model="selectedCampusId" />
+  <button @click="aplicarFiltro">Aplicar Filtro</button>
 
-    <div class="container mt-2z">
+  <div class="container mt-2z">
     <h2 class="text-primary mb-1 fs-4">Incidencias</h2>
     <hr>
     <table class="table table-bordered table-striped">
