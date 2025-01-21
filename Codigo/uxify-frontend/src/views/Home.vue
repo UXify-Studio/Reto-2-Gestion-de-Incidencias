@@ -19,27 +19,27 @@ export default {
   },
   created() {
     axios.get(`${API_BASE_URL}/incidencias`)
-    .then(response => {
+      .then(response => {
         this.incidencias = response.data.data;
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error(error);
-    });
+      });
   },
   methods: {
     fetchIncidencias(campusId = null, sectionId = null) {
       let url = `${API_BASE_URL}/incidencias`;
-      
+
       if (campusId > 0) {
         console.log('campus ID: ', campusId);
         console.log('Section ID: ', sectionId);
-        if ( sectionId > 0){
+        if (sectionId > 0) {
           url += `/section/${sectionId}`;
         } else {
           url += `/campus/${campusId}`;
         }
         console.log('URL: ', url);
-        
+
       }
       axios.get(url)
         .then(response => {
@@ -59,14 +59,12 @@ export default {
 
 <template>
   <CuadrosDatos />
-  
-  
+
+
   <div class="container mt-2z">
     <div class="row mb-3">
       <div class="col d-flex align-items-center">
-        <SelectCampus 
-        v-model:selectedCampusId="selectedCampusId" 
-        v-model:selectedSectionId="selectedSectionId" />
+        <SelectCampus v-model:selectedCampusId="selectedCampusId" v-model:selectedSectionId="selectedSectionId" />
         <button class="btn btn-dark" @click="aplicarFiltro">Aplicar Filtro</button>
       </div>
     </div>
@@ -86,22 +84,55 @@ export default {
       </thead>
       <tbody>
         <tr v-for="incidencias in incidencias" :key="incidencias.id">
-          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.id }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.titulo }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.nombre_maquina }}</td>
           <td class="fs-6 p-1 text-center align-middle">
-            <span v-if="incidencias.prioridad === 1" class="badge bg-danger">Alta</span>
-            <span v-else-if="incidencias.prioridad === 2" class="badge bg-warning">Media</span>
-            <span v-else class="badge bg-success">Baja</span>
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              {{ incidencias.id }}
+            </router-link>
           </td>
           <td class="fs-6 p-1 text-center align-middle">
-            <span v-if="incidencias.gravedad_incidencia === 1" class="badge bg-danger">Parada</span>
-            <span v-else class="badge bg-success">Operativa</span>
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              {{ incidencias.titulo }}
+            </router-link>
           </td>
-          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.fecha_creacion }}</td>
-          <td class="fs-6 p-1 text-center align-middle">{{ incidencias.categoria }}</td>
+          <td class="fs-6 p-1 text-center align-middle">
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              {{ incidencias.nombre_maquina }}
+            </router-link>
+          </td>
+          <td class="fs-6 p-1 text-center align-middle">
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              <span v-if="incidencias.prioridad === 1" class="badge bg-danger">Alta</span>
+              <span v-else-if="incidencias.prioridad === 2" class="badge bg-warning">Media</span>
+              <span v-else class="badge bg-success">Baja</span>
+            </router-link>
+          </td>
+          <td class="fs-6 p-1 text-center align-middle">
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              <span v-if="incidencias.gravedad_incidencia === 1" class="badge bg-danger">Parada</span>
+              <span v-else class="badge bg-success">Operativa</span>
+            </router-link>
+          </td>
+          <td class="fs-6 p-1 text-center align-middle">
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              {{ incidencias.fecha_creacion }}
+            </router-link>
+          </td>
+          <td class="fs-6 p-1 text-center align-middle">
+            <router-link :to="{ name: 'IncidenciaDetalles', params: { id: incidencias.id } }"
+              class="d-block text-decoration-none" style="color: inherit;">
+              {{ incidencias.categoria }}
+            </router-link>
+          </td>
         </tr>
       </tbody>
+
+
     </table>
   </div>
 </template>
