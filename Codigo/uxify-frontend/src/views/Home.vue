@@ -13,37 +13,45 @@ export default {
   data() {
     return {
       incidencias: [],
-      selectedCampusId: null,
+      selectedCampusId: null, // Agregar propiedad para el ID del campus seleccionado
       selectedSectionId: null,
     };
   },
   created() {
-    this.fetchIncidencias();
+    axios.get(`${API_BASE_URL}/incidencias`)
+    .then(response => {
+        this.incidencias = response.data.data;
+    })
+    .catch(error => {
+        console.error(error);
+    });
   },
   methods: {
-    async fetchIncidencias(campusId = null, sectionId = null) {
-      try {
-        const token = sessionStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token found');
+    fetchIncidencias(campusId = null, sectionId = null) {
+      let url = `${API_BASE_URL}/incidencias`;
+      
+      if (campusId > 0) {
+        console.log('campus ID: ', campusId);
+        console.log('Section ID: ', sectionId);
+        if ( sectionId > 0){
+          url += `/section/${sectionId}`;
+        } else {
+          url += `/campus/${campusId}`;
         }
-        let url = `${API_BASE_URL}/incidencias`;
-        if (campusId > 0) {
-          url += `?campus_id=${campusId}`;
-        }
-        if (sectionId > 0) {
-          url += campusId > 0 ? `&section_id=${sectionId}` : `?section_id=${sectionId}`;
-        }
-        const response = await axios.get(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        this.incidencias = response.data.data;
-      } catch (error) {
-        console.error('Error al obtener las incidencias:', error);
+        console.log('URL: ', url);
+        
       }
+      axios.get(url)
+        .then(response => {
+          this.incidencias = response.data.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+
+    aplicarFiltro() {
+      this.fetchIncidencias(this.selectedCampusId, this.selectedSectionId);
     }
   }
 };

@@ -31,6 +31,7 @@ import CuadrosDatosUsuarios from '@/components/CuadrosDatosUsuarios.vue';
 import UserList from '@/components/UserList.vue';
 import UserModal from '@/components/UserModal.vue';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
     components: {
