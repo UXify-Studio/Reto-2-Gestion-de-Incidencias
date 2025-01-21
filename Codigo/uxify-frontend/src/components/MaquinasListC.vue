@@ -5,9 +5,10 @@ import { API_BASE_URL } from '@/config.js';
 
 export default {
     props: {
-        maquinas: Array
+        machines: Array
     },
-    setup() {
+    emits:['edit-machine'],
+    setup(props, { emit }) {
         const maquinas = ref([]);
         const currentPage = ref(1);
         const totalPages = ref(1);
@@ -24,12 +25,16 @@ export default {
         };
 
         fetchMaquinas();
+        const editMachine = (machine) => {
+            emit('edit-machine', machine);
+        };
 
         return {
             maquinas,
             currentPage,
             totalPages,
-            fetchMaquinas
+            fetchMaquinas,
+            editMachine
         };
     }
 };
@@ -71,11 +76,17 @@ export default {
                         <span class="badge text-bg-success" v-if="maquina.estado === 1">
                             {{ maquina.estado }}
                         </span>
+                         <span class="badge text-bg-warning" v-if="maquina.estado === 2">
+                            {{ maquina.estado }}
+                        </span>
+                          <span class="badge text-bg-secondary" v-if="maquina.estado === 3">
+                            {{ maquina.estado }}
+                        </span>
                     </td>
                     <td class="align-middle">{{ maquina.section.campus.nombre }}</td>
                     <td class="align-middle">{{ maquina.section.n_seccion }}</td>
                     <td class="align-middle">
-                        <button class="btn btn-sm">
+                        <button class="btn btn-sm" @click="editMachine(maquina)">
                             <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                         </button>
                         <button class="btn btn-sm">
