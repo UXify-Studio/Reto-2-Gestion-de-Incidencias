@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="show" :title="modalTitle" @close="close">
+    <Modal :show="show" :title="modalTitle" @close="close" class="z-3">
         <form @submit.prevent="submit">
             <div class="mb-3">
                 <label for="campus" class="form-label">Campus</label>
@@ -9,7 +9,7 @@
                 <label for="codigo_maquina" class="form-label">Código de la Máquina</label>
                 <div class="codigo-maquina-wrapper">
                     <span class="codigo-maquina-prefix">
-                        {{ campusId || "0" }}-{{ sectionId ? sectionId.padStart(3, '0') : "000" }}-
+                        {{ codigoMaquinaPrefix }}
                     </span>
                     <input type="text" class="form-control codigo-maquina-input" id="codigo_maquina"
                         v-model="customCodigo" placeholder="000" maxlength="3" @input="validateCustomCodigo" />
@@ -85,6 +85,10 @@ export default {
         const campusId = ref('');
         const sectionId = ref('');
         const customCodigo = ref('');
+
+        const codigoMaquinaPrefix = computed(() => {
+            return `${campusId.value || "0"}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-`;
+        });
 
         const codigoMaquina = computed(() => {
             return `${campusId.value}${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}${customCodigo.value}`;
@@ -219,6 +223,7 @@ export default {
             handleCampusSelected,
             handleSectionSelected,
             codigoMaquina,
+            codigoMaquinaPrefix,
             customCodigo,
             validateCustomCodigo
         };

@@ -40,18 +40,18 @@ export default {
         <table class="table table-striped table-hover align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th class="align-middle">Modelo</th>
+                    <th class="align-middle">Codigo</th>
                     <th class="align-middle">Nombre</th>
                     <th class="align-middle">Prioridad</th>
                     <th class="align-middle">Estado</th>
-                    <th class="align-middle">Sección</th>
                     <th class="align-middle">Campus</th>
+                    <th class="align-middle">Sección</th>
                     <th class="align-middle">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="maquina in maquinas" :key="maquina.id">
-                    <td class="align-middle">{{ maquina.modelo }}</td>
+                    <td class="align-middle">{{ maquina.codigo }}</td>
                     <td class="align-middle">{{ maquina.nombre }}</td>
                     <td class="align-middle">
                         <span class="badge text-bg-warning" v-if="maquina.prioridad === 1">
@@ -72,8 +72,8 @@ export default {
                             {{ maquina.estado }}
                         </span>
                     </td>
-                    <td class="align-middle">{{ maquina.section.n_seccion }}</td>
                     <td class="align-middle">{{ maquina.section.campus.nombre }}</td>
+                    <td class="align-middle">{{ maquina.section.n_seccion }}</td>
                     <td class="align-middle">
                         <button class="btn btn-sm">
                             <img src="../assets/editar.svg" alt="Editar" class="icon-small">
