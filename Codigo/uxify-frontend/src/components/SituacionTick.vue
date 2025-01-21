@@ -1,5 +1,5 @@
 <template>
-    <div class="containet mt-2">
+    <div class="containet">
       <h class="text-primary mb-1 fs-4">Situación tickets</h>
       <hr>
       <p><span class="font-weight-bold">{{ tickets.activas }}</span> Incidencias Activas</p>
