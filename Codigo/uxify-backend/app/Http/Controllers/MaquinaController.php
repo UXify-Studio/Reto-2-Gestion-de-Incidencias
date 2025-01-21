@@ -123,4 +123,22 @@ class MaquinaController extends Controller
                 'prioridad3' => $maquinas3,
             ]);
     }
+
+    public function enable($id)
+    {
+        $machine = Maquina::findOrFail($id);
+        $machine->deshabilitado = 0;
+        $machine->save();
+
+        return response()->json(['message' => 'Machine enabled successfully'], 200);
+    }
+
+    public function disable($id)
+    {
+        $machine = Maquina::findOrFail($id);
+        $machine->deshabilitado = 1;
+        $machine->save();
+
+        return response()->json(['message' => 'Machine disabled successfully'], 200);
+    }
 }

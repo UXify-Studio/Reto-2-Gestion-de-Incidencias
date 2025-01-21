@@ -25,9 +25,11 @@ Route::controller(CategoriaController::class)->group(function () {
 });
 
 Route::controller(MaquinaController::class)->group(function () {
-    Route::get('/maquinas', [MaquinaController::class, 'index']);
-    Route::get('/maquinasCount', [MaquinaController::class, 'countMaquinas']);
-    Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD']);
+    Route::get('/maquinas', [MaquinaController::class, 'index'])->middleware('auth:api', 'admin');
+    Route::get('/maquinasCount', [MaquinaController::class, 'countMaquinas'])->middleware('auth:api', 'admin');
+    Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD'])->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}/enable', [MaquinaController::class, 'enable'])->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
 });
 
 Route::controller(CampusController::class)->group(function () {
@@ -45,6 +47,7 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
     Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
     Route::get('incidencias/campus/{campus}', [IncidenciaController::class, 'getIncidenciasByCampus']);
+    Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
 });
 
 Route::get('/roles', [RolController::class, 'index']);
