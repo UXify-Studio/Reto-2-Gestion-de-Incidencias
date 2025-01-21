@@ -45,8 +45,14 @@ export default {
                     console.error('Error data:', error.response.data);
                     console.error('Error status:', error.response.status);
                     console.error('Error headers:', error.response.headers);
+                    toast.error('Credenciales incorrectas. Por favor, inténtelo de nuevo.', {
+                        position: 'top-right',
+                    });
                 } else {
                     console.error('Error message:', error.message);
+                    toast.error('Error al intentar iniciar sesión. Por favor, inténtelo de nuevo más tarde.', {
+                        position: 'top-right',
+                    });
                 }
             }
         };
@@ -66,7 +72,8 @@ export default {
                 <div class="col-12 rounded p-4 shadow form-container">
                     <form @submit.prevent="submit">
                         <div class="text-center mb-3">
-                            <div class="rounded-circle profile-image-container d-flex justify-content-center align-items-center">
+                            <div
+                                class="rounded-circle profile-image-container d-flex justify-content-center align-items-center">
                                 <img src="/src/assets/Login PFP.svg" alt="Profile" class="rounded-circle profile-image">
                             </div>
                         </div>
