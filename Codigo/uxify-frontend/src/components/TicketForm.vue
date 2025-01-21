@@ -44,6 +44,7 @@
 
 <script>
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 export default {
   data() {
     return {
@@ -52,7 +53,7 @@ export default {
         descripcion: '',
         categoria: '',
         maquina: '',
-        estado: ''
+        estado: 0,
       },
       categorias: [],
       maquinas: [],
@@ -72,7 +73,7 @@ export default {
     .then(responses => {
       this.categorias = responses[0].data;
       this.maquinas = responses[1].data;
-    })
+    })  
     .catch(error => {
       console.error("Error al cargar datos iniciales:", error);
     });
@@ -101,7 +102,7 @@ export default {
     },
     async submitIncidencia() {
       try {
-          const token = sessionStorage.getItem('token');
+          const token = sessionStorage.getItem('token');  
           if (!token) {
               throw new Error('No se encontró el token.');
           }

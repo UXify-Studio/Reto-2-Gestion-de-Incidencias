@@ -67,8 +67,9 @@ class IncidenciaController extends Controller
                 'estado' => 'required|integer'
             ]);
 
-            $incidencia = Incidencia::create($validatedData);
 
+            $incidencia = Incidencia::create($validatedData);
+            
             // Actualizar el estado de la máquina
             $maquina = Maquina::findOrFail($request->maquina);
             $maquina->estado = $request->estado;
