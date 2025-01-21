@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export const useUsersStore = defineStore('users', {
   state: () => ({
@@ -11,7 +12,7 @@ export const useUsersStore = defineStore('users', {
   actions: {
     async fetchUsersTotal() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/usersCount');
+        const response = await axios.get(`${API_BASE_URL}/usersCount`);
         console.log('Usuarios totales:', response.data.total);
         console.log('Usuarios Admin:', response.data.admin);
         console.log('Usuarios Tecnocos:', response.data.tecnico);

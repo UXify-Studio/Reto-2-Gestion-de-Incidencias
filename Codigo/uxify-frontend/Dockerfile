@@ -1,18 +1,17 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18
+# Usa una imagen base de Node.js para construir la aplicación
+FROM node:18 as build-stage
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Install dependencies first (to leverage Docker cache)
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the application files
 COPY . .
+RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 5173
+# Usa una imagen base de Nginx para servir la aplicación
+FROM nginx:alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Command to run the app
-CMD ["npm", "run", "dev"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

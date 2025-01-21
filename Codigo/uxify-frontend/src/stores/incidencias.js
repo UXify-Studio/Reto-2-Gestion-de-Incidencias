@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export const useIncidenciasStore = defineStore('incidencias', {
   state: () => ({
@@ -12,7 +13,7 @@ export const useIncidenciasStore = defineStore('incidencias', {
   actions: {
     async fetchIncidenciasTotal() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/incidencias/prioridad');
+        const response = await axios.get(`${API_BASE_URL}/incidencias/prioridad`);
         console.log("DATA: ", response.data);
         console.log('Inicidencias Prioridad Alta:', response.data.data.alta);
         console.log('Inicidencias Prioridad Media:', response.data.data.media);
