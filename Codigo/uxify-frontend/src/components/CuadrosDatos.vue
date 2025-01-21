@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="row align-items-center p-2">
         <div class="col-md-12 d-flex justify-content-end pb-3">
-          <button @click="showModal = true" class="btn btn-primary">Añadir Ticket</button>
+          <button @click="showModal = true" class="btn btn-primary ">Añadir Ticket</button>
         </div>
         <div class="col-12">
           <div class="d-flex gap-2 " >
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <Modal :show="showModal" :title="'Nuevo Ticket'" @close="showModal = false">
+    <Modal :show="showModal" :title="'Nuevo Ticket'" @close="showModal = false" class="z-5">
       <TicketForm @ticket-submitted="handleTicketSubmitted"/>
     </Modal>
   </Container>

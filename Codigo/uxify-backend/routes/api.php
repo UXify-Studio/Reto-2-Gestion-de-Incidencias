@@ -34,6 +34,13 @@ Route::controller(MaquinaController::class)->group(function () {
 
 Route::controller(CampusController::class)->group(function () {
     Route::get('/campus', [CampusController::class, 'index']);
+    Route::get('/campus', [CampusController::class, 'index']);
+    Route::post('/campus', [CampusController::class, 'store']);
+    Route::get('/campus/{campus}', [CampusController::class, 'show']);
+    Route::put('/campus/{campus}', [CampusController::class, 'update']);
+    Route::put('/campus/{campus}/disable', [CampusController::class, 'disable']); // Para deshabilitar
+    // Si necesitas una ruta para habilitar, puedes agregarla aquí:
+    // Route::put('/campus/{campus}/enable', [CampusController::class, 'enable']);
 });
 
 Route::controller(SectionController::class)->group(function () {

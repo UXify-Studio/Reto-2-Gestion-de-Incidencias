@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Campus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CampusController extends Controller
 {
@@ -29,7 +31,17 @@ class CampusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'deshabilitado' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $campus = Campus::create($request->all());
+        return response()->json($campus, 201);
     }
 
     /**
@@ -37,7 +49,7 @@ class CampusController extends Controller
      */
     public function show(Campus $campus)
     {
-        //
+        return response()->json($campus);
     }
 
     /**
@@ -53,14 +65,29 @@ class CampusController extends Controller
      */
     public function update(Request $request, Campus $campus)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'deshabilitado' => ['required', Rule::in([0, 1, '0', '1'])], // <-- Validación más robusta
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $campus->nombre = $request->nombre;
+        $campus->deshabilitado = (bool) $request->deshabilitado; // Conversión explícita a booleano
+        $campus->save();
+
+        return response()->json($campus, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Campus $campus)
+    public function disable(Campus $campus)
     {
-        //
+        $campus->deshabilitado = 1; // Cambia el valor a 1 para deshabilitar
+        $campus->save();
+        return response()->json(['message' => 'Campus deshabilitado correctamente'], 200);
     }
 }

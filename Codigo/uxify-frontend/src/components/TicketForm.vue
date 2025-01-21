@@ -1,6 +1,7 @@
 <!-- IncidenciaForm.vue -->
 <template>
-  <form @submit.prevent="submitIncidencia">
+  <Modal :show="show" :title="modalTitle" @close="close" class="z-6">
+    <form @submit.prevent="submitIncidencia">
     <div class="mb-3">
       <label for="titulo" class="form-label text-primary">Título *</label>
       <input type="text" class="form-control" id="titulo" v-model="incidencia.titulo" required>
@@ -40,6 +41,7 @@
     
     <button type="submit" class="btn btn-primary w-100" style="background-color: #512888; border-color: #512888;">Publicar Incidencia</button>
   </form>
+  </Modal>
 </template>
 
 <script>
