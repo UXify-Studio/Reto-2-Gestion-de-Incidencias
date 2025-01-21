@@ -14,6 +14,7 @@ export default {
     return {
       incidencias: [],
       selectedCampusId: null, // Agregar propiedad para el ID del campus seleccionado
+      selectedSectionId: null,
     };
   },
   created() {
@@ -26,12 +27,19 @@ export default {
     });
   },
   methods: {
-    fetchIncidencias(campusId = null) {
+    fetchIncidencias(campusId = null, sectionId = null) {
       let url = `${API_BASE_URL}/incidencias`;
-      if (campusId) {
+      
+      if (campusId > 0) {
         console.log('campus ID: ', campusId);
-        url += `/campus/${campusId}`;
+        console.log('Section ID: ', sectionId);
+        if ( sectionId > 0){
+          url += `/section/${sectionId}`;
+        } else {
+          url += `/campus/${campusId}`;
+        }
         console.log('URL: ', url);
+        
       }
       axios.get(url)
         .then(response => {
@@ -43,7 +51,7 @@ export default {
     },
 
     aplicarFiltro() {
-      this.fetchIncidencias(this.selectedCampusId);
+      this.fetchIncidencias(this.selectedCampusId, this.selectedSectionId);
     }
   }
 };
@@ -51,10 +59,17 @@ export default {
 
 <template>
   <CuadrosDatos />
-  <SelectCampus v-model="selectedCampusId" />
-  <button @click="aplicarFiltro">Aplicar Filtro</button>
-
+  
+  
   <div class="container mt-2z">
+    <div class="row mb-3">
+      <div class="col d-flex align-items-center">
+        <SelectCampus 
+        v-model:selectedCampusId="selectedCampusId" 
+        v-model:selectedSectionId="selectedSectionId" />
+        <button class="btn btn-dark" @click="aplicarFiltro">Aplicar Filtro</button>
+      </div>
+    </div>
     <h2 class="text-primary mb-1 fs-4">Incidencias</h2>
     <hr>
     <table class="table table-bordered table-striped">
@@ -76,12 +91,12 @@ export default {
           <td class="fs-6 p-1 text-center align-middle">{{ incidencias.nombre_maquina }}</td>
           <td class="fs-6 p-1 text-center align-middle">
             <span v-if="incidencias.prioridad === 1" class="badge bg-danger">Alta</span>
-            <span v-else-if="incidencias.prioridad === 2" class="badge bg-danger">Media</span>
-            <span v-else class="badge bg-danger">Baja</span>
+            <span v-else-if="incidencias.prioridad === 2" class="badge bg-warning">Media</span>
+            <span v-else class="badge bg-success">Baja</span>
           </td>
           <td class="fs-6 p-1 text-center align-middle">
-            <span v-if="incidencias.gravedad_incidencia === 1" class="badge bg-success">Activa</span>
-            <span v-else class="badge bg-danger">Inactiva</span>
+            <span v-if="incidencias.gravedad_incidencia === 1" class="badge bg-danger">Parada</span>
+            <span v-else class="badge bg-success">Operativa</span>
           </td>
           <td class="fs-6 p-1 text-center align-middle">{{ incidencias.fecha_creacion }}</td>
           <td class="fs-6 p-1 text-center align-middle">{{ incidencias.categoria }}</td>
