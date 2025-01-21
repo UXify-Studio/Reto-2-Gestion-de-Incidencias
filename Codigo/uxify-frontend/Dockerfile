@@ -1,5 +1,5 @@
 # Usa una imagen base de Node.js para construir la aplicación
-FROM node:14 as build-stage
+FROM node:18 as build-stage
 
 WORKDIR /app
 
