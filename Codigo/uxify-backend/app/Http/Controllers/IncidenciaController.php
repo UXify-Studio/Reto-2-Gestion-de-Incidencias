@@ -69,7 +69,7 @@ class IncidenciaController extends Controller
 
 
             $incidencia = Incidencia::create($validatedData);
-            
+
             // Actualizar el estado de la máquina
             $maquina = Maquina::findOrFail($request->maquina);
             $maquina->estado = $request->estado;
@@ -86,9 +86,21 @@ class IncidenciaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Incidencia $incidencia)
+    public function show($id)
     {
-        //
+        $incidencia = Incidencia::find($id);
+
+        if ($incidencia) {
+            return response()->json([
+                'success' => true,
+                'data' => $incidencia
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró la incidencia.'
+        ], 404);
     }
 
     /**

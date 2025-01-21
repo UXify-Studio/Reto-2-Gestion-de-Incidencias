@@ -32,6 +32,12 @@ const router = createRouter({
       component: () => import('../views/Register.vue'),
       meta: { requiresAdmin: true },
     },
+    {
+      path: '/incidencia/:id',
+      name: 'IncidenciaDetalles',
+      component: () => import('../views/DetailsIncidenceView.vue'),
+      props: true
+    },
     { 
       path: '/gestion/users', 
       component: () => import('../views/admin/UsuariosListView.vue') ,
