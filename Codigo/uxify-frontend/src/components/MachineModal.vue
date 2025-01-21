@@ -3,7 +3,8 @@
         <form @submit.prevent="submit">
             <div class="mb-3">
                 <label for="campus" class="form-label">Campus</label>
-                <SelectCampus @campus-selected="handleCampusSelected" @section-selected="handleSectionSelected" />
+                <SelectCampus :selectedCampus="campusId" :selectedSection="sectionId"
+                    @campus-selected="handleCampusSelected" @section-selected="handleSectionSelected" />
             </div>
             <div class="mb-3">
                 <label for="codigo_maquina" class="form-label">Código de la Máquina</label>
@@ -33,8 +34,8 @@
                 <select v-model="data.estado" class="form-control" required>
                     <option disabled value="">Seleccione un estado</option>
                     <option value="1">Operativa</option>
-                    <option value="2">En Mantenimiento</option>
-                    <option value="3">Fuera de Servicio</option>
+                    <option value="2" v-if="!isRegisterMode">En Mantenimiento</option>
+                    <option value="3" v-if="!isRegisterMode">Fuera de Servicio</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">{{ isRegisterMode ? 'Registrar' : 'Actualizar' }}</button>
@@ -86,18 +87,20 @@ export default {
         const sectionId = ref('');
         const customCodigo = ref('');
 
+
         const codigoMaquinaPrefix = computed(() => {
             return `${campusId.value || "0"}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-`;
         });
 
         const codigoMaquina = computed(() => {
-            return `${campusId.value}${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}${customCodigo.value}`;
+            return `${campusId.value}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-${customCodigo.value}`;
         });
+
 
         const toast = useToast();
 
         watch(() => props.machine, (newMachine) => {
-            if (newMachine) {
+            if (newMachine && newMachine.codigo) {
                 data.id = newMachine.id;
                 data.nombre = newMachine.nombre;
                 data.codigo = newMachine.codigo;
@@ -112,6 +115,7 @@ export default {
                 customCodigo.value = custom;
             }
         }, { immediate: true });
+
 
         watch(() => props.mode, (newMode) => {
             isRegisterMode.value = newMode === 'register';
@@ -155,9 +159,8 @@ export default {
                 if (!token) {
                     throw new Error('No se encontró el token.');
                 }
-                data.codigo = codigoMaquina.value;
 
-                // Verificar los datos antes de enviar
+                data.codigo = codigoMaquina.value;
                 console.log('Datos enviados:', {
                     nombre: data.nombre,
                     codigo: data.codigo,
@@ -225,7 +228,9 @@ export default {
             codigoMaquina,
             codigoMaquinaPrefix,
             customCodigo,
-            validateCustomCodigo
+            validateCustomCodigo,
+            campusId,
+            sectionId
         };
     }
 };
