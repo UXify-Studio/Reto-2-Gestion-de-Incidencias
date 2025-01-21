@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Selector de Campus -->
-    <select name="campuses" @change="handleCampusChange($event)">
+    <select name="campuses" v-model="selectedCampus" @change="handleCampusChange($event)">
       <option disabled selected value="">Selecciona un campus</option>
       <option
         v-for="campus in campuses"
@@ -29,11 +29,26 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
 
 export default {
+  props: {
+      modelValue: {
+        type: [String, Number],
+        default: null
+      }
+    },
   data() {
     return {
       campuses: [],
+      selectedCampus: this.modelValue,
     };
   },
+  watch: {
+      modelValue(newValue) {
+        this.selectedCampus = newValue;
+      },
+      selectedCampus(newValue) {
+        this.$emit('update:modelValue', newValue);
+      }
+    },
   created() {
     axios
       .get(`${API_BASE_URL}/campus`)
