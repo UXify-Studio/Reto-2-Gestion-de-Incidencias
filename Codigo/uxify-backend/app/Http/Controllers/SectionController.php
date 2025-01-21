@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SectionController extends Controller
 {
@@ -29,16 +31,34 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'n_seccion' => 'required|integer',
+            'id_campus' => 'required|exists:campus,id', // Verifica que el campus exista
+            'deshabilitado' => ['required', Rule::in([0, 1])],
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $seccion = Section::create($request->all());
+        return response()->json($seccion, 201);
+    }
     /**
      * Display the specified resource.
      */
     public function show(Section $seccion)
     {
-        //
+        return response()->json($seccion);
     }
+    public function getSectionsWithCampus()
+    {
+        $secciones = Section::with('campus')->get();
+
+        return response()->json($secciones);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -53,7 +73,19 @@ class SectionController extends Controller
      */
     public function update(Request $request, Section $seccion)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'n_seccion' => 'required|integer',
+            'id_campus' => 'required|exists:campus,id',
+            'deshabilitado' => ['required', Rule::in([0, 1])],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $seccion->update($request->all());
+        return response()->json($seccion, 200);
     }
 
     /**
@@ -62,6 +94,15 @@ class SectionController extends Controller
     public function destroy(Section $seccion)
     {
         //
+    }
+
+    public function disable(Section $seccion)
+    {
+        $seccion->deshabilitado = !$seccion->deshabilitado; // Alterna el estado
+        $seccion->save();
+
+        $message = $seccion->deshabilitado ? 'Sección deshabilitada correctamente' : 'Sección habilitada correctamente';
+        return response()->json(['message' => $message], 200);
     }
 
     public function getSectionsByCampus($campus){

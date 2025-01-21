@@ -34,17 +34,18 @@ Route::controller(MaquinaController::class)->group(function () {
 
 Route::controller(CampusController::class)->group(function () {
     Route::get('/campus', [CampusController::class, 'index']);
-    Route::get('/campus', [CampusController::class, 'index']);
     Route::post('/campus', [CampusController::class, 'store']);
     Route::get('/campus/{campus}', [CampusController::class, 'show']);
     Route::put('/campus/{campus}', [CampusController::class, 'update']);
-    Route::put('/campus/{campus}/disable', [CampusController::class, 'disable']); // Para deshabilitar
-    // Si necesitas una ruta para habilitar, puedes agregarla aquí:
-    // Route::put('/campus/{campus}/enable', [CampusController::class, 'enable']);
+    Route::put('/campus/{campus}/disable', [CampusController::class, 'disable']);
 });
 
 Route::controller(SectionController::class)->group(function () {
-    route::get('/sections', [SectionController::class, 'index']);
+    route::get('/secciones', [SectionController::class, 'index']);
+    Route::post('/secciones', [SectionController::class, 'store']);
+    Route::get('/secciones/{seccion}', [SectionController::class, 'show']);
+    Route::put('/secciones/{seccion}', [SectionController::class, 'update']);
+    Route::put('/secciones/{seccion}/disable', [SectionController::class, 'disable']);
     Route::get('/sectionByCampus/{campus}', [SectionController::class, 'getSectionsByCampus']);
 });
 
@@ -58,6 +59,8 @@ Route::controller(IncidenciaController::class)->group(function () {
 });
 
 Route::get('/roles', [RolController::class, 'index']);
+
+Route::get('/seccionesConCampus', [SectionController::class, 'getSectionsWithCampus']);
 
 Route::get('categorias/prioridad', [CategoriaController::class, 'getIncidenciasPorPrioridad']);
 
