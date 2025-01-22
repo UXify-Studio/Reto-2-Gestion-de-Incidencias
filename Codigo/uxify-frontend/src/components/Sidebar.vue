@@ -47,17 +47,6 @@ export default {
           <span>Estadisticas</span>
         </div>
       </router-link>
-      <router-link to="/tipos-de-activo"
-        class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
-        <div class="col-auto">
-          <i class="bi bi-gear me-2">
-            <img src="../assets/Maquinas.png" alt="Tipos de activo" class="menu-icon">
-          </i>
-        </div>
-        <div class="col">
-          <span>Tipos de activo</span>
-        </div>
-      </router-link>
       <div class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary cursor-pointer"
         @click="toggleGestionSubmenu">
         <div class="col-auto">
