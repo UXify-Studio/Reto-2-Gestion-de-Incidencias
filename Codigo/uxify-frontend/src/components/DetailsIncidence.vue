@@ -50,12 +50,16 @@
                 <td class="px-3 py-2">{{ incidencia.id_categoria }}</td>
               </tr>
               <tr>
+                <th class="bg-dark text-white px-3 py-2">ID Categoría</th>
+                <td class="px-3 py-2">{{ incidencia.nombre_categoria }}</td>
+              </tr>
+              <tr>
                 <th class="bg-dark text-white px-3 py-2">ID Máquina</th>
                 <td class="px-3 py-2">{{ incidencia.id_maquina }}</td>
               </tr>
               <tr>
                 <th class="bg-dark text-white px-3 py-2">Nombre Máquina</th>
-                <td class="px-3 py-2">{{ maquina.nombre }}</td>
+                <td class="px-3 py-2">{{ incidencia.nombre_maquina }}</td>
               </tr>
               <tr>
                 <th class="bg-dark text-white px-3 py-2">ID Usuario</th>
@@ -63,7 +67,7 @@
               </tr>
               <tr>
                 <th class="bg-dark text-white px-3 py-2">Nombre Usuario</th>
-                <td class="px-3 py-2">{{ usuario.nombre }}</td>
+                <td class="px-3 py-2">{{ incidencia.nombre_usuario }}</td>
               </tr>
             </tbody>
           </table>
