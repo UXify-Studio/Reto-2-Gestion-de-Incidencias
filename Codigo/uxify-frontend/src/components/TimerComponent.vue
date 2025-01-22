@@ -166,14 +166,35 @@ export default {
 </script>
 
 <template>
-    <div>
-        <div>{{ formattedTime }}</div>
-        <div>Tiempo Total: {{ formattedTotalTime }}</div>
-        <button @click="startTimer">Empezar</button>
-        <button @click="pauseTimer">Pausar</button>
-        <button @click="stopTimer">Incidencia Resuelta</button>
+    <div class="container py-4">
+        <h1 class="mb-3 text-primary fs-3">Gestión de Tiempo</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0 fs-6">
+                    <tbody>
+                        <tr>
+                            <th class="bg-dark text-white px-3 py-2" style="width: 200px;">Tiempo Actual</th>
+                            <td class="px-3 py-2">{{ formattedTime }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-dark text-white px-3 py-2">Tiempo Total</th>
+                            <td class="px-3 py-2">{{ formattedTotalTime }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button class="btn btn-primary me-2" @click="startTimer">Empezar</button>
+            <button class="btn btn-warning me-2" @click="pauseTimer">Pausar</button>
+            <button class="btn btn-success" @click="stopTimer">Incidencia Resuelta</button>
+        </div>
+
         <CommentModal :visible="showModal" :title="modalTitle" @close="showModal = false" @submit="handleModalSubmit" />
     </div>
 </template>
+
 
 <style scoped></style>
