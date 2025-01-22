@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
+use App\Http\Controllers\IncidenciaTecnicoController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Http\Request;
@@ -84,6 +85,9 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/users/{id}/disable', [UserController::class, 'disable'])->middleware('auth:api', 'admin');
 });
 
+Route::post('/timer', [IncidenciaTecnicoController::class, 'store']);
+Route::put('/timer/{id}', [IncidenciaTecnicoController::class, 'update']);
+Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncidenciaTecnico']);
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
 //    Route::post('/admin/users', [UserController::class, 'store']);

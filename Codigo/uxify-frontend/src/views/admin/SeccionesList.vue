@@ -75,6 +75,14 @@
   </div>
 </template>
 
+<style scoped>
+.icon-small-2 {
+width: 22px;
+height: 22px;
+}
+</style>
+
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
