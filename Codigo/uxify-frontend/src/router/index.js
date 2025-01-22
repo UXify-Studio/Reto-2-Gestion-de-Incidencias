@@ -33,10 +33,10 @@ const router = createRouter({
       meta: { requiresAdmin: true },
     },
     {
-      path: '/incidencia/:id',
+      path: '/incidencia/detalles',
       name: 'IncidenciaDetalles',
       component: () => import('../views/DetailsIncidenceView.vue'),
-      props: true
+      props: route => ({ id: route.query.id })
     },
     { 
       path: '/gestion/users', 
