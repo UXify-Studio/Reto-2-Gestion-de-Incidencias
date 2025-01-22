@@ -88,12 +88,18 @@ class IncidenciaController extends Controller
      */
     public function show($id)
     {
-        $incidencia = Incidencia::find($id);
+        $result = DB::table('incidencias as i')
+            ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
+            ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
+            ->join('users as u', 'i.id_usuario', '=', 'u.id')
+            ->select('i.*', 'm.nombre as nombre_maquina', 'c.nombre as nombre_categoria', 'u.name as nombre_usuario')
+            ->where('i.id', $id)
+            ->first();
 
-        if ($incidencia) {
+        if ($result) {
             return response()->json([
                 'success' => true,
-                'data' => $incidencia
+                'data' => $result
             ]);
         }
 

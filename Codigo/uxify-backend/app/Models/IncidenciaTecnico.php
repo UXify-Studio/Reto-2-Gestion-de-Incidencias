@@ -9,8 +9,13 @@ class IncidenciaTecnico extends Model
 {
     use HasFactory;
 
+    protected $table = 'incidencia_tecnicos';
+    public $timestamps = false;
+
     protected $fillable = [
-        'id_incidencia', 'id_tecnico'
+        'id_incidencia',
+        'id_tecnico',
+        'fecha_inicio'
     ];
 
     protected $casts = [
