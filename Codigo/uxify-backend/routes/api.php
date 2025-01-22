@@ -57,7 +57,7 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
     Route::get('incidencias/campus/{campus}', [IncidenciaController::class, 'getIncidenciasByCampus']);
     Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
-    Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api', 'admin');
+    Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api');
 });
 
 Route::get('/roles', [RolController::class, 'index']);
