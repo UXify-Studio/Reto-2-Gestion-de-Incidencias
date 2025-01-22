@@ -1,19 +1,52 @@
 <script>
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
+import { useRoute } from 'vue-router';
+import CommentModal from './CommentModal.vue';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
+    components: {
+        CommentModal,
+    },
     data() {
         return {
             timer: null,
             time: 0,
+            totalTime: 0, // Tiempo total que lleva el usuario reparando la incidencia en segundos
             isRunning: false,
             startTime: null,
             endTime: null,
-            idIncidencia: 42, // Ejemplo de id_incidencia
-            idTecnico: 1, // Ejemplo de id_tecnico
-            idIncidenciaTecnico: null, // ID de la fila de incidencia_tecnicos
+            idIncidencia: null,
+            idTecnico: null,
+            idIncidenciaTecnico: null,
+            showModal: false,
+            modalTitle: '',
+            isStop: false,
         };
+    },
+    async beforeMount() {
+        const route = useRoute();
+        this.idIncidencia = route.query.id;
+
+        const token = sessionStorage.getItem('token');
+
+        try {
+            const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.idTecnico = response.data.id;
+
+            // Obtener el tiempo total que lleva el usuario reparando la incidencia
+            await this.getTotalTime(token);
+        } catch (error) {
+            toast.error('Error al obtener el ID del técnico');
+        }
     },
     computed: {
         formattedTime() {
@@ -21,8 +54,30 @@ export default {
             const seconds = this.time % 60;
             return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         },
+        formattedTotalTime() {
+            const hours = Math.floor(this.totalTime / 3600);
+            const minutes = Math.floor((this.totalTime % 3600) / 60);
+            const seconds = this.totalTime % 60;
+            return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        },
     },
     methods: {
+        async getTotalTime(token) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/timer/${this.idIncidencia}/tiempototal`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const { horas, minutos, segundos } = response.data.data;
+                this.totalTime = (horas * 3600) + (minutos * 60) + segundos;
+                console.log('Tiempo total obtenido:', this.totalTime);
+            } catch (error) {
+                console.error('Error al obtener el tiempo total:', error);
+                toast.error('Error al obtener el tiempo total');
+            }
+        },
         startTimer() {
             if (!this.isRunning) {
                 this.isRunning = true;
@@ -33,12 +88,14 @@ export default {
                 this.insertIncidencia();
             }
         },
-        async pauseTimer() {
+        pauseTimer() {
             if (this.isRunning) {
                 this.isRunning = false;
                 clearInterval(this.timer);
                 this.endTime = new Date().toISOString();
-                await this.updateIncidencia();
+                this.modalTitle = 'Motivo de la pausa';
+                this.isStop = false;
+                this.showModal = true;
             }
         },
         stopTimer() {
@@ -46,7 +103,9 @@ export default {
                 this.isRunning = false;
                 clearInterval(this.timer);
                 this.endTime = new Date().toISOString();
-                this.updateIncidencia(true);
+                this.modalTitle = 'Motivo de la parada';
+                this.isStop = true;
+                this.showModal = true;
                 this.time = 0;
             }
         },
@@ -57,14 +116,12 @@ export default {
                     id_tecnico: this.idTecnico,
                     fecha_inicio: this.startTime,
                 };
-                console.log('Datos enviados (insertIncidencia):', data);
                 const response = await axios.post(`${API_BASE_URL}/timer`, data);
-                console.log('Respuesta del servidor (insertIncidencia):', response);
-                // Almacenar el ID de la fila de incidencia_tecnicos directamente desde la respuesta
+
                 this.idIncidenciaTecnico = response.data.id;
-                console.log('ID de incidencia_tecnicos almacenado:', this.idIncidenciaTecnico);
+                toast.success('Incidencia iniciada');
             } catch (error) {
-                console.error('Error al insertar incidencia:', error);
+                toast.error('Error al iniciar la incidencia');
             }
         },
         async getLatestIncidenciaTecnico() {
@@ -77,45 +134,46 @@ export default {
                 });
                 if (response.data) {
                     this.idIncidenciaTecnico = response.data.id;
-                    console.log('ID de incidencia_tecnicos obtenido:', this.idIncidenciaTecnico);
                 } else {
-                    console.error('No se encontró el ID de incidencia_tecnicos');
+                    toast.error('No se encontró la incidencia');
                 }
             } catch (error) {
-                console.error('Error al obtener el ID de incidencia_tecnicos:', error);
+                toast.error('Error al obtener la incidencia');
             }
         },
-        async updateIncidencia(isStop = false) {
+        async updateIncidencia(isStop = false, comentario = '') {
             try {
                 await this.getLatestIncidenciaTecnico();
                 if (!this.idIncidenciaTecnico) {
-                    console.error('ID de incidencia_tecnicos no definido');
+                    toast.error('No se encontró la incidencia');
                     return;
                 }
                 const data = {
                     fecha_fin: this.endTime,
-                    comentario: isStop ? 'Incidencia cerrada' : 'Incidencia pausada',
+                    comentario: isStop ? 'Incidencia cerrada' : comentario,
                 };
-                console.log('Datos enviados (updateIncidencia):', data);
                 const response = await axios.put(`${API_BASE_URL}/timer/${this.idIncidenciaTecnico}`, data);
-                console.log('Respuesta del servidor (updateIncidencia):', response);
+                toast.success('Incidencia actualizada', response.data);
             } catch (error) {
-                console.error('Error al actualizar incidencia:', error);
+                toast.error('Error al actualizar la incidencia');
             }
+        },
+        handleModalSubmit(comment) {
+            this.updateIncidencia(this.isStop, comment);
         },
     },
 };
 </script>
 
 <template>
-  <div>
-    <div>{{ formattedTime }}</div>
-    <button @click="startTimer">Start</button>
-    <button @click="pauseTimer">Pause</button>
-    <button @click="stopTimer">Stop</button>
-  </div>
+    <div>
+        <div>{{ formattedTime }}</div>
+        <div>Tiempo Total: {{ formattedTotalTime }}</div>
+        <button @click="startTimer">Empezar</button>
+        <button @click="pauseTimer">Pausar</button>
+        <button @click="stopTimer">Incidencia Resuelta</button>
+        <CommentModal :visible="showModal" :title="modalTitle" @close="showModal = false" @submit="handleModalSubmit" />
+    </div>
 </template>
 
-<style scoped>
-/* Añade estilos según sea necesario */
-</style>
+<style scoped></style>
