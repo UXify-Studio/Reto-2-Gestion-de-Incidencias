@@ -50,7 +50,7 @@
                 <td class="px-3 py-2">{{ incidencia.id_categoria }}</td>
               </tr>
               <tr>
-                <th class="bg-dark text-white px-3 py-2">ID Categoría</th>
+                <th class="bg-dark text-white px-3 py-2">Nombre Categoría</th>
                 <td class="px-3 py-2">{{ incidencia.nombre_categoria }}</td>
               </tr>
               <tr>
@@ -163,46 +163,10 @@
             }
           });
           this.incidencia = response.data.data;
-          this.fetchMaquina(this.incidencia.id_maquina);
-          this.fetchUsuario(this.incidencia.id_usuario);
         } catch (error) {
           console.error('Error al obtener la incidencia:', error);
         }
       },
-      async fetchMaquina(id) {
-        try {
-          const token = sessionStorage.getItem('token');
-          if (!token) {
-            throw new Error('No token found');
-          }
-          const response = await axios.get(`${API_BASE_URL}/maquinas/${id}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          this.maquina = response.data.data;
-        } catch (error) {
-          console.error('Error al obtener la máquina:', error);
-        }
-      },
-      async fetchUsuario(id) {
-        try {
-          const token = sessionStorage.getItem('token');
-          if (!token) {
-            throw new Error('No token found');
-          }
-          const response = await axios.get(`${API_BASE_URL}/usuarios/${id}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          this.usuario = response.data.data;
-        } catch (error) {
-          console.error('Error al obtener el usuario:', error);
-        }
-      }
     }
   };
   </script>

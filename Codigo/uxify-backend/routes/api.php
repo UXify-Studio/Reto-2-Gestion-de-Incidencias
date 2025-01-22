@@ -88,6 +88,7 @@ Route::controller(UserController::class)->group(function () {
 Route::post('/timer', [IncidenciaTecnicoController::class, 'store']);
 Route::put('/timer/{id}', [IncidenciaTecnicoController::class, 'update']);
 Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncidenciaTecnico']);
+Route::get('/timer/{id}/tiempototal', [IncidenciaTecnicoController::class, 'calcularTiempoTrabajado']);
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
 //    Route::post('/admin/users', [UserController::class, 'store']);

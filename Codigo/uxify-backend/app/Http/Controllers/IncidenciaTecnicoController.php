@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\IncidenciaTecnico;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -126,5 +127,63 @@ class IncidenciaTecnicoController extends Controller
         } else {
             return response()->json(['message' => 'No se encontró el registro'], 404);
         }
+    }
+
+    public function calcularTiempoTrabajado($id_incidencia)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated']);
+        }
+
+        $id_tecnico = $user->id;
+
+        $incidenciasTecnico = IncidenciaTecnico::where('id_incidencia', $id_incidencia)
+            ->where('id_tecnico', $id_tecnico)
+            ->get();
+
+        $totalTiempo = 0;
+
+
+        foreach ($incidenciasTecnico as $incidencia) {
+            if ($incidencia->fecha_inicio && $incidencia->fecha_fin) {
+                $fechaInicio = Carbon::parse($incidencia->fecha_inicio);
+                $fechaFin = Carbon::parse($incidencia->fecha_fin);
+
+                //Log::info('Fecha inicio: ' . $fechaInicio);
+                //Log::info('Fecha fin: ' . $fechaFin);
+
+                // Calcular la diferencia en segundos
+                $diferencia = $fechaFin->diffInSeconds($fechaInicio, false); // El parámetro 'false' habilita diferencias negativas
+
+                //Log::info("Diferencia calculada (sin ajustar): $diferencia");
+
+                // Asegurarse de que la diferencia sea positiva
+                $diferencia = abs($diferencia);
+
+                //Log::info("Diferencia ajustada (positiva): $diferencia");
+
+                $totalTiempo += $diferencia;
+            }
+        }
+
+
+
+
+
+        $horas = floor($totalTiempo / 3600);
+        $minutos = floor(($totalTiempo % 3600) / 60);
+        $segundos = $totalTiempo % 60;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id_tecnico' => $id_tecnico,
+                'horas' => $horas,
+                'minutos' => $minutos,
+                'segundos' => $segundos
+            ]
+        ]);
     }
 }
