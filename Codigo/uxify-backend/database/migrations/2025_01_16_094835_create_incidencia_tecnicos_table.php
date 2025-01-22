@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('id_incidencia')->constrained('incidencias')->onDelete('cascade');
             $table->foreignId('id_tecnico')->constrained('users')->onDelete('cascade');
 
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin')->nullable();
+            $table->dateTime('fecha_inicio');
+            $table->dateTime('fecha_fin')->nullable();
             $table->string("comentario")->nullable();
 
             $table->timestamps();

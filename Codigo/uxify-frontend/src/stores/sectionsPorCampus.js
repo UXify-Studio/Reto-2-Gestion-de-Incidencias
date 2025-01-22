@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export const useSectionsStore = defineStore('sections', {
   state: () => ({
@@ -9,7 +10,7 @@ export const useSectionsStore = defineStore('sections', {
   actions: {
     async fetchSectionsByCampus() {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/sectionByCampus/${this.campus}`);
+        const response = await axios.get(`${API_BASE_URL}/sectionByCampus/${this.campus}`);
         console.log('Campus: ', this.campus);
         console.log('Secciones: ', response.data);
 

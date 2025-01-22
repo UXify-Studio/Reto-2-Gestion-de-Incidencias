@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
+use App\Http\Controllers\IncidenciaTecnicoController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Http\Request;
@@ -25,18 +26,27 @@ Route::controller(CategoriaController::class)->group(function () {
 });
 
 Route::controller(MaquinaController::class)->group(function () {
-    Route::get('/maquinas', [MaquinaController::class, 'index']);
-    Route::post('/maquinas', [MaquinaController::class, 'store']);
-    Route::get('/maquinasCount', [MaquinaController::class, 'countMaquinas']);
-    Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD']);
+    Route::get('/maquinas', [MaquinaController::class, 'index'])->middleware('auth:api', 'admin');
+    Route::get('/maquinasCount', [MaquinaController::class, 'countMaquinas'])->middleware('auth:api', 'admin');
+    Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD'])->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}/enable', [MaquinaController::class, 'enable'])->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
 });
 
 Route::controller(CampusController::class)->group(function () {
     Route::get('/campus', [CampusController::class, 'index']);
+    Route::post('/campus', [CampusController::class, 'store']);
+    Route::get('/campus/{campus}', [CampusController::class, 'show']);
+    Route::put('/campus/{campus}', [CampusController::class, 'update']);
+    Route::put('/campus/{campus}/disable', [CampusController::class, 'disable']);
 });
 
 Route::controller(SectionController::class)->group(function () {
-    route::get('/sections', [SectionController::class, 'index']);
+    route::get('/secciones', [SectionController::class, 'index']);
+    Route::post('/secciones', [SectionController::class, 'store']);
+    Route::get('/secciones/{seccion}', [SectionController::class, 'show']);
+    Route::put('/secciones/{seccion}', [SectionController::class, 'update']);
+    Route::put('/secciones/{seccion}/disable', [SectionController::class, 'disable']);
     Route::get('/sectionByCampus/{campus}', [SectionController::class, 'getSectionsByCampus']);
 });
 
@@ -45,10 +55,14 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::post('/incidencias', [IncidenciaController::class, 'store']);
     Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
     Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
-
+    Route::get('incidencias/campus/{campus}', [IncidenciaController::class, 'getIncidenciasByCampus']);
+    Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
+    Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api');
 });
 
 Route::get('/roles', [RolController::class, 'index']);
+
+Route::get('/seccionesConCampus', [SectionController::class, 'getSectionsWithCampus']);
 
 Route::get('categorias/prioridad', [CategoriaController::class, 'getIncidenciasPorPrioridad']);
 
@@ -71,6 +85,10 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/users/{id}/disable', [UserController::class, 'disable'])->middleware('auth:api', 'admin');
 });
 
+Route::post('/timer', [IncidenciaTecnicoController::class, 'store']);
+Route::put('/timer/{id}', [IncidenciaTecnicoController::class, 'update']);
+Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncidenciaTecnico']);
+Route::get('/timer/{id}/tiempototal', [IncidenciaTecnicoController::class, 'calcularTiempoTrabajado']);
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
 //    Route::post('/admin/users', [UserController::class, 'store']);

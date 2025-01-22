@@ -1,8 +1,9 @@
 <template>
   <div>
     <!-- Selector de Campus -->
-    <select name="campuses" @change="handleCampusChange($event)">
+    <select name="campuses" class="form-control" v-model="selectedCampus" @change="handleCampusChange($event)">
       <option disabled selected value="">Selecciona un campus</option>
+      <option value="0">Todos</option>
       <option
         v-for="campus in campuses"
         :key="campus.id"
@@ -13,7 +14,7 @@
     </select>
 
     <!-- Selector de Secciones -->
-    <select name="sections" @change="handleSectionChange($event)">
+    <select name="sections" class="form-control" v-model="selectedSection" @change="handleSectionChange($event)">
       <option disabled selected value="">Selecciona una sección</option>
       <option v-for="section in sections" :key="section.id" :value="section.id">
         {{ section.nombre }}
@@ -29,11 +30,42 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
 
 export default {
+  props: {
+    selectedCampusId: {
+      type: [String, Number],
+      default: null
+    },
+    selectedSectionId: {
+      type: [String, Number],
+      default: null
+    }
+  },
   data() {
     return {
       campuses: [],
+      selectedCampus: this.selectedCampusId,
+      selectedSection: this.selectedSectionId
     };
   },
+  watch: {
+    selectedCampus(newVal) {
+      this.$emit('update:selectedCampusId', newVal);
+    },
+    selectedSection(newVal) {
+      this.$emit('update:selectedSectionId', newVal);
+    }
+  },
+  methods: {
+    handleCampusChange(event) {
+      this.selectedCampus = event.target.value;
+      // Fetch sections based on selected campus
+      this.fetchSections(this.selectedCampus);
+    },
+    handleSectionChange(event) {
+      this.selectedSection = event.target.value;
+    },
+  },
+
   created() {
     axios
       .get(`${API_BASE_URL}/campus`)

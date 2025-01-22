@@ -67,6 +67,7 @@ class IncidenciaController extends Controller
                 'estado' => 'required|integer'
             ]);
 
+
             $incidencia = Incidencia::create($validatedData);
 
             // Actualizar el estado de la máquina
@@ -85,9 +86,27 @@ class IncidenciaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Incidencia $incidencia)
+    public function show($id)
     {
-        //
+        $result = DB::table('incidencias as i')
+            ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
+            ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
+            ->join('users as u', 'i.id_usuario', '=', 'u.id')
+            ->select('i.*', 'm.nombre as nombre_maquina', 'c.nombre as nombre_categoria', 'u.name as nombre_usuario')
+            ->where('i.id', $id)
+            ->first();
+
+        if ($result) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró la incidencia.'
+        ], 404);
     }
 
     /**
@@ -183,4 +202,51 @@ class IncidenciaController extends Controller
             'message' => 'No se encontraron incidencias.'
         ], 404);
     }
+
+    public function getIncidenciasByCampus($campus){
+        $result = DB::table('incidencias as inc')
+            ->join('categorias as cat', 'inc.id_categoria', '=', 'cat.id')
+            ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
+            ->join('sections as sect', 'maq.id_section', '=', 'sect.id')
+            ->join('campuses as camp', 'sect.id_campus', '=', 'camp.id')
+            ->select('inc.*', 'maq.prioridad', 'maq.estado as gravedad_incidencia', 'maq.nombre as nombre_maquina', 'cat.nombre as categoria')
+            ->where('resuelta', 0)
+            ->where('camp.id', $campus)
+            ->get();
+
+        if ($result->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
+    }
+
+    public function getIncidenciasBySection($section){
+        $result = DB::table('incidencias as inc')
+            ->join('categorias as cat', 'inc.id_categoria', '=', 'cat.id')
+            ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
+            ->join('sections as sect', 'maq.id_section', '=', 'sect.id')
+            ->join('campuses as camp', 'sect.id_campus', '=', 'camp.id')
+            ->select('inc.*', 'maq.prioridad', 'maq.estado as gravedad_incidencia', 'maq.nombre as nombre_maquina', 'cat.nombre as categoria')
+            ->where('resuelta', 0)
+            ->where('sect.id', $section)
+            ->get();
+
+        if ($result->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
+    }
+
 }
