@@ -7,23 +7,52 @@ use App\Models\Mantenimiento;
 use App\Models\Maquina;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function Symfony\Component\String\b;
 
 class IncidenciaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $result = DB::table('incidencias as i')
+        $prioridad = $request->query('priority', null);
+
+        $query = DB::table('incidencias as i')
             ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
             ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
             ->select('i.*', 'm.prioridad', 'm.estado as gravedad_incidencia', 'm.nombre as nombre_maquina', 'c.nombre as categoria')
-            ->where('resuelta', 0)
             ->orderBy('m.estado', 'desc')
             ->orderBy('m.prioridad', 'asc')
-            ->orderBy('i.fecha_creacion', 'desc')
-            ->get();
+            ->orderBy('i.fecha_creacion', 'desc');
+
+        if ($prioridad != null){
+            switch ((int)$prioridad){
+                case 0:
+                    $query->where('i.resuelta', 1);
+                    break;
+                case 1:
+                    $query->where('m.prioridad', 1);
+                     break;
+                case 2:
+                    $query->where('m.prioridad', 2);
+                    break;
+                case 3:
+                    $query->where('m.prioridad', 3);
+                    break;
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se encontraron incidencias.'
+                    ], 404);
+                    break;
+
+            }
+        } else {
+            $query->where('i.resuelta', 0);
+        }
+
+        $result = $query->get();
 
         if ($result->isNotEmpty()) {
             return response()->json([

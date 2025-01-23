@@ -79,55 +79,14 @@
 </template>
 
 <script>
-import axios from 'axios';
-import SelectCampus from '@/components/SelectCampus.vue';
 import CuadrosDatos from '@/components/CuadrosDatos.vue';
-import { API_BASE_URL } from '@/config.js';
+import IncidenciasList from '@/components/IncidenciasList.vue';
 
 export default {
   name: 'Home',
   components: {
-    SelectCampus,
     CuadrosDatos,
+    IncidenciasList,
   },
-  data() {
-    return {
-      incidencias: [],
-      selectedCampusId: null,
-      selectedSectionId: null,
-    };
-  },
-  created() {
-    this.fetchIncidencias();
-  },
-  methods: {
-    async fetchIncidencias(campusId = null, sectionId = null) {
-      try {
-        const token = sessionStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token found');
-        }
-        let url = `${API_BASE_URL}/incidencias`;
-        if (campusId > 0) {
-          url += `?campus_id=${campusId}`;
-        }
-        if (sectionId > 0) {
-          url += campusId > 0 ? `&section_id=${sectionId}` : `?section_id=${sectionId}`;
-        }
-        const response = await axios.get(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        this.incidencias = response.data.data;
-      } catch (error) {
-        console.error('Error al obtener las incidencias:', error);
-      }
-    },
-    aplicarFiltro() {
-      this.fetchIncidencias(this.selectedCampusId, this.selectedSectionId);
-    }
-  }
 };
 </script>
