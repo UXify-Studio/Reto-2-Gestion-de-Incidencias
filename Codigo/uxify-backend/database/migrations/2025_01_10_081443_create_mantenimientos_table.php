@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('fecha_inicio');
             $table->date('proxima_fecha');
             $table->string('periodo');
+            $table->integer('resuelta')->default(0);
             $table->timestamps();
         });
     }
