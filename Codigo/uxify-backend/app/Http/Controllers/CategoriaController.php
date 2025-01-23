@@ -12,9 +12,10 @@ class CategoriaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $categorias = Categoria::all();
+
         return response()->json($categorias);
     }
 
@@ -31,7 +32,17 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'deshabilitado' => 'required|boolean', // Asumiendo que es un boolean (0 o 1)
+        ]);
+
+        $categoria = Categoria::create([
+            'nombre' => $request->nombre,
+            'deshabilitado' => $request->deshabilitado,
+        ]);
+
+        return response()->json($categoria, 201); // 201 Created
     }
 
     /**
@@ -55,7 +66,17 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, Categoria $categoria)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'deshabilitado' => 'required|boolean', // Asumiendo que es un boolean (0 o 1)
+        ]);
+
+        $categoria->update([
+            'nombre' => $request->nombre,
+            'deshabilitado' => $request->deshabilitado,
+        ]);
+
+        return response()->json($categoria, 200);
     }
 
     /**
@@ -88,5 +109,23 @@ class CategoriaController extends Controller
             'success' => false,
             'message' => 'No se encontraron incidencias.'
         ], 404);
+    }
+
+    public function enable($id)
+    {
+        $categoria = Categoria::findOrFail($id);
+        $categoria->deshabilitado = 0;
+        $categoria->save();
+
+        return response()->json(['message' => 'Categoria enabled successfully'], 200);
+    }
+
+    public function disable($id)
+    {
+        $categoria = Categoria::findOrFail($id);
+        $categoria->deshabilitado = 1;
+        $categoria->save();
+
+        return response()->json(['message' => 'Categoria disabled successfully'], 200);
     }
 }

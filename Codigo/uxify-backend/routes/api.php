@@ -23,7 +23,13 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(CategoriaController::class)->group(function () {
-    Route::get('/categorias', [CategoriaController::class, 'index']);
+    Route::get('/categorias', 'index');
+    Route::post('/categorias', 'store')->middleware('auth:api','admin');
+    //Route::get('/categorias/{id}', 'show')->middleware('auth:api','admin');
+    Route::put('/categorias/{id}', 'update')->middleware('auth:api','admin');
+    //Route::delete('/categorias/{id}', 'destroy')->middleware('auth:api','admin');
+    Route::put('/categorias/{id}/enable',  'enable')->middleware('auth:api','admin');
+    Route::put('/categorias/{id}/disable',  'disable')->middleware('auth:api','admin');
 });
 
 Route::controller(MaquinaController::class)->group(function () {
