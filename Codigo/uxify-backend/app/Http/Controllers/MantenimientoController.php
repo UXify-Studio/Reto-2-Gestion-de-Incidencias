@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mantenimiento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -64,9 +65,36 @@ class MantenimientoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Mantenimiento $mantenimiento)
+
+    public function show($id)
     {
-        return $mantenimiento;
+        try {
+            $mantenimiento = DB::table('mantenimientos')
+                ->join('maquinas', 'mantenimientos.id_maquina', '=', 'maquinas.id')
+                ->join('users', 'mantenimientos.id_usuario', '=', 'users.id')
+                ->where('mantenimientos.id', $id)
+                ->select('mantenimientos.*', 'maquinas.nombre as nombre_maquina', 'users.name as nombre_usuario')
+                ->first();
+
+            if (!$mantenimiento) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mantenimiento no encontrado'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Detalles del mantenimiento obtenidos exitosamente',
+                'data' => $mantenimiento
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hubo un problema al obtener los detalles del mantenimiento',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

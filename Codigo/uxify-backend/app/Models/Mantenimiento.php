@@ -14,6 +14,7 @@ class Mantenimiento extends Model {
         'periodo',
         'duracion',
         'fecha_inicio',
+        'resuelta',
         'proxima_fecha'
     ];
 
