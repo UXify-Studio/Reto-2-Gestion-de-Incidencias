@@ -27,6 +27,13 @@ const router = createRouter({
       name: 'mantenimientos',
       component: () => import('../views/MantenimientosView.vue') 
     },
+    {
+      path: '/mantenimientos/detalles',
+      name: 'MantenimientosDetalles',
+      component: () => import('../views/DetailsMantenimientoView.vue'),
+      props: route => ({ id: route.query.id })
+    },
+
     
     { 
       path: '/estadisticas',
@@ -69,6 +76,7 @@ const router = createRouter({
       component: () => import('../views/admin/SeccionesList.vue') ,
       meta: { requiresAdmin: true },
     },
+    
     
 
   ],
