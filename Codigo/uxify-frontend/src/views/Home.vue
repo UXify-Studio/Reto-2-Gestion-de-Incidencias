@@ -12,7 +12,7 @@
           <button class="btn btn-dark" @click="borrarFiltros">Borrar Filtros</button>
         </div>
       </div>
-      <h2 class="text-primary mb-1 fs-4">Incidencias</h2>
+      <h2 class="text-primary mb-1 fs-4">Incidencias <span v-if="priorityText">{{ priorityText }}</span></h2>
       <hr>
       <table class="table table-bordered table-striped">
         <thead class="table-light">
@@ -101,6 +101,23 @@ export default {
       selectedSectionId: null,
       resetFilters: false,
     };
+  },
+  computed: {
+    priorityText() {
+      const priority = this.$route.query.priority;
+      switch (priority) {
+        case '1':
+          return 'Prioridad 1';
+        case '2':
+          return 'Prioridad 2';
+        case '3':
+          return 'Prioridad 3';
+        case '0':
+          return 'Resueltas';
+        default:
+          return '';
+      }
+    }
   },
   watch: {
     // Observar cambios en el parámetro de consulta "priority"
