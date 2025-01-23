@@ -62,8 +62,6 @@ import Modal from '@/components/Modal.vue';
 import { useIncidenciasStore } from '../stores/incidencias';
 import { computed, onMounted } from 'vue';
 
-import TicketForm from './TicketForm.vue';
-import Modal from '@/components/Modal.vue';
 
 export default {
   name: 'CuadrosDatos',

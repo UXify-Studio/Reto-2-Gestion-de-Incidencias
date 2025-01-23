@@ -4,10 +4,12 @@
     <div class="container mt-2z">
       <div class="row mb-3">
         <div class="col d-flex align-items-center">
-          <SelectCampus 
-            v-model:selectedCampusId="selectedCampusId" 
-            v-model:selectedSectionId="selectedSectionId" />
+          <FiltroCampus
+            :resetFilters="resetFilters"
+            @updateSelections="handleSelections"
+          />
           <button class="btn btn-dark" @click="aplicarFiltro">Aplicar Filtro</button>
+          <button class="btn btn-dark" @click="borrarFiltros">Borrar Filtros</button>
         </div>
       </div>
       <h2 class="text-primary mb-1 fs-4">Incidencias</h2>
@@ -79,14 +81,76 @@
 </template>
 
 <script>
+import axios from 'axios';
 import CuadrosDatos from '@/components/CuadrosDatos.vue';
 import IncidenciasList from '@/components/IncidenciasList.vue';
+import FiltroCampus from '@/components/FiltroCampus.vue';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
   name: 'Home',
   components: {
     CuadrosDatos,
     IncidenciasList,
+    FiltroCampus,
   },
+  data() {
+    return {
+      incidencias: [],
+      selectedCampusId: null,
+      selectedSectionId: null,
+      resetFilters: false,
+    };
+  },
+  watch: {
+    // Observar cambios en el parámetro de consulta "priority"
+    '$route.query.priority': {
+      immediate: true,
+      handler(newPriority) {
+        this.fetchIncidencias(newPriority);
+      },
+    },
+  },
+  methods:{
+    fetchIncidencias(priority) {
+      const params = {};
+      if (priority) {
+        params.priority = priority;
+      }
+
+      axios
+        .get(`${API_BASE_URL}/incidencias`, { params })
+        .then((response) => {
+          this.incidencias = response.data.data || [];
+        })
+        .catch((error) => {
+          console.error('Error al obtener las incidencias:', error);
+        });
+    },
+
+    created() {
+      this.fetchIncidencias();
+    },
+
+    aplicarFiltro() {
+        console.log("Campus ID:", this.selectedCampusId);
+        console.log("Section ID:", this.selectedSectionId);
+    },
+
+    borrarFiltros() {
+        this.selectedCampusId = null;
+        this.selectedSectionId = null;
+        this.resetFilters = true; // Activa el reset en el hijo
+        setTimeout(() => {
+            this.resetFilters = false; // Desactiva el reset después de un ciclo
+        }, 0);
+        this.$router.push('/home');
+    },
+    handleSelections({ campusId, sectionId }) {
+        this.selectedCampusId = campusId;
+        this.selectedSectionId = sectionId;
+    },
+  },
+  
 };
 </script>
