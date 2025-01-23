@@ -292,6 +292,16 @@ class IncidenciaController extends Controller
     public function marcarIncidenciaComoResuelta($id_incidencia)
     {
         try {
+            $tecnicosTrabajando = DB::table('incidencia_tecnicos')
+                ->where('id_incidencia', $id_incidencia)
+                ->whereNotNull('fecha_inicio')
+                ->whereNull('fecha_fin')
+                ->exists();
+
+            if ($tecnicosTrabajando) {
+                return response()->json(['success' => false, 'message' => 'No se puede marcar la incidencia como resuelta porque hay técnicos trabajando en ella.'], 400);
+            }
+
             $incidencia = Incidencia::findOrFail($id_incidencia);
             $incidencia->resuelta = 1;
             $incidencia->save();
@@ -299,6 +309,33 @@ class IncidenciaController extends Controller
             return response()->json(['success' => true, 'message' => 'Incidencia marcada como resuelta']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error al marcar la incidencia como resuelta: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function actualizarComentario(Request $request, $id_incidencia)
+    {
+        $validatedData = $request->validate([
+            'comentario' => 'required|string',
+        ]);
+
+        try {
+            $incidencia = Incidencia::findOrFail($id_incidencia);
+            $incidencia->comentario = $validatedData['comentario'];
+            $incidencia->save();
+
+            return response()->json(['success' => true, 'message' => 'Comentario actualizado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al actualizar el comentario: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function obtenerComentario($id_incidencia)
+    {
+        try {
+            $incidencia = Incidencia::findOrFail($id_incidencia);
+            return response()->json(['success' => true, 'comentario' => $incidencia->comentario]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al obtener el comentario: ' . $e->getMessage()], 500);
         }
     }
 }

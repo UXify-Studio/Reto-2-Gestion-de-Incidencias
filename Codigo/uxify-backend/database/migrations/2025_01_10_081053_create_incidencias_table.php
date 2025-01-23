@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('descripcion');
             $table->date('fecha_creacion');
             $table->integer('estado_incidencia');
+            $table->text('comentario')->nullable();
             $table->boolean('resuelta')->default(0);
             $table->timestamps();
         });

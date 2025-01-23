@@ -31,7 +31,6 @@ export default {
 
         idIncidencia.value = route.query.id;
 
-
         const formattedTime = computed(() => {
             const minutes = Math.floor(time.value / 60);
             const seconds = time.value % 60;
@@ -55,7 +54,6 @@ export default {
         onMounted(async () => {
             window.addEventListener('beforeunload', handleBeforeUnload);
 
-
             const token = sessionStorage.getItem('token');
             try {
                 const response = await axios.get(`${API_BASE_URL}/auth/me`, {
@@ -70,7 +68,6 @@ export default {
                 toast.error('Error al obtener el ID del técnico');
             }
         });
-
 
         onUnmounted(() => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -126,24 +123,29 @@ export default {
 
             try {
                 const token = sessionStorage.getItem('token');
-                await axios.put(`${API_BASE_URL}/incidencias/${idIncidencia.value}/resuelta`, null, {
+                const response = await axios.put(`${API_BASE_URL}/incidencias/${idIncidencia.value}/resuelta`, null, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-                toast.success('Incidencia marcada como resuelta');
 
-                time.value = 0;
-                router.push({ name: 'home' });
+                if (response.data.success) {
+                    toast.success('Incidencia marcada como resuelta');
+                    time.value = 0;
+                    router.push({ name: 'home' });
+                } else {
+                    toast.error(response.data.message || 'Error al marcar la incidencia como resuelta');
+                }
             } catch (error) {
-                toast.error('Error al marcar la incidencia como resuelta');
-                console.error('Error:', error);
-                return;
+                if (error.response && error.response.status === 400 && error.response.data.message) {
+                    toast.error(error.response.data.message);
+                } else {
+                    toast.error('Error al marcar la incidencia como resuelta');
+                    console.error('Error:', error);
+                }
             }
         };
-
-
 
         const insertIncidencia = async () => {
             try {
