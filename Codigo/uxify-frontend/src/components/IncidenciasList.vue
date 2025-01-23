@@ -141,7 +141,7 @@ export default {
       }
 
       axios
-        .get(`${API_BASE_URL}/home`, { params })
+        .get(`${API_BASE_URL}/incidencias`, { params })
         .then((response) => {
           this.incidencias = response.data.data || [];
         })

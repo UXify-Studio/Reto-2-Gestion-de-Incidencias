@@ -13,7 +13,8 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        return Mantenimiento::all();
+        $mantenimientos = Mantenimiento::with('usuario', 'maquina')->get();
+        return response()->json(['mantenimientos' => $mantenimientos]);
     }
 
     /**
