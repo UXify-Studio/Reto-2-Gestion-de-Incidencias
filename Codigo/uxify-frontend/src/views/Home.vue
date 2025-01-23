@@ -86,7 +86,6 @@ import CuadrosDatos from '@/components/CuadrosDatos.vue';
 import IncidenciasList from '@/components/IncidenciasList.vue';
 import FiltroCampus from '@/components/FiltroCampus.vue';
 import { API_BASE_URL } from '@/config.js';
-
 export default {
   name: 'Home',
   components: {
@@ -129,40 +128,27 @@ export default {
     },
   },
   methods:{
-    fetchIncidencias(priority, page = 1) {
-      let url = `${API_BASE_URL}/incidencias?page=${page}`;
+    fetchIncidencias(priority) {
       const params = {};
       if (priority) {
         params.priority = priority;
-        url += `&priority=${priority}`;
       }
-      console.log('URL:', url);
-
       axios
-        .get(url)
+        .get(`${API_BASE_URL}/incidencias`, { params })
         .then((response) => {
           this.incidencias = response.data.data || [];
-          //this.$emit('update:incidencias', response.data.data);
-          this.$emit('update:pagination', {
-              current_page: response.data.current_page,
-              last_page: response.data.last_page,
-              per_page: response.data.per_page
-          });
         })
         .catch((error) => {
           console.error('Error al obtener las incidencias:', error);
         });
     },
-
     created() {
       this.fetchIncidencias();
     },
-
     aplicarFiltro() {
         console.log("Campus ID:", this.selectedCampusId);
         console.log("Section ID:", this.selectedSectionId);
     },
-
     borrarFiltros() {
         this.selectedCampusId = null;
         this.selectedSectionId = null;
