@@ -1,50 +1,3 @@
-<script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { API_BASE_URL } from '@/config.js';
-
-export default {
-    name: 'CategoriaList',
-    props: {
-        categorias: {
-            type: Array,
-            required: true,
-        },
-    },
-    emits:['edit-categoria', 'toggle-categoria-status'],
-    setup(props, { emit }) {
-        const categoriasData = ref([]);
-        const loading = ref(false);
-        const error = ref(null);
-         const fetchCategorias = async () => {
-            loading.value = true;
-           error.value = null;
-          try {
-            const response = await axios.get(`${API_BASE_URL}/categorias`);
-            categoriasData.value = response.data;
-             }
-          catch (err) {
-              error.value = err;
-                console.error('Error al obtener las categorías:', err);
-           } finally {
-               loading.value = false;
-           }
-       };
-
-
-       onMounted(() => {
-        fetchCategorias();
-       });
-
-        return {
-           categoriasData,
-            loading,
-           error,
-        };
-    },
-};
-</script>
-
 <template>
     <div class="col-12">
         <div v-if="loading">Cargando categorías...</div>
@@ -59,7 +12,7 @@ export default {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="categoria in categoriasData" :key="categoria.id">
+                    <tr v-for="categoria in categorias" :key="categoria.id">
                         <td>{{ categoria.nombre }}</td>
                         <td>
                             <span class="badge bg-success" v-if="categoria.deshabilitado === 0">Habilitada</span>
@@ -70,7 +23,7 @@ export default {
                                 <img src="../assets/editar.svg" alt="Editar" class="icon-small">
                             </button>
                             <button class="btn btn-sm" @click="$emit('toggle-categoria-status', categoria)">
-                                <img src="../assets/person-lock.svg" 
+                                <img src="../assets/person-lock.svg"
                                 :alt="categoria.deshabilitado ===0 ? 'Deshabilitar' : 'Habilitar' " class="icon-small-2">
                             </button>
                         </td>
@@ -80,7 +33,23 @@ export default {
         </div>
     </div>
 </template>
+<script>
 
+export default {
+    name: 'CategoriaList',
+    props: {
+        categorias: {
+            type: Array,
+            required: true,
+        },
+    },
+    emits:['edit-categoria', 'toggle-categoria-status'],
+    setup(props, { emit }) {
+        return {
+        };
+    },
+};
+</script>
 <style scoped>
 .icon-small {
     width: 40px;

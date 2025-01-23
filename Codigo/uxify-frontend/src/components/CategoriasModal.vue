@@ -5,15 +5,6 @@
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" v-model="categoriaForm.nombre" required>
             </div>
-            <div class="mb-3">
-               <label for="deshabilitado" class="form-label">Estado</label>
-                <select  id="deshabilitado"  class="form-control" v-model="categoriaForm.deshabilitado" required>
-                    <option :value="0">Habilitado</option>
-                    <option :value="1">Deshabilitado</option>
-                </select>
-            </div>
-
-
             <button type="submit" class="btn btn-primary">
                 {{ mode === 'register' ? 'Registrar' : 'Guardar Cambios' }}
             </button>
@@ -40,7 +31,7 @@ export default {
         },
         mode: {
             type: String,
-            default: 'register' // 'register' o 'edit'
+            default: 'register'
         },
         categoria: {
             type: Object,
@@ -54,7 +45,6 @@ export default {
         const categoriaForm = reactive({
            nombre: '',
            descripcion: '',
-           deshabilitado: 0,
           });
 
         const toast = useToast();

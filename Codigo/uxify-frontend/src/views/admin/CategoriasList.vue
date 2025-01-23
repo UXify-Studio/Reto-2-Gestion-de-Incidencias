@@ -16,7 +16,7 @@
                 <CategoriasList
                     :categorias="categorias"
                     @edit-categoria="openModal('edit', $event)"
-                    @toggle-categoria-status="toggleCategoriaStatus($event)"
+                    @toggle-categoria-status="toggleCategoriaStatus"
                 />
             </div>
         </div>
@@ -35,6 +35,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
 
 import CuadrosDatos from '@/components/CuadrosDatos.vue';
 import CategoriasList from '@/components/CategoriasList.vue';
@@ -49,6 +50,7 @@ export default {
         CategoriasModal,
     },
     setup(){
+        const toast = useToast();
         const showModal = ref(false);
         const modalMode = ref('register');
         const categoriaSelected = ref(null);
@@ -74,15 +76,24 @@ export default {
            error.value = null;
             try {
                 const response = await axios.get(`${API_BASE_URL}/categorias`);
-                 // Actualiza los datos de la lista y usa el operador de propagación para actualizar reactivamente
-                 categorias.value = [...response.data]
-                 return response; // Devuelve la respuesta
-
+                categorias.value = response.data; // Direct assignment is fine since we update specific objects
             } catch (err) {
                 error.value = err;
                 console.error('Error fetching categorías:', err);
+                toast.error('Error al cargar las categorías');
             } finally {
               loading.value = false;
+            }
+        };
+
+        const updateCategoriaInList = (updatedCategoria) => {
+            const index = categorias.value.findIndex(cat => cat.id === updatedCategoria.id);
+            if (index !== -1) {
+                // Use Vue's reactivity system to update the object.
+                Object.assign(categorias.value[index], updatedCategoria);
+
+                // OR (alternative with spread syntax, might have performance considerations for very large lists)
+                // categorias.value = categorias.value.map(cat => cat.id === updatedCategoria.id ? { ...cat, ...updatedCategoria } : cat);
             }
         };
 
@@ -102,27 +113,38 @@ export default {
                          Authorization: `Bearer ${token}`
                     }
                  });
-                  if (response && response.data){ // comprueba que response y response.data existen
-                    await fetchCategorias();
-                 }
+
+                if (response && response.data) {
+                    // Optimistically update the category status in the list:
+                    const updatedCategoria = { ...categoria, deshabilitado: categoria.deshabilitado === 0 ? 1 : 0 };
+                    updateCategoriaInList(updatedCategoria);
+
+                     toast.success(`Categoría ${updatedCategoria.deshabilitado ? 'deshabilitada' : 'habilitada'} con éxito`);
+                }
             }
            catch (error){
               console.error(error);
+                 toast.error('Error al cambiar el estado de la categoría');
             }
          };
 
-
-         const handleCategoriaUpdate = async () => {
-            const response = await fetchCategorias();
-            if (response && response.data) {
-                categorias.value = [...response.data]; // Actualiza las categorías
+        const handleCategoriaUpdate = async () => {
+             try {
+                await fetchCategorias(); // Refetch all categories or update specific one if your API returns it
+                toast.success('Categorías actualizadas con éxito.');
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                toast.error('Error al actualizar las categorías.');
             }
         };
+
+
         onMounted(() => {
             fetchCategorias();
         });
 
         return{
+            toast,
             showModal,
             modalMode,
             categoriaSelected,
