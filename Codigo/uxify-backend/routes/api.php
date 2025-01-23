@@ -73,6 +73,8 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
     Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api');
     Route::put('/incidencias/{id}/resuelta', [IncidenciaController::class, 'marcarIncidenciaComoResuelta'])->middleware('auth:api');
+    Route::put('/incidencias/{id}/comentario', [IncidenciaController::class, 'actualizarComentario']);
+    Route::get('/incidencias/{id}/comentario', [IncidenciaController::class, 'obtenerComentario']);
 });
 
 Route::get('/roles', [RolController::class, 'index']);

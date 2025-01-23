@@ -1,11 +1,12 @@
 <template>
   <div class="container py-4">
     <h1 class="mb-3 text-primary fs-3">Detalles de la Incidencia</h1>
-    
+
     <div class="card shadow-sm">
       <div class="card-body p-0">
         <table class="table table-hover mb-0 fs-6">
           <tbody>
+            <!-- Campos existentes -->
             <tr>
               <th class="bg-dark text-white px-3 py-2" style="width: 200px;">ID Incidencia</th>
               <td class="px-3 py-2">{{ incidencia.id }}</td>
@@ -25,12 +26,14 @@
             <tr>
               <th class="bg-dark text-white px-3 py-2">Estado</th>
               <td class="px-3 py-2">
-                <span class="badge rounded-pill px-2 py-1" 
-                      :class="{
-                        'bg-warning': estadoTexto === 'Pendiente',
-                        'bg-success': estadoTexto === 'En proceso',
-                        'bg-danger': estadoTexto === 'Parada'
-                      }">
+                <span
+                  class="badge rounded-pill px-2 py-1"
+                  :class="{
+                    'bg-warning': estadoTexto === 'Pendiente',
+                    'bg-success': estadoTexto === 'En proceso',
+                    'bg-danger': estadoTexto === 'Parada'
+                  }"
+                >
                   {{ estadoTexto }}
                 </span>
               </td>
@@ -38,8 +41,10 @@
             <tr>
               <th class="bg-dark text-white px-3 py-2">Resuelta</th>
               <td class="px-3 py-2">
-                <span class="badge rounded-pill px-2 py-1" 
-                      :class="incidencia.resuelta ? 'bg-success' : 'bg-danger'">
+                <span
+                  class="badge rounded-pill px-2 py-1"
+                  :class="incidencia.resuelta ? 'bg-success' : 'bg-danger'"
+                >
                   {{ incidencia.resuelta ? 'Sí' : 'No' }}
                 </span>
               </td>
@@ -68,6 +73,22 @@
               <th class="bg-dark text-white px-3 py-2">Nombre Usuario</th>
               <td class="px-3 py-2">{{ incidencia.nombre_usuario }}</td>
             </tr>
+
+            <!-- Nuevo campo Comentario -->
+            <tr>
+              <th class="bg-dark text-white px-3 py-2">Comentario</th>
+              <td class="px-3 py-2">
+                <textarea
+                  v-model="comentario"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Añadir un comentario..."
+                  @input="autoExpand($event)"
+                  style="overflow:hidden; resize: none; max-height: 500px;"
+                ></textarea>
+                <button class="btn btn-primary mt-2" @click="guardarComentario">Guardar Comentario</button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -75,64 +96,32 @@
   </div>
 </template>
 
-<style scoped>
-.table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.table tr:last-child td,
-.table tr:last-child th {
-  border-bottom: none;
-}
-
-.table td, 
-.table th {
-  border: none;
-  border-bottom: 1px solid #dee2e6;
-  vertical-align: middle;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.badge {
-  font-weight: 500;
-  font-size: 0.75rem;
-}
-
-.card {
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #dee2e6;
-}
-
-h1 {
-  font-size: 1.75rem;
-  font-weight: 600;
-}
-</style>  
-
 <script>
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   name: 'IncidenciaDetalles',
   props: {
     id: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       incidencia: {},
-      estadoTexto: 'Desconocido', // Default text for estado
+      estadoTexto: 'Desconocido', // Estado inicial
+      comentario: '', // Nuevo campo de comentario
     };
   },
   created() {
     this.fetchIncidencia();
     this.fetchEstado();
+    this.fetchComentario(); // Obtener el comentario existente
   },
   methods: {
     async fetchIncidencia() {
@@ -144,12 +133,12 @@ export default {
         const response = await axios.get(`${API_BASE_URL}/incidencias/${this.id}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         this.incidencia = response.data.data;
       } catch (error) {
-        console.error('Error al obtener la incidencia:', error);
+        toast.error('Error al obtener la incidencia');
       }
     },
     async fetchEstado() {
@@ -161,14 +150,57 @@ export default {
         const response = await axios.get(`${API_BASE_URL}/incidencias/${this.id}/estado`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         const estado = response.data.estado;
         this.estadoTexto = this.getEstadoTexto(estado);
       } catch (error) {
         console.error('Error al obtener el estado:', error);
       }
+    },
+    async fetchComentario() {
+      try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        const response = await axios.get(`${API_BASE_URL}/incidencias/${this.id}/comentario`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.comentario = response.data.comentario || '';
+      } catch (error) {
+        console.error('Error al obtener el comentario:', error);
+      }
+    },
+    async guardarComentario() {
+      try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        await axios.put(
+          `${API_BASE_URL}/incidencias/${this.id}/comentario`,
+          { comentario: this.comentario },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        toast.success('Comentario guardado correctamente');
+      } catch (error) {
+        toast.error('Error al guardar el comentario');
+      }
+    },
+    autoExpand(event) {
+      const textarea = event.target;
+      textarea.style.height = 'auto'; // Restablece la altura para calcular correctamente
+      textarea.style.height = `${textarea.scrollHeight}px`; // Ajusta al contenido
     },
     getEstadoTexto(estado) {
       switch (estado) {
@@ -181,7 +213,7 @@ export default {
         default:
           return 'Desconocido';
       }
-    }
-  }
+    },
+  },
 };
 </script>
