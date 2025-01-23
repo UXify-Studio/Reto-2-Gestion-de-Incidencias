@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import TicketForm from './TicketForm.vue';
+import TicketForm from './IncidenciaForm.vue';
 import Modal from '@/components/Modal.vue';
 
 import { useIncidenciasStore } from '../stores/incidencias';

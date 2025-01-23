@@ -62,8 +62,8 @@ class IncidenciaController extends Controller
             $validatedData = $request->validate([
                 'titulo' => 'required|string',
                 'descripcion' => 'required|string',
-                'categoria' => 'required|integer', // O el tipo de dato que corresponda
-                'maquina' => 'required|integer',
+                'id_categoria' => 'required|integer',
+                'id_maquina' => 'required|integer',
                 'estado' => 'required|integer'
             ]);
 

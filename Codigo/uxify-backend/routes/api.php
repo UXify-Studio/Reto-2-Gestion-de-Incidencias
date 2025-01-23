@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\IncidenciaTecnicoController;
 use App\Http\Controllers\MaquinaController;
+use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,13 @@ Route::controller(MaquinaController::class)->group(function () {
     Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD'])->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/enable', [MaquinaController::class, 'enable'])->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
+});
+
+Route::controller(MantenimientoController::class)->group(function () {
+    Route::get('/mantenimientos', [MantenimientoController::class, 'index']);
+    Route::put('/mantenimientosCreate', [MantenimientoController::class, 'store']);
+    Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
+    Route::put('/mantenimientos/{id}', [MantenimientoController::class, 'update']);
 });
 
 Route::controller(CampusController::class)->group(function () {
