@@ -51,8 +51,8 @@ class IncidenciaController extends Controller
             }
         }
 
-        //$result = $query->get();
-        $result = $query->paginate(12);
+        $result = $query->get();
+        //$result = $query->paginate(12);
 
         if ($result->isNotEmpty()) {
             return response()->json([
