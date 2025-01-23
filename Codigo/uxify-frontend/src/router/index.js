@@ -23,6 +23,19 @@ const router = createRouter({
       component: () => import('../views/Home.vue') 
     },
     { 
+      path: '/mantenimientos',
+      name: 'mantenimientos',
+      component: () => import('../views/MantenimientosView.vue') 
+    },
+    {
+      path: '/mantenimientos/detalles',
+      name: 'MantenimientosDetalles',
+      component: () => import('../views/DetailsMantenimientoView.vue'),
+      props: route => ({ id: route.query.id })
+    },
+
+    
+    { 
       path: '/estadisticas',
       name: 'estadisticas',
       component: () => import('../views/Estadisticas.vue') 
@@ -41,28 +54,29 @@ const router = createRouter({
     { 
       path: '/gestion/users', 
       component: () => import('../views/admin/UsuariosListView.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     { 
       path: '/gestion/maquinas', 
       component: () => import('../views/admin/MaquinasListView.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     { 
       path: '/gestion/categorias', 
       component: () => import('../views/admin/CategoriasList.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     {
       path: '/gestion/campus', 
       component: () => import('../views/admin/CampusList.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     { 
       path: '/gestion/secciones', 
       component: () => import('../views/admin/SeccionesList.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
+    
     
 
   ],

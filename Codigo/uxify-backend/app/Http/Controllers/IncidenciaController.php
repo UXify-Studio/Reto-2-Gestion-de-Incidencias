@@ -7,23 +7,52 @@ use App\Models\Mantenimiento;
 use App\Models\Maquina;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function Symfony\Component\String\b;
 
 class IncidenciaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $result = DB::table('incidencias as i')
+        $prioridad = $request->query('priority', -1);
+
+        $query = DB::table('incidencias as i')
             ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
             ->join('categorias as c', 'i.id_categoria', '=', 'c.id')
             ->select('i.*', 'm.prioridad', 'm.estado as gravedad_incidencia', 'm.nombre as nombre_maquina', 'c.nombre as categoria')
-            ->where('resuelta', 0)
             ->orderBy('m.estado', 'desc')
             ->orderBy('m.prioridad', 'asc')
-            ->orderBy('i.fecha_creacion', 'desc')
-            ->get();
+            ->orderBy('i.fecha_creacion', 'desc');
+
+        if ($prioridad < 0) {
+            $query->where('i.resuelta', 0);
+
+        } else {
+            switch ((int)$prioridad) {
+                case 0:
+                    $query->where('i.resuelta', 1);
+                    break;
+                case 1:
+                    $query->where('m.prioridad', 1);
+                    break;
+                case 2:
+                    $query->where('m.prioridad', 2);
+                    break;
+                case 3:
+                    $query->where('m.prioridad', 3);
+                    break;
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se encontraron incidencias.'
+                    ], 404);
+            }
+        }
+
+        //$result = $query->get();
+        $result = $query->paginate(12);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -39,7 +68,8 @@ class IncidenciaController extends Controller
 
     }
 
-    public function index2(){
+    public function index2()
+    {
         $incidencias = Incidencia::all();
         return response()->json($incidencias);
     }
@@ -57,27 +87,34 @@ class IncidenciaController extends Controller
      */
     public function store(Request $request)
     {
-
         try {
             $validatedData = $request->validate([
                 'titulo' => 'required|string',
                 'descripcion' => 'required|string',
-                'categoria' => 'required|integer', // O el tipo de dato que corresponda
-                'maquina' => 'required|integer',
-                'estado' => 'required|integer'
+                'id_categoria' => 'required|integer',
+                'id_maquina' => 'required|integer',
+                'estado' => 'required|integer', // Validar el estado de la incidencia
             ]);
 
-
-            $incidencia = Incidencia::create($validatedData);
+            // Crear la incidencia
+            $incidencia = Incidencia::create([
+                'titulo' => $validatedData['titulo'],
+                'descripcion' => $validatedData['descripcion'],
+                'id_categoria' => $validatedData['id_categoria'],
+                'id_maquina' => $validatedData['id_maquina'],
+                'id_usuario' => auth()->user()->id, // Asignar el ID del usuario autenticado
+                'estado' => $validatedData['estado'] // Asignar el estado de la incidencia
+            ]);
 
             // Actualizar el estado de la máquina
-            $maquina = Maquina::findOrFail($request->maquina);
-            $maquina->estado = $request->estado;
+            $maquina = Maquina::findOrFail($validatedData['id_maquina']);
+            $maquina->estado = $validatedData['estado'];
             $maquina->save();
 
-
-
             return response()->json(['message' => 'Incidencia creada correctamente', 'incidencia' => $incidencia], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            return response()->json(['errors' => $validationException->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear la incidencia: ' . $e->getMessage()], 500);
         }
@@ -156,7 +193,8 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
-    public function countIncidenciasPorPrioridad(){
+    public function countIncidenciasPorPrioridad()
+    {
 
         $mantenimientos = Mantenimiento::count();
         $incidenciasResueltas = Incidencia::where('resuelta', 1)->count();
@@ -171,7 +209,7 @@ class IncidenciaController extends Controller
                 ->where('maq.prioridad', $i)
                 ->count();
 
-            switch ($i){
+            switch ($i) {
                 case 1:
                     $incidenciasAltas = $result;
                     break;
@@ -184,7 +222,7 @@ class IncidenciaController extends Controller
             }
         }
 
-        if ($result > 0 ) {
+        if ($result > 0) {
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -203,7 +241,8 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
-    public function getIncidenciasByCampus($campus){
+    public function getIncidenciasByCampus($campus)
+    {
         $result = DB::table('incidencias as inc')
             ->join('categorias as cat', 'inc.id_categoria', '=', 'cat.id')
             ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
@@ -226,7 +265,8 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
-    public function getIncidenciasBySection($section){
+    public function getIncidenciasBySection($section)
+    {
         $result = DB::table('incidencias as inc')
             ->join('categorias as cat', 'inc.id_categoria', '=', 'cat.id')
             ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
@@ -249,4 +289,53 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
+    public function marcarIncidenciaComoResuelta($id_incidencia)
+    {
+        try {
+            $tecnicosTrabajando = DB::table('incidencia_tecnicos')
+                ->where('id_incidencia', $id_incidencia)
+                ->whereNotNull('fecha_inicio')
+                ->whereNull('fecha_fin')
+                ->exists();
+
+            if ($tecnicosTrabajando) {
+                return response()->json(['success' => false, 'message' => 'No se puede marcar la incidencia como resuelta porque hay técnicos trabajando en ella.'], 400);
+            }
+
+            $incidencia = Incidencia::findOrFail($id_incidencia);
+            $incidencia->resuelta = 1;
+            $incidencia->save();
+
+            return response()->json(['success' => true, 'message' => 'Incidencia marcada como resuelta']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al marcar la incidencia como resuelta: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function actualizarComentario(Request $request, $id_incidencia)
+    {
+        $validatedData = $request->validate([
+            'comentario' => 'required|string',
+        ]);
+
+        try {
+            $incidencia = Incidencia::findOrFail($id_incidencia);
+            $incidencia->comentario = $validatedData['comentario'];
+            $incidencia->save();
+
+            return response()->json(['success' => true, 'message' => 'Comentario actualizado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al actualizar el comentario: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function obtenerComentario($id_incidencia)
+    {
+        try {
+            $incidencia = Incidencia::findOrFail($id_incidencia);
+            return response()->json(['success' => true, 'comentario' => $incidencia->comentario]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al obtener el comentario: ' . $e->getMessage()], 500);
+        }
+    }
 }

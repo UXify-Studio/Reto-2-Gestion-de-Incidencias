@@ -5,7 +5,9 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\IncidenciaTecnicoController;
+use App\Http\Controllers\MantenimientoTecnicoController;
 use App\Http\Controllers\MaquinaController;
+use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +24,13 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(CategoriaController::class)->group(function () {
-    Route::get('/categorias', [CategoriaController::class, 'index']);
+    Route::get('/categorias', 'index');
+    Route::post('/categorias', 'store')->middleware('auth:api','admin');
+    //Route::get('/categorias/{id}', 'show')->middleware('auth:api','admin');
+    Route::put('/categorias/{id}', 'update')->middleware('auth:api','admin');
+    //Route::delete('/categorias/{id}', 'destroy')->middleware('auth:api','admin');
+    Route::put('/categorias/{id}/enable',  'enable')->middleware('auth:api','admin');
+    Route::put('/categorias/{id}/disable',  'disable')->middleware('auth:api','admin');
 });
 
 Route::controller(MaquinaController::class)->group(function () {
@@ -31,6 +39,17 @@ Route::controller(MaquinaController::class)->group(function () {
     Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD'])->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/enable', [MaquinaController::class, 'enable'])->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
+});
+
+Route::controller(MantenimientoController::class)->group(function () {
+    Route::get('/mantenimientos', [MantenimientoController::class, 'index']);
+//    Route::middleware('auth:api')->post('/mantenimientosCreate', [MantenimientoController::class, 'store']);
+    Route::post('/mantenimientosCreate', [MantenimientoController::class, 'store'])->middleware('auth:api');
+    Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
+    Route::put('/mantenimientos/{id}', [MantenimientoController::class, 'update']);
+    Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
+    Route::put('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'actualizarComentario']);
+    Route::get('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'obtenerComentario']);
 });
 
 Route::controller(CampusController::class)->group(function () {
@@ -58,6 +77,9 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::get('incidencias/campus/{campus}', [IncidenciaController::class, 'getIncidenciasByCampus']);
     Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
     Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api');
+    Route::put('/incidencias/{id}/resuelta', [IncidenciaController::class, 'marcarIncidenciaComoResuelta'])->middleware('auth:api');
+    Route::put('/incidencias/{id}/comentario', [IncidenciaController::class, 'actualizarComentario']);
+    Route::get('/incidencias/{id}/comentario', [IncidenciaController::class, 'obtenerComentario']);
 });
 
 Route::get('/roles', [RolController::class, 'index']);
@@ -89,6 +111,15 @@ Route::post('/timer', [IncidenciaTecnicoController::class, 'store']);
 Route::put('/timer/{id}', [IncidenciaTecnicoController::class, 'update']);
 Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncidenciaTecnico']);
 Route::get('/timer/{id}/tiempototal', [IncidenciaTecnicoController::class, 'calcularTiempoTrabajado']);
+Route::get('/incidencias/{id}/estado', [IncidenciaTecnicoController::class, 'obtenerEstadoIncidencia']);
+
+Route::post('/mantenimiento/timer', [MantenimientoTecnicoController::class, 'store']);
+Route::put('/mantenimiento/timer/{id}', [MantenimientoTecnicoController::class, 'update']);
+Route::get('/mantenimiento/timer/latest', [MantenimientoTecnicoController::class, 'getLatestMantenimientoTecnico']);
+Route::get('/mantenimiento/timer/{id}/tiempototal', [MantenimientoTecnicoController::class, 'calcularTiempoTrabajado']);
+
+Route::put('/mantenimientos/{id}/resuelto', [MantenimientoController::class, 'marcarMantenimientoComoResuelta'])->middleware('auth:api');
+
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
 //    Route::post('/admin/users', [UserController::class, 'store']);

@@ -8,7 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Mantenimiento extends Model {
     use HasFactory;
     protected $fillable = [
-        'id_maquina', 'id_usuario', 'descripcion', 'periodo'
+        'id_maquina',
+        'id_usuario',
+        'descripcion',
+        'periodo',
+        'duracion',
+        'fecha_inicio',
+        'resuelta',
+        'proxima_fecha'
     ];
 
     protected $casts = [
@@ -20,10 +27,10 @@ class Mantenimiento extends Model {
     ];
 
     public function usuario(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_usuario');
     }
 
     public function maquina(){
-        return $this->belongsTo(Maquina::class);
+        return $this->belongsTo(Maquina::class, 'id_maquina');
     }
 }
