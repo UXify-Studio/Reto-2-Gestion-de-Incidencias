@@ -186,4 +186,23 @@ class IncidenciaTecnicoController extends Controller
             ]
         ]);
     }
+
+    public function obtenerEstadoIncidencia($id_incidencia)
+    {
+        $incidenciasTecnico = IncidenciaTecnico::where('id_incidencia', $id_incidencia)->get();
+
+        if ($incidenciasTecnico->isEmpty()) {
+            return response()->json(['success' => true, 'estado' => 0]); // Pendiente
+        }
+
+        foreach ($incidenciasTecnico as $incidencia) {
+            if ($incidencia->fecha_inicio && !$incidencia->fecha_fin) {
+                return response()->json(['success' => true, 'estado' => 1]); // En proceso
+            } elseif ($incidencia->fecha_inicio && $incidencia->fecha_fin) {
+                return response()->json(['success' => true, 'estado' => 2]); // Parada
+            }
+        }
+
+        return response()->json(['success' => true, 'estado' => 0]); // Default to Pendiente if no other conditions are met
+    }
 }
