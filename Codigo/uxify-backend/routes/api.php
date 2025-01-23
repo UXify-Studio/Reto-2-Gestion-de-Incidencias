@@ -42,7 +42,7 @@ Route::controller(MaquinaController::class)->group(function () {
 
 Route::controller(MantenimientoController::class)->group(function () {
     Route::get('/mantenimientos', [MantenimientoController::class, 'index']);
-    Route::post('/mantenimientosCreate', [MantenimientoController::class, 'store']);
+    Route::middleware('auth:api')->post('/mantenimientosCreate', [MantenimientoController::class, 'store']);
     Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
     Route::put('/mantenimientos/{id}', [MantenimientoController::class, 'update']);
 });

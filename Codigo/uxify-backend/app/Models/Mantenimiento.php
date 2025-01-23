@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Mantenimiento extends Model {
     use HasFactory;
     protected $fillable = [
-        'id_maquina', 'id_usuario', 'descripcion', 'periodo'
+        'id_maquina',
+        'id_usuario',
+        'descripcion',
+        'periodo',
+        'duracion',
+        'fecha_inicio',
+        'proxima_fecha'
     ];
 
     protected $casts = [

@@ -88,183 +88,226 @@
 <script>
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
+import { useToast } from 'vue-toastification';
 
 export default {
   data() {
-      return {
-          incidencia: {
-              titulo: '',
-              descripcion: '',
-              categoria: '',
-              maquina: '',
-              estado: 0,
-          },
-          mantenimiento: {
-              duracion: null,
-              fecha_inicio: '',
-              proxima_fecha: '',
-              descripcion: '',
-              periodo: '',
-              maquina: '' // Asegúrate de que 'maquina' exista en el objeto mantenimiento
-          },
-          categorias: [],
-          maquinas: [],
-          estadosNumeros: {
-              0: 'Parada',
-              1: 'En marcha',
-              2: 'Mantenimiento'
-          },
-          estadoActualNombre: null,
-          creandoIncidencia: true
-      };
+    return {
+      incidencia: {
+        titulo: '',
+        descripcion: '',
+        categoria: '',
+        maquina: '',
+        estado: 0,
+      },
+      mantenimiento: {
+        duracion: null,
+        fecha_inicio: '',
+        proxima_fecha: '',
+        descripcion: '',
+        periodo: '',
+        maquina: ''
+      },
+      categorias: [],
+      maquinas: [],
+      estadosNumeros: {
+        0: 'Parada',
+        1: 'En marcha',
+        2: 'Mantenimiento'
+      },
+      estadoActualNombre: null,
+      creandoIncidencia: true
+    };
   },
+    setup() {
+        const toast = useToast();
+        return { toast };
+    },
   created() {
-    const token = sessionStorage.getItem('token');  // Obtener el token aquí
+    const token = sessionStorage.getItem('token');
     if (!token) {
       console.error('No se encontró token. No se pueden obtener datos');
-      return; // Detener aquí si no hay token. Probablemente deberías redirigir a la página de inicio de sesión en este caso.
+      return;
     }
 
     Promise.all([
-      axios.get(`${API_BASE_URL}/categorias`, { // AÑADIR TOKEN A LA PETICIÓN DE CATEGORIAS
-         headers: {
-                  'Authorization': `Bearer ${token}`
-          }
+      axios.get(`${API_BASE_URL}/categorias`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       }),
-      axios.get(`${API_BASE_URL}/maquinasTD`,  { // AÑADIR TOKEN A LA PETICIÓN DE MAQUINASTD
-          headers: {
-                  'Authorization': `Bearer ${token}`
-          }
+      axios.get(`${API_BASE_URL}/maquinasTD`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       })
     ])
-    .then(responses => {
-      this.categorias = responses[0].data;
-      this.maquinas = responses[1].data;
-    })  
-    .catch(error => {
-      console.error("Error al cargar datos iniciales:", error);
-    });
+      .then(responses => {
+        this.categorias = responses[0].data;
+        this.maquinas = responses[1].data;
+      })
+      .catch(error => {
+        console.error("Error al cargar datos iniciales:", error);
+      });
   },
   methods: {
-      cargarEstados() {
-          const token = sessionStorage.getItem('token');
-          if (!token) {
-              console.error('No se encontró token. No se pueden obtener estados');
-              return;
+    cargarEstados() {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No se encontró token. No se pueden obtener estados');
+        return;
+      }
+
+      if (this.incidencia.maquina) {
+        axios.get(`${API_BASE_URL}/maquinas/${this.incidencia.maquina}/estados`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
           }
+        })
+          .then(response => {
+            const maquina = response.data;
+            this.incidencia.estado = maquina.estado;
+            this.estadoActualNombre = this.nombreEstado(this.incidencia.estado);
+          })
+          .catch(error => {
+            console.error("Error al cargar el estado:", error);
+            this.incidencia.estado = null;
+            this.estadoActualNombre = 'Desconocido';
+          });
+      } else {
+        this.incidencia.estado = null;
+        this.estadoActualNombre = 'Desconocido';
+      }
+    },
+    nombreEstado(estadoNumero) {
+      return this.estadosNumeros[estadoNumero] || 'Desconocido';
+    },
+    async submitIncidencia() {
+      try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('No se encontró el token.');
+        }
 
-          if (this.incidencia.maquina) {
-              axios.get(`${API_BASE_URL}/maquinas/${this.incidencia.maquina}/estados`, {
-                  headers: {
-                      'Authorization': `Bearer ${token}`
-                  }
-              })
-                  .then(response => {
-                      const maquina = response.data;
-                      this.incidencia.estado = maquina.estado;
-                      this.estadoActualNombre = this.nombreEstado(this.incidencia.estado);
-                  })
-                  .catch(error => {
-                      console.error("Error al cargar el estado:", error);
-                      this.incidencia.estado = null;
-                      this.estadoActualNombre = 'Desconocido';
-                  });
-          } else {
-              this.incidencia.estado = null;
-              this.estadoActualNombre = 'Desconocido';
+        const response = await axios.post(`${API_BASE_URL}/incidencias`, {
+            titulo: this.incidencia.titulo,
+            descripcion: this.incidencia.descripcion,
+            id_categoria: this.incidencia.categoria,
+            id_maquina: this.incidencia.maquina,
+            estado: this.incidencia.estado
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
-      },
-      nombreEstado(estadoNumero) {
-          return this.estadosNumeros[estadoNumero] || 'Desconocido';
-      },
-      async submitIncidencia() {
-          try {
-              const token = sessionStorage.getItem('token');
-              if (!token) {
-                  throw new Error('No se encontró el token.');
-              }
-              const dataToSend = {
-                  titulo: this.incidencia.titulo,
-                  descripcion: this.incidencia.descripcion,
-                  id_categoria: this.incidencia.categoria,
-                  id_maquina: this.incidencia.maquina,
-                  estado: this.incidencia.estado
-              };
-
-              console.log("Datos a Enviar:", dataToSend);
-
-              const response = await axios.post(`${API_BASE_URL}/incidencias`, {
-                  titulo: this.incidencia.titulo,
-                  descripcion: this.incidencia.descripcion,
-                  id_categoria: this.incidencia.categoria,
-                  id_maquina: this.incidencia.maquina,
-                  estado: this.incidencia.estado
-              }, {
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${token}`
-                  }
+        });
+        this.incidencia = {
+          titulo: '',
+          descripcion: '',
+          categoria: '',
+          maquina: '',
+          estado: ''
+        };
+          this.toast.success('Incidencia creada correctamente.', {
+            position: 'top-right',
+            timeout: 3000,
+          });
+      } catch (error) {
+        if (error.response) {
+          console.error('Error data:', error.response.data);
+          this.toast.error('Error al crear la incidencia: ' + error.response.data.message, {
+                position: 'top-right',
+                timeout: 3000,
+            });
+        } else if (error.message === 'No se encontró el token.') {
+          this.toast.error('No has iniciado sesión. Por favor, inicia sesión para crear una incidencia.', {
+                position: 'top-right',
+                timeout: 3000,
               });
-              this.incidencia = {
-                  titulo: '',
-                  descripcion: '',
-                  categoria: '',
-                  maquina: '',
-                  estado: ''
-              };
-              alert('Incidencia creada correctamente.');
-          } catch (error) {
-              if (error.response) {
-                  console.error('Error data:', error.response.data);
-                  alert('Error al crear la incidencia: ' + error.response.data.message);
-              } else if (error.message === 'No se encontró el token.') {
-                  alert('No has iniciado sesión. Por favor, inicia sesión para crear una incidencia.');
-              } else {
-                  console.error('Error:', error.message);
-                  alert('Error al crear la incidencia.');
-              }
-          }
-      },
-      async submitMantenimiento() {
-          try {
-              const token = sessionStorage.getItem('token');
-              if (!token) {
-                  throw new Error('No se encontró el token.');
-              }
-              const response = await axios.post(`${API_BASE_URL}/mantenimientosCreate`, {
-                  duracion: this.mantenimiento.duracion,
-                  fecha_inicio: this.mantenimiento.fecha_inicio,
-                  proxima_fecha: this.mantenimiento.proxima_fecha,
-                  descripcion: this.mantenimiento.descripcion,
-                  periodo: this.mantenimiento.periodo,
-                  id_maquina: this.mantenimiento.maquina
-              }, {
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${token}`
-                  }
-              });
-              this.mantenimiento = {
-                  duracion: null,
-                  fecha_inicio: '',
-                  proxima_fecha: '',
-                  descripcion: '',
-                  periodo: '',
-                  maquina: ''
-              };
-              alert('Mantenimiento creado correctamente.');
-          } catch (error) {
-              if (error.response) {
-                  console.error('Error data:', error.response.data);
-                  alert('Error al crear el mantenimiento: ' + error.response.data.message);
-              } else if (error.message === 'No se encontró el token.') {
-                  alert('No has iniciado sesión. Por favor, inicia sesión para crear un mantenimiento.');
-              } else {
-                  console.error('Error:', error.message);
-                  alert('Error al crear el mantenimiento.');
-              }
-          }
-      },
+        } else {
+          console.error('Error:', error.message);
+            this.toast.error('Error al crear la incidencia.', {
+                position: 'top-right',
+                timeout: 3000,
+            });
+        }
+      }
+    },
+    async submitMantenimiento() {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            throw new Error('No se encontró el token.');
+        }
+
+        // Formatear las fechas antes de enviarlas
+        const formattedFechaInicio = this.formatDate(this.mantenimiento.fecha_inicio);
+        const formattedProximaFecha = this.formatDate(this.mantenimiento.proxima_fecha);
+
+        console.log('Datos a Enviar:',{
+                duracion: this.mantenimiento.duracion,
+                fecha_inicio: formattedFechaInicio, // Usar la fecha formateada
+                proxima_fecha: formattedProximaFecha, // Usar la fecha formateada
+                descripcion: this.mantenimiento.descripcion,
+                periodo: this.mantenimiento.periodo,
+                id_maquina: this.mantenimiento.maquina
+        });
+
+        const response = await axios.post(`${API_BASE_URL}/mantenimientosCreate`, {
+            duracion: this.mantenimiento.duracion,
+            fecha_inicio: formattedFechaInicio,
+            proxima_fecha: formattedProximaFecha,
+            descripcion: this.mantenimiento.descripcion,
+            periodo: this.mantenimiento.periodo,
+            id_maquina: this.mantenimiento.maquina
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Incluir el token en la cabecera Authorization
+            }
+        });
+        this.mantenimiento = {
+            duracion: null,
+            fecha_inicio: '',
+            proxima_fecha: '',
+            descripcion: '',
+            periodo: '',
+            maquina: ''
+        };
+        this.toast.success('Mantenimiento creado correctamente.', {
+            position: 'top-right',
+            timeout: 3000,
+        });
+    } catch (error) {
+        if (error.response) {
+            console.error('Error data:', error.response.data);
+            this.toast.error('Error al crear el mantenimiento: ' + error.response.data.message, {
+                position: 'top-right',
+                timeout: 3000,
+            });
+        } else if (error.message === 'No se encontró el token.') {
+            this.toast.error('No has iniciado sesión. Por favor, inicia sesión para crear un mantenimiento.', {
+                position: 'top-right',
+                timeout: 3000,
+            });
+        } else {
+            console.error('Error:', error.message);
+            this.toast.error('Error al crear el mantenimiento.', {
+                position: 'top-right',
+                timeout: 3000,
+            });
+        }
+    }
+},
+    formatDate(date) {
+    if (!date) return '';
+
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+    },
   }
 };
 </script>
