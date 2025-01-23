@@ -64,19 +64,23 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categoria $categoria)
+
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'deshabilitado' => 'required|boolean', // Asumiendo que es un boolean (0 o 1)
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255'
         ]);
 
-        $categoria->update([
-            'nombre' => $request->nombre,
-            'deshabilitado' => $request->deshabilitado,
-        ]);
+        try {
+            $categoria = Categoria::findOrFail($id);
 
-        return response()->json($categoria, 200);
+            $categoria->nombre = $validatedData['nombre'];
+            $categoria->save();
+
+            return response()->json(['success' => true, 'nombre' => $categoria->nombre], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error updating category name: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
