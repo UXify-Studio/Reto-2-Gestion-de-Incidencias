@@ -37,7 +37,7 @@
                     <h3 class="card-title mb-0 display-6">{{ incidenciasResueltas >= 0 ? incidenciasResueltas : 'Cargando...' }}</h3>
                 </div>
             </router-link>
-            <router-link to="/Mantenimiento" class="card text-white bg-mantenimiento w-100 text-decoration-none"> 
+            <router-link :to="{ path: '/mantenimientos' }" class="card text-white bg-mantenimiento w-100 text-decoration-none"> 
                 <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
                     <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
                     <p class="mb-1">Mantenimientos Preventivos</p>

@@ -20,10 +20,10 @@ class Mantenimiento extends Model {
     ];
 
     public function usuario(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_usuario');
     }
 
     public function maquina(){
-        return $this->belongsTo(Maquina::class);
+        return $this->belongsTo(Maquina::class, 'id_maquina');
     }
 }

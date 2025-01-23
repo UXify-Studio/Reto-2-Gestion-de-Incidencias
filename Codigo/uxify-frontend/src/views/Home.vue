@@ -129,16 +129,25 @@ export default {
     },
   },
   methods:{
-    fetchIncidencias(priority) {
+    fetchIncidencias(priority, page = 1) {
+      let url = `${API_BASE_URL}/incidencias?page=${page}`;
       const params = {};
       if (priority) {
         params.priority = priority;
+        url += `&priority=${priority}`;
       }
+      console.log('URL:', url);
 
       axios
-        .get(`${API_BASE_URL}/incidencias`, { params })
+        .get(url)
         .then((response) => {
           this.incidencias = response.data.data || [];
+          //this.$emit('update:incidencias', response.data.data);
+          this.$emit('update:pagination', {
+              current_page: response.data.current_page,
+              last_page: response.data.last_page,
+              per_page: response.data.per_page
+          });
         })
         .catch((error) => {
           console.error('Error al obtener las incidencias:', error);

@@ -16,7 +16,7 @@ class IncidenciaController extends Controller
      */
     public function index(Request $request)
     {
-        $prioridad = $request->query('priority', null);
+        $prioridad = $request->query('priority', -1);
 
         $query = DB::table('incidencias as i')
             ->join('maquinas as m', 'i.id_maquina', '=', 'm.id')
@@ -26,14 +26,17 @@ class IncidenciaController extends Controller
             ->orderBy('m.prioridad', 'asc')
             ->orderBy('i.fecha_creacion', 'desc');
 
-        if ($prioridad != null){
-            switch ((int)$prioridad){
+        if ($prioridad < 0) {
+            $query->where('i.resuelta', 0);
+
+        } else {
+            switch ((int)$prioridad) {
                 case 0:
                     $query->where('i.resuelta', 1);
                     break;
                 case 1:
                     $query->where('m.prioridad', 1);
-                     break;
+                    break;
                 case 2:
                     $query->where('m.prioridad', 2);
                     break;
@@ -45,14 +48,11 @@ class IncidenciaController extends Controller
                         'success' => false,
                         'message' => 'No se encontraron incidencias.'
                     ], 404);
-                    break;
-
             }
-        } else {
-            $query->where('i.resuelta', 0);
         }
 
-        $result = $query->get();
+        //$result = $query->get();
+        $result = $query->paginate(12);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -68,7 +68,8 @@ class IncidenciaController extends Controller
 
     }
 
-    public function index2(){
+    public function index2()
+    {
         $incidencias = Incidencia::all();
         return response()->json($incidencias);
     }
@@ -192,7 +193,8 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
-    public function countIncidenciasPorPrioridad(){
+    public function countIncidenciasPorPrioridad()
+    {
 
         $mantenimientos = Mantenimiento::count();
         $incidenciasResueltas = Incidencia::where('resuelta', 1)->count();
@@ -207,7 +209,7 @@ class IncidenciaController extends Controller
                 ->where('maq.prioridad', $i)
                 ->count();
 
-            switch ($i){
+            switch ($i) {
                 case 1:
                     $incidenciasAltas = $result;
                     break;
@@ -220,7 +222,7 @@ class IncidenciaController extends Controller
             }
         }
 
-        if ($result > 0 ) {
+        if ($result > 0) {
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -239,7 +241,8 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
-    public function getIncidenciasByCampus($campus){
+    public function getIncidenciasByCampus($campus)
+    {
         $result = DB::table('incidencias as inc')
             ->join('categorias as cat', 'inc.id_categoria', '=', 'cat.id')
             ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
@@ -262,7 +265,8 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
-    public function getIncidenciasBySection($section){
+    public function getIncidenciasBySection($section)
+    {
         $result = DB::table('incidencias as inc')
             ->join('categorias as cat', 'inc.id_categoria', '=', 'cat.id')
             ->join('maquinas as maq', 'inc.id_maquina', '=', 'maq.id')
