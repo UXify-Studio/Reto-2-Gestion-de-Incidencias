@@ -19,31 +19,31 @@
                             </router-link>
                         </td>
                         <td class="fs-6 p-1 text-center align-middle">
-                            <router-link
+                            <router-link :to="{ name: 'MantenimientosDetalles', query: { id: mantenimiento.id } }"
                                 class="d-block text-decoration-none" style="color: inherit;">
                                 {{mantenimiento.descripcion }}
                             </router-link>
                         </td>                        
                         <td class="fs-6 p-1 text-center align-middle">
-                            <router-link
+                            <router-link :to="{ name: 'MantenimientosDetalles', query: { id: mantenimiento.id } }"
                                 class="d-block text-decoration-none" style="color: inherit;">
                                 {{mantenimiento.maquina.nombre }}
                             </router-link>
                         </td>
                         <td class="fs-6 p-1 text-center align-middle">
-                            <router-link
+                            <router-link :to="{ name: 'MantenimientosDetalles', query: { id: mantenimiento.id } }"
                                 class="d-block text-decoration-none" style="color: inherit;">
                                 {{mantenimiento.usuario.username }}
                             </router-link>
                         </td>
                         <td class="fs-6 p-1 text-center align-middle">
-                            <router-link
+                            <router-link :to="{ name: 'MantenimientosDetalles', query: { id: mantenimiento.id } }"
                                 class="d-block text-decoration-none" style="color: inherit;">
                                 {{mantenimiento.periodo }}
                             </router-link>
                         </td>
                         <td class="fs-6 p-1 text-center align-middle">
-                            <router-link
+                            <router-link :to="{ name: 'MantenimientosDetalles', query: { id: mantenimiento.id } }"
                                 class="d-block text-decoration-none" style="color: inherit;">
                                 {{mantenimiento.proxima_fecha }}
                             </router-link>

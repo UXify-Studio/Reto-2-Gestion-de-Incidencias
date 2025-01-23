@@ -5,6 +5,7 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\IncidenciaTecnicoController;
+use App\Http\Controllers\MantenimientoTecnicoController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\SectionController;
@@ -47,6 +48,8 @@ Route::controller(MantenimientoController::class)->group(function () {
     Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
     Route::put('/mantenimientos/{id}', [MantenimientoController::class, 'update']);
     Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
+    Route::put('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'actualizarComentario']);
+    Route::get('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'obtenerComentario']);
 });
 
 Route::controller(CampusController::class)->group(function () {
@@ -110,6 +113,12 @@ Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncid
 Route::get('/timer/{id}/tiempototal', [IncidenciaTecnicoController::class, 'calcularTiempoTrabajado']);
 Route::get('/incidencias/{id}/estado', [IncidenciaTecnicoController::class, 'obtenerEstadoIncidencia']);
 
+Route::post('/mantenimiento/timer', [MantenimientoTecnicoController::class, 'store']);
+Route::put('/mantenimiento/timer/{id}', [MantenimientoTecnicoController::class, 'update']);
+Route::get('/mantenimiento/timer/latest', [MantenimientoTecnicoController::class, 'getLatestMantenimientoTecnico']);
+Route::get('/mantenimiento/timer/{id}/tiempototal', [MantenimientoTecnicoController::class, 'calcularTiempoTrabajado']);
+
+Route::put('/mantenimientos/{id}/resuelto', [MantenimientoController::class, 'marcarMantenimientoComoResuelta'])->middleware('auth:api');
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
