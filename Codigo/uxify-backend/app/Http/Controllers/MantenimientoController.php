@@ -142,4 +142,54 @@ class MantenimientoController extends Controller
             return response()->json(['message' => 'Error al eliminar el mantenimiento.', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function actualizarComentario(Request $request, $id_mantenimiento)
+    {
+        $validatedData = $request->validate([
+            'comentario' => 'required|string',
+        ]);
+
+        try {
+            $mantenimiento = Mantenimiento::findOrFail($id_mantenimiento);
+            $mantenimiento->comentario = $validatedData['comentario'];
+            $mantenimiento->save();
+
+            return response()->json(['success' => true, 'message' => 'Comentario actualizado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al actualizar el comentario: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function obtenerComentario($id_mantenimiento)
+    {
+        try {
+            $mantenimiento = Mantenimiento::findOrFail($id_mantenimiento);
+            return response()->json(['success' => true, 'comentario' => $mantenimiento->comentario]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al obtener el comentario: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function marcarMantenimientoComoResuelta($id_mantenimiento)
+    {
+        try {
+            $tecnicosTrabajando = DB::table('mantenimiento_tecnicos')
+                ->where('id_mantenimiento', $id_mantenimiento)
+                ->whereNotNull('fecha_inicio')
+                ->whereNull('fecha_fin')
+                ->exists();
+
+            if ($tecnicosTrabajando) {
+                return response()->json(['success' => false, 'message' => 'No se puede marcar la mantenimiento como resuelta porque hay técnicos trabajando en ella.'], 400);
+            }
+
+            $mantenimiento = Mantenimiento::findOrFail($id_mantenimiento);
+            $mantenimiento->resuelta = 1;
+            $mantenimiento->save();
+
+            return response()->json(['success' => true, 'message' => 'Mantenimiento marcada como resuelta']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al marcar la incidencia como resuelta: ' . $e->getMessage()], 500);
+        }
+    }
 }

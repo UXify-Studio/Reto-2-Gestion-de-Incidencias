@@ -1,6 +1,6 @@
 <template>
     <div class="container py-4">
-      <h1 class="mb-3 text-primary fs-3">Tabla de Datos</h1>
+      <h1 class="mb-3 text-primary fs-3">Detalles del Mantenimiento</h1>
   
       <div class="card shadow-sm">
         <div class="card-body p-0">
@@ -15,6 +15,18 @@
                 <td class="px-3 py-2">{{ mantenimiento.id_maquina }}</td>
               </tr>
               <tr>
+                <th class="bg-dark text-white px-3 py-2">Nombre Máquina</th>
+                <td class="px-3 py-2">{{ mantenimiento.nombre_maquina }}</td>
+              </tr>
+              <tr>
+                <th class="bg-dark text-white px-3 py-2">ID Usuario</th>
+                <td class="px-3 py-2">{{ mantenimiento.id_usuario }}</td>
+              </tr>
+              <tr>
+                <th class="bg-dark text-white px-3 py-2">Nombre Usuario</th>
+                <td class="px-3 py-2">{{ mantenimiento.nombre_usuario }}</td>
+              </tr>
+              <tr>
                 <th class="bg-dark text-white px-3 py-2">Duración</th>
                 <td class="px-3 py-2">{{ mantenimiento.duracion }}</td>
               </tr>
@@ -26,10 +38,7 @@
                 <th class="bg-dark text-white px-3 py-2">Próxima Fecha</th>
                 <td class="px-3 py-2">{{ mantenimiento.proxima_fecha }}</td>
               </tr>
-              <tr>
-                <th class="bg-dark text-white px-3 py-2">ID Usuario</th>
-                <td class="px-3 py-2">{{ mantenimiento.id_usuario }}</td>
-              </tr>
+
               <tr>
                 <th class="bg-dark text-white px-3 py-2">Descripción</th>
                 <td class="px-3 py-2">{{ mantenimiento.descripcion }}</td>
@@ -53,8 +62,6 @@
                 <th class="bg-dark text-white px-3 py-2">Fecha de Creación</th>
                 <td class="px-3 py-2">{{ mantenimiento.created_at }}</td>
               </tr>
-            
-
               <tr>
               <th class="bg-dark text-white px-3 py-2">Comentario</th>
               <td class="px-3 py-2">
@@ -109,7 +116,7 @@ export default {
                 if (!token) {
                 throw new Error('No token found');
                 }
-                const response = await axios.get(`${API_BASE_URL}/mantenimientos/${this.mantenimiento.id}`, {
+                const response = await axios.get(`${API_BASE_URL}/mantenimientos/${this.id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
@@ -126,7 +133,7 @@ export default {
                 if (!token) {
                 throw new Error('No token found');
                 }
-                const response = await axios.get(`${API_BASE_URL}/mantenimiento/${this.id}/comentario`, {
+                const response = await axios.get(`${API_BASE_URL}/mantenimientos/${this.id}/comentario`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
