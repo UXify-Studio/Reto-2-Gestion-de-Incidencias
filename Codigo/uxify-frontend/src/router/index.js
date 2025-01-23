@@ -33,35 +33,35 @@ const router = createRouter({
       meta: { requiresAdmin: true },
     },
     {
-      path: '/incidencia/:id',
+      path: '/incidencia/detalles',
       name: 'IncidenciaDetalles',
       component: () => import('../views/DetailsIncidenceView.vue'),
-      props: true
+      props: route => ({ id: route.query.id })
     },
     { 
       path: '/gestion/users', 
       component: () => import('../views/admin/UsuariosListView.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     { 
       path: '/gestion/maquinas', 
       component: () => import('../views/admin/MaquinasListView.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     { 
       path: '/gestion/categorias', 
       component: () => import('../views/admin/CategoriasList.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     {
       path: '/gestion/campus', 
       component: () => import('../views/admin/CampusList.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     { 
       path: '/gestion/secciones', 
       component: () => import('../views/admin/SeccionesList.vue') ,
-      //meta: { requiresAdmin: true },
+      meta: { requiresAdmin: true },
     },
     
 

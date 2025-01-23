@@ -19,14 +19,12 @@ export default {
 
 <template>
   <div class="container-fluid bg-light border-end vh-100 height-100">
-    <div class="row">
+    <nav class="menu">
       <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
         <img src="../assets/example.png" alt="Foto de perfil"
           class="profile-image rounded-circle mb-2 border border-secondary">
         <p class="user-name text-primary fw-bold mb-4">Juan La Matina</p>
       </div>
-    </div>
-    <nav class="menu">
       <router-link to="/home"
         class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
         <div class="col-auto">
@@ -47,17 +45,6 @@ export default {
         </div>
         <div class="col">
           <span>Estadisticas</span>
-        </div>
-      </router-link>
-      <router-link to="/tipos-de-activo"
-        class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
-        <div class="col-auto">
-          <i class="bi bi-gear me-2">
-            <img src="../assets/Maquinas.png" alt="Tipos de activo" class="menu-icon">
-          </i>
-        </div>
-        <div class="col">
-          <span>Tipos de activo</span>
         </div>
       </router-link>
       <div class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary cursor-pointer"

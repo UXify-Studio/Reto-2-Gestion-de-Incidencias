@@ -16,6 +16,7 @@ class SectionController extends Controller
     {
         $secciones = Section::all();
         return response()->json($secciones);
+
     }
 
     /**
@@ -34,7 +35,7 @@ class SectionController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'n_seccion' => 'required|integer',
-            'id_campus' => 'required|exists:campus,id', // Verifica que el campus exista
+            'id_campus' => 'required|exists:campuses,id',
             'deshabilitado' => ['required', Rule::in([0, 1])],
         ]);
 
@@ -42,7 +43,13 @@ class SectionController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $seccion = Section::create($request->all());
+        $seccion = Section::create([
+            'nombre' => $request->input('nombre'),
+            'n_seccion' => $request->input('n_seccion'),
+            'id_campus' => $request->input('id_campus'),
+            'deshabilitado' => $request->input('deshabilitado'),
+        ]);
+
         return response()->json($seccion, 201);
     }
     /**
@@ -52,9 +59,10 @@ class SectionController extends Controller
     {
         return response()->json($seccion);
     }
-    public function getSectionsWithCampus()
+    public function getSectionsWithCampus(Request $request)
     {
-        $secciones = Section::with('campus')->get();
+        $perPage = $request->query('per_page', 10); // Número de resultados por página (por defecto 10)
+        $secciones = Section::with('campus')->paginate($perPage);
 
         return response()->json($secciones);
     }
@@ -76,7 +84,7 @@ class SectionController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'n_seccion' => 'required|integer',
-            'id_campus' => 'required|exists:campus,id',
+            'id_campus' => 'required|exists:campuses,id',
             'deshabilitado' => ['required', Rule::in([0, 1])],
         ]);
 

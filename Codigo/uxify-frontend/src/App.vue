@@ -19,7 +19,7 @@ watch(route, (newRoute) => {
     <Header v-if="showHeaderAndSidebar" />
     <main class="d-flex">
       <div class="row w-100 m-0">
-        <div class="col-2 p-0" v-if="showHeaderAndSidebar">
+        <div class="col-2 p-0 bg-light border-end" v-if="showHeaderAndSidebar">
           <Sidebar />
         </div>
         <div :class="showHeaderAndSidebar ? 'col-10 p-0' : 'col-12 p-0'">

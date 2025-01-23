@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\IncidenciaController;
+use App\Http\Controllers\IncidenciaTecnicoController;
 use App\Http\Controllers\MaquinaController;
+use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +34,13 @@ Route::controller(MaquinaController::class)->group(function () {
     Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
 });
 
+Route::controller(MantenimientoController::class)->group(function () {
+    Route::get('/mantenimientos', [MantenimientoController::class, 'index']);
+    Route::put('/mantenimientosCreate', [MantenimientoController::class, 'store']);
+    Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
+    Route::put('/mantenimientos/{id}', [MantenimientoController::class, 'update']);
+});
+
 Route::controller(CampusController::class)->group(function () {
     Route::get('/campus', [CampusController::class, 'index']);
     Route::post('/campus', [CampusController::class, 'store']);
@@ -56,7 +65,7 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
     Route::get('incidencias/campus/{campus}', [IncidenciaController::class, 'getIncidenciasByCampus']);
     Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
-    Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api', 'admin');
+    Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api');
 });
 
 Route::get('/roles', [RolController::class, 'index']);
@@ -84,6 +93,10 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/users/{id}/disable', [UserController::class, 'disable'])->middleware('auth:api', 'admin');
 });
 
+Route::post('/timer', [IncidenciaTecnicoController::class, 'store']);
+Route::put('/timer/{id}', [IncidenciaTecnicoController::class, 'update']);
+Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncidenciaTecnico']);
+Route::get('/timer/{id}/tiempototal', [IncidenciaTecnicoController::class, 'calcularTiempoTrabajado']);
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 //    Route::get('/admin/users', [UserController::class, 'index']);
 //    Route::post('/admin/users', [UserController::class, 'store']);

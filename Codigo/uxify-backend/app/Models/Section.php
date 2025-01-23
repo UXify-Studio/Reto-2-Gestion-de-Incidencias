@@ -10,7 +10,10 @@ class Section extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombre', 'n_seccion'
+        'nombre',
+        'n_seccion',
+        'id_campus',
+        'deshabilitado'
     ];
 
     protected $casts = [
