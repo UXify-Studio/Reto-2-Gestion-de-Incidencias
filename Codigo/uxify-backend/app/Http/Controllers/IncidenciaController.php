@@ -86,27 +86,34 @@ class IncidenciaController extends Controller
      */
     public function store(Request $request)
     {
-
         try {
             $validatedData = $request->validate([
                 'titulo' => 'required|string',
                 'descripcion' => 'required|string',
                 'id_categoria' => 'required|integer',
                 'id_maquina' => 'required|integer',
-                'estado' => 'required|integer'
+                'estado' => 'required|integer', // Validar el estado de la incidencia
             ]);
 
-
-            $incidencia = Incidencia::create($validatedData);
+            // Crear la incidencia
+            $incidencia = Incidencia::create([
+                'titulo' => $validatedData['titulo'],
+                'descripcion' => $validatedData['descripcion'],
+                'id_categoria' => $validatedData['id_categoria'],
+                'id_maquina' => $validatedData['id_maquina'],
+                'id_usuario' => auth()->user()->id, // Asignar el ID del usuario autenticado
+                'estado' => $validatedData['estado'] // Asignar el estado de la incidencia
+            ]);
 
             // Actualizar el estado de la máquina
-            $maquina = Maquina::findOrFail($request->maquina);
-            $maquina->estado = $request->estado;
+            $maquina = Maquina::findOrFail($validatedData['id_maquina']);
+            $maquina->estado = $validatedData['estado'];
             $maquina->save();
 
-
-
             return response()->json(['message' => 'Incidencia creada correctamente', 'incidencia' => $incidencia], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
+            return response()->json(['errors' => $validationException->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear la incidencia: ' . $e->getMessage()], 500);
         }
@@ -278,4 +285,16 @@ class IncidenciaController extends Controller
         ], 404);
     }
 
+    public function marcarIncidenciaComoResuelta($id_incidencia)
+    {
+        try {
+            $incidencia = Incidencia::findOrFail($id_incidencia);
+            $incidencia->resuelta = 1;
+            $incidencia->save();
+
+            return response()->json(['success' => true, 'message' => 'Incidencia marcada como resuelta']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al marcar la incidencia como resuelta: ' . $e->getMessage()], 500);
+        }
+    }
 }

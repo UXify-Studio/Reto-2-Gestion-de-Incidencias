@@ -53,7 +53,7 @@ export default {
         };
 
         onMounted(async () => {
-              window.addEventListener('beforeunload', handleBeforeUnload);
+            window.addEventListener('beforeunload', handleBeforeUnload);
 
 
             const token = sessionStorage.getItem('token');
@@ -72,9 +72,9 @@ export default {
         });
 
 
-      onUnmounted(() => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-    });
+        onUnmounted(() => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        });
 
         const getTotalTime = async (token) => {
             try {
@@ -118,19 +118,32 @@ export default {
             }
         };
 
-        const stopTimer = () => {
+        const stopTimer = async () => {
             if (isRunning.value) {
-                isRunning.value = false;
-                clearInterval(timer.value);
-                const now = new Date();
-                time.value = Math.floor((now - startTime.value) / 1000);
-                endTime.value = now.toISOString();
-                modalTitle.value = 'Motivo de la parada';
-                isStop.value = true;
-                showModal.value = true;
+                toast.error('Debes pausar el contador antes de marcar la incidencia como resuelta.');
+                return;
+            }
+
+            try {
+                const token = sessionStorage.getItem('token');
+                await axios.put(`${API_BASE_URL}/incidencias/${idIncidencia.value}/resuelta`, null, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                toast.success('Incidencia marcada como resuelta');
+
                 time.value = 0;
+                router.push({ name: 'home' });
+            } catch (error) {
+                toast.error('Error al marcar la incidencia como resuelta');
+                console.error('Error:', error);
+                return;
             }
         };
+
+
 
         const insertIncidencia = async () => {
             try {
@@ -167,7 +180,7 @@ export default {
 
         const updateIncidencia = async (isStopParam = false, comentarioParam = '') => {
             try {
-                 await getLatestIncidenciaTecnico();
+                await getLatestIncidenciaTecnico();
                 if (!idIncidenciaTecnico.value) {
                     toast.error('No se encontró la incidencia');
                     return false;
@@ -185,9 +198,9 @@ export default {
             }
         };
 
-      const handleModalSubmit = async (comment) => {
-           const updateSuccess = await updateIncidencia(isStop.value, comment);
-             if (updateSuccess) {
+        const handleModalSubmit = async (comment) => {
+            const updateSuccess = await updateIncidencia(isStop.value, comment);
+            if (updateSuccess) {
                 router.go(0);
             }
         };
