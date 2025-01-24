@@ -1,4 +1,5 @@
 <template>
+  <div>
     <table class="table table-bordered table-striped">
             <thead class="table-light">
             <tr>
@@ -80,6 +81,7 @@
           </nav>
         </div>
       </div>
+  </div>
 </template>
 
 <script>

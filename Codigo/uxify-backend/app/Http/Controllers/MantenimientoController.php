@@ -15,12 +15,15 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        $mantenimientos = Mantenimiento::with('usuario', 'maquina')->paginate(12);
+        $mantenimientosProximos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 0)->paginate(12);
+        $mantenimientosResueltos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 1)->paginate(12);
 
-        if ($mantenimientos->isNotEmpty()) {
+        if ($mantenimientosProximos->isNotEmpty()) {
             return response()->json([
                 'success' => true,
-                'mantenimientos' => $mantenimientos
+                'mantenimientos' => $mantenimientosProximos,
+                'mantenimientosResueltos' => $mantenimientosResueltos
+
             ]);
         }
 
