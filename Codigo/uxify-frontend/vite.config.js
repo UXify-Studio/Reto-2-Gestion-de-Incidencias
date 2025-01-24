@@ -16,10 +16,8 @@ export default defineConfig({
     },
   },
   server: {
-    watch: {
-      usePolling: true,
-      interval: 1000,
-      binaryInterval: 3000
-    }
+    host: '0.0.0.0', // Esto asegura que el servidor sea accesible desde fuera del contenedor
+    port: 5173, // Puerto donde estará disponible la app
+    strictPort: true, // Esto asegura que Vite no cambie el puerto si 5173 está ocupado
   },
 })
