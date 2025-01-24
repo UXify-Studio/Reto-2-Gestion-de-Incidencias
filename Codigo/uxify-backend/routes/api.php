@@ -50,6 +50,7 @@ Route::controller(MantenimientoController::class)->group(function () {
     Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
     Route::put('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'actualizarComentario']);
     Route::get('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'obtenerComentario']);
+    Route::get('/mantenimientosCount', [MantenimientoController::class, 'countMantenimiento']);
 });
 
 Route::controller(CampusController::class)->group(function () {
@@ -80,6 +81,7 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::put('/incidencias/{id}/resuelta', [IncidenciaController::class, 'marcarIncidenciaComoResuelta'])->middleware('auth:api');
     Route::put('/incidencias/{id}/comentario', [IncidenciaController::class, 'actualizarComentario']);
     Route::get('/incidencias/{id}/comentario', [IncidenciaController::class, 'obtenerComentario']);
+    Route::get('/incidenciasCount', [IncidenciaController::class, 'countIncidenciasEstados']);
 });
 
 Route::get('/roles', [RolController::class, 'index']);

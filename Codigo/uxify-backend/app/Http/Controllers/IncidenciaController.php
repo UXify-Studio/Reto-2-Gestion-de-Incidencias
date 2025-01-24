@@ -338,4 +338,20 @@ class IncidenciaController extends Controller
             return response()->json(['success' => false, 'message' => 'Error al obtener el comentario: ' . $e->getMessage()], 500);
         }
     }
+
+    public function countIncidenciasEstados()
+    {
+        $IncidenciasPendiente = Incidencia::where('estado',0)->count();
+        $incidenciasActivo = Incidencia::where('estado', 1)->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'IncidenciasPendiente' => $IncidenciasPendiente,
+                'incidenciasActivo' => $incidenciasActivo
+            ]
+        ]);
+
+    }
+
 }

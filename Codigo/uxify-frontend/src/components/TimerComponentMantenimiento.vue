@@ -25,6 +25,7 @@ export default {
         const showModal = ref(false);
         const modalTitle = ref('');
         const isStop = ref(false);
+        const mantenimientoData = ref(null);
 
         const route = useRoute();
         const router = useRouter();
@@ -114,13 +115,52 @@ export default {
                 showModal.value = true;
             }
         };
+        // Función para obtener los datos del mantenimiento actual
+        const fetchMantenimientoData = async () => {
+          try {
+              const token = sessionStorage.getItem('token');
+            const response = await axios.get(`${API_BASE_URL}/mantenimientos/${idMantenimiento.value}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+             if (response.data && response.data.data) {
+                mantenimientoData.value = response.data.data;
+            } else {
+              toast.error("Error al obtener los datos del mantenimiento.");
+            }
 
-        const stopTimer = async () => {
+        } catch(error){
+            toast.error('Error al obtener los datos del mantenimiento');
+            }
+        };
+
+        // Función para crear un nuevo mantenimiento
+        const createNewMantenimiento = async (data) => {
+          try {
+                const token = sessionStorage.getItem('token');
+              const response = await axios.post(`${API_BASE_URL}/mantenimientosCreate`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,
+                },
+              });
+              if (response.data.mantenimiento) {
+                toast.success('Nuevo mantenimiento creado.');
+              } else {
+                  toast.error('Error al crear el nuevo mantenimiento');
+              }
+            } catch (error) {
+              toast.error("Error al crear el nuevo mantenimiento.");
+            }
+          };
+          const stopTimer = async () => {
             if (isRunning.value) {
                 toast.error('Debes pausar el contador antes de marcar el mantenimiento como resuelto.');
                 return;
             }
-
+              await fetchMantenimientoData();// Primero obtenemos los datos del mantenimiento actual
             try {
                 const token = sessionStorage.getItem('token');
                 const response = await axios.put(`${API_BASE_URL}/mantenimientos/${idMantenimiento.value}/resuelto`, null, {
@@ -131,9 +171,37 @@ export default {
                 });
 
                 if (response.data.success) {
+                   const proximaFechaMantenimiento = new Date(mantenimientoData.value.proxima_fecha);
+                    let proximaFecha;
+                    switch (mantenimientoData.value.periodo) {
+                        case 'diario':
+                            proximaFecha = new Date(proximaFechaMantenimiento.getTime() + (24 * 60 * 60 * 1000));
+                            break;
+                        case 'semanal':
+                            proximaFecha = new Date(proximaFechaMantenimiento.getTime() + (7 * 24 * 60 * 60 * 1000));
+                            break;
+                        case 'mensual':
+                            proximaFecha = new Date(proximaFechaMantenimiento.getFullYear(), proximaFechaMantenimiento.getMonth() + 1, proximaFechaMantenimiento.getDate());
+                             break;
+                         case 'anual':
+                            proximaFecha = new Date(proximaFechaMantenimiento.getFullYear() + 1, proximaFechaMantenimiento.getMonth(), proximaFechaMantenimiento.getDate());
+                            break;
+                        default:
+                            proximaFecha = new Date();
+                    }
+                  const newMantenimientoData = {
+                    duracion: Math.floor(mantenimientoData.value.duracion/60),
+                     fecha_inicio: mantenimientoData.value.proxima_fecha, // usar proxima_fecha como fecha_inicio
+                     proxima_fecha: proximaFecha.toISOString().slice(0, 10),
+                    descripcion: mantenimientoData.value.descripcion,
+                    periodo: mantenimientoData.value.periodo,
+                    id_maquina: mantenimientoData.value.id_maquina,
+                  };
+                   console.log("Datos que se enviarán:", newMantenimientoData);
+                    await createNewMantenimiento(newMantenimientoData);
                     toast.success('Mantenimiento marcado como resuelto');
                     time.value = 0;
-                    router.push({ name: 'home' });
+                     router.push({ name: 'home' });
                 } else {
                     toast.error(response.data.message || 'Error al marcar el mantenimiento como resuelto');
                 }
@@ -146,6 +214,7 @@ export default {
                 }
             }
         };
+
 
         const insertMantenimiento = async () => {
             try {

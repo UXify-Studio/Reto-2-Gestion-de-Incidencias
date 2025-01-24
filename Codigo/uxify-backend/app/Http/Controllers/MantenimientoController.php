@@ -52,9 +52,10 @@ class MantenimientoController extends Controller
                 'periodo' => 'required|string',
                 'id_maquina' => 'required|exists:maquinas,id'
             ]);
+
             // Crear el mantenimiento, incluyendo explícitamente 'fecha_inicio' y 'id_usuario'
             $mantenimiento = Mantenimiento::create([
-                'duracion' =>  (int)round($validatedData['duracion'] / 60),
+                'duracion' => $validatedData['duracion'],
                 'fecha_inicio' => $validatedData['fecha_inicio'],
                 'proxima_fecha' =>  $validatedData['proxima_fecha'],
                 'descripcion' => $validatedData['descripcion'],
@@ -65,9 +66,9 @@ class MantenimientoController extends Controller
 
             return response()->json(['message' => 'Mantenimiento creado correctamente', 'mantenimiento' => $mantenimiento], 201);
 
-        }  catch (\Illuminate\Validation\ValidationException $validationException) {
+        } catch (\Illuminate\Validation\ValidationException $validationException) {
             return response()->json(['errors' => $validationException->errors()], 422);
-        }  catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear el mantenimiento: ' . $e->getMessage()], 500);
         }
     }
@@ -190,7 +191,7 @@ class MantenimientoController extends Controller
                 ->exists();
 
             if ($tecnicosTrabajando) {
-                return response()->json(['success' => false, 'message' => 'No se puede marcar el mantenimiento como resuelta porque hay técnicos trabajando en ella.'], 400);
+                return response()->json(['success' => false, 'message' => 'No se puede marcar la mantenimiento como resuelta porque hay técnicos trabajando en ella.'], 400);
             }
 
             $mantenimiento = Mantenimiento::findOrFail($id_mantenimiento);
@@ -201,5 +202,20 @@ class MantenimientoController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error al marcar la incidencia como resuelta: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function countMantenimiento()
+    {
+        $MantenimeitnoHechos = Mantenimiento::where('resuelta',1)->count();
+        $MantenimeitnoProximos = Mantenimiento::where('resuelta',0)->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'MantenimientoTotal' => $MantenimeitnoHechos,
+                'MantenimientoProximos' => $MantenimeitnoProximos
+            ]
+        ]);
+
     }
 }
