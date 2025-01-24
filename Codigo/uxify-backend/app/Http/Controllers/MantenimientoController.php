@@ -15,8 +15,19 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        $mantenimientos = Mantenimiento::with('usuario', 'maquina')->get();
-        return response()->json(['mantenimientos' => $mantenimientos]);
+        $mantenimientos = Mantenimiento::with('usuario', 'maquina')->paginate(12);
+
+        if ($mantenimientos->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'mantenimientos' => $mantenimientos
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
     }
 
     /**
@@ -41,10 +52,9 @@ class MantenimientoController extends Controller
                 'periodo' => 'required|string',
                 'id_maquina' => 'required|exists:maquinas,id'
             ]);
-
             // Crear el mantenimiento, incluyendo explícitamente 'fecha_inicio' y 'id_usuario'
             $mantenimiento = Mantenimiento::create([
-                'duracion' => $validatedData['duracion'],
+                'duracion' =>  (int)round($validatedData['duracion'] / 60),
                 'fecha_inicio' => $validatedData['fecha_inicio'],
                 'proxima_fecha' =>  $validatedData['proxima_fecha'],
                 'descripcion' => $validatedData['descripcion'],
@@ -55,9 +65,9 @@ class MantenimientoController extends Controller
 
             return response()->json(['message' => 'Mantenimiento creado correctamente', 'mantenimiento' => $mantenimiento], 201);
 
-        } catch (\Illuminate\Validation\ValidationException $validationException) {
+        }  catch (\Illuminate\Validation\ValidationException $validationException) {
             return response()->json(['errors' => $validationException->errors()], 422);
-        } catch (\Exception $e) {
+        }  catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear el mantenimiento: ' . $e->getMessage()], 500);
         }
     }
