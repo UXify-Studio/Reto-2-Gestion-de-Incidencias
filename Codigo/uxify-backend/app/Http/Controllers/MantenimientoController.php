@@ -190,7 +190,7 @@ class MantenimientoController extends Controller
                 ->exists();
 
             if ($tecnicosTrabajando) {
-                return response()->json(['success' => false, 'message' => 'No se puede marcar la mantenimiento como resuelta porque hay técnicos trabajando en ella.'], 400);
+                return response()->json(['success' => false, 'message' => 'No se puede marcar el mantenimiento como resuelta porque hay técnicos trabajando en ella.'], 400);
             }
 
             $mantenimiento = Mantenimiento::findOrFail($id_mantenimiento);
