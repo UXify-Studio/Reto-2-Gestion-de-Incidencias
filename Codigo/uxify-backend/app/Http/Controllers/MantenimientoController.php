@@ -50,26 +50,34 @@ class MantenimientoController extends Controller
                 'proxima_fecha' => 'required|date',
                 'descripcion' => 'required|string',
                 'periodo' => 'required|string',
-                'id_maquina' => 'required|exists:maquinas,id'
+                'id_maquina' => 'required|array',
+                'id_maquina.*' => 'exists:maquinas,id'
             ]);
 
-            // Crear el mantenimiento, incluyendo explícitamente 'fecha_inicio' y 'id_usuario'
-            $mantenimiento = Mantenimiento::create([
-                'duracion' => $validatedData['duracion'],
-                'fecha_inicio' => $validatedData['fecha_inicio'],
-                'proxima_fecha' =>  $validatedData['proxima_fecha'],
-                'descripcion' => $validatedData['descripcion'],
-                'periodo' => $validatedData['periodo'],
-                'id_maquina' => $validatedData['id_maquina'],
-                'id_usuario' => auth()->user()->id, // Añadir el ID del usuario autenticado
-            ]);
+            $mantenimientos = [];
+            DB::transaction(function () use ($validatedData, &$mantenimientos) {
+                foreach ($validatedData['id_maquina'] as $maquinaId) {
+                    $mantenimiento = Mantenimiento::create([
+                        'duracion' => $validatedData['duracion'],
+                        'fecha_inicio' => $validatedData['fecha_inicio'],
+                        'proxima_fecha' =>  $validatedData['proxima_fecha'],
+                        'descripcion' => $validatedData['descripcion'],
+                        'periodo' => $validatedData['periodo'],
+                        'id_maquina' => $maquinaId,
+                        'id_usuario' => auth()->user()->id,
+                    ]);
 
-            return response()->json(['message' => 'Mantenimiento creado correctamente', 'mantenimiento' => $mantenimiento], 201);
+                    $mantenimientos[] = $mantenimiento;
+                }
+            });
+
+            return response()->json(['message' => 'Mantenimientos creados correctamente', 'mantenimientos' => $mantenimientos], 201);
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
             return response()->json(['errors' => $validationException->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al crear el mantenimiento: ' . $e->getMessage()], 500);
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Error al crear los mantenimientos: ' . $e->getMessage()], 500);
         }
     }
 
