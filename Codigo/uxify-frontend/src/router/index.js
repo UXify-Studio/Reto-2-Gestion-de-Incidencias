@@ -7,7 +7,7 @@ import { useToast } from 'vue-toastification';
 const toast = useToast();
 
 const router = createRouter({
-  history: createWebHistory(API_BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { 
       path: '/', 

@@ -12,6 +12,7 @@ const showHeaderAndSidebar = ref(route.path !== '/login' && route.path !== '/');
 watch(route, (newRoute) => {
   showHeaderAndSidebar.value = newRoute.path !== '/login' && newRoute.path !== '/';
 });
+console.log(import.meta.env.BASE_URL);
 </script>
 
 <template>
