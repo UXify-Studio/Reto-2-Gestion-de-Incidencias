@@ -6,7 +6,7 @@ import { API_BASE_URL } from '@/config.js';
 import { useToast } from 'vue-toastification';
 const toast = useToast();
 
-const router = createRouter({ç,
+const router = createRouter({
   linkActiveClass: 'active',
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
