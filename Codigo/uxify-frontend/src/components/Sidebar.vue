@@ -1,17 +1,27 @@
 <script>
 import { ref } from 'vue';
+import { computed, onMounted } from 'vue';
+import { useLoggedUser }  from '@/stores/loggedUser';
 
 export default {
   setup() {
+    const loggedUserStore = useLoggedUser();
     const showGestionSubmenu = ref(false);
+
+    onMounted(() => {
+      loggedUserStore.fetchUsersTotal();
+    });
 
     const toggleGestionSubmenu = () => {
       showGestionSubmenu.value = !showGestionSubmenu.value;
     };
 
+    const loggedUser = computed(() => loggedUserStore.userName);
+
     return {
       showGestionSubmenu,
       toggleGestionSubmenu,
+      loggedUser,
     };
   },
 };
@@ -23,7 +33,7 @@ export default {
       <div class="col-12 d-flex align-items-center flex-column user-info p-3 pt-4">
         <img src="../assets/example.png" alt="Foto de perfil"
           class="profile-image rounded-circle mb-2 border border-secondary">
-        <p class="user-name text-primary fw-bold mb-4">Juan La Matina</p>
+        <p class="user-name text-primary fw-bold mb-4">{{ loggedUser }}</p>
       </div>
       <router-link to="/home"
         class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary">
