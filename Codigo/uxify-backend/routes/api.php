@@ -39,6 +39,7 @@ Route::controller(MaquinaController::class)->group(function () {
     Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD'])->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/enable', [MaquinaController::class, 'enable'])->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}', [MaquinaController::class, 'update'])->middleware('auth:api', 'admin');
 });
 
 Route::controller(MantenimientoController::class)->group(function () {
