@@ -8,13 +8,8 @@
             </div>
             <div class="mb-3">
                 <label for="codigo_maquina" class="form-label">Código de la Máquina</label>
-                <div class="codigo-maquina-wrapper">
-                    <span class="codigo-maquina-prefix">
-                        {{ codigoMaquinaPrefix }}
-                    </span>
-                    <input type="text" class="form-control codigo-maquina-input" id="codigo_maquina"
-                        v-model="customCodigo" placeholder="000" maxlength="3" @input="validateCustomCodigo" />
-                </div>
+                <input type="text" class="form-control" id="codigo_maquina" v-model="codigoMaquinaInput"
+                    placeholder="Ej. 1-001-000" />
             </div>
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre de la Máquina</label>
@@ -24,9 +19,9 @@
                 <label for="prioridad" class="form-label">Prioridad</label>
                 <select v-model="data.prioridad" class="form-control" required>
                     <option disabled value="">Seleccione una prioridad</option>
-                    <option value="1">Alta</option>
-                    <option value="2">Media</option>
-                    <option value="3">Baja</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -44,7 +39,7 @@
 </template>
 
 <script>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import Modal from '@/components/Modal.vue';
 import SelectCampus from '@/components/SelectCampus.vue';
@@ -85,41 +80,44 @@ export default {
 
         const campusId = ref('');
         const sectionId = ref('');
-        const customCodigo = ref('');
-
-
-        const codigoMaquinaPrefix = computed(() => {
-            return `${campusId.value || "0"}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-`;
-        });
-
-        const codigoMaquina = computed(() => {
-            return `${campusId.value}-${sectionId.value ? sectionId.value.padStart(3, '0') : "000"}-${customCodigo.value}`;
-        });
+        const codigoMaquinaInput = ref('');
+        const initialLoad = ref(true);
 
 
         const toast = useToast();
 
-        watch(() => props.machine, (newMachine) => {
-            if (newMachine && newMachine.codigo) {
-                data.id = newMachine.id;
-                data.nombre = newMachine.nombre;
-                data.codigo = newMachine.codigo;
-                data.prioridad = newMachine.prioridad;
-                data.estado = newMachine.estado;
-                data.id_section = newMachine.id_section;
-                data.deshabilitado = newMachine.deshabilitado;
+        watch(
+            () => props.machine,
+            (newMachine) => {
+                if (newMachine) {
+                    data.id = newMachine.id;
+                    data.nombre = newMachine.nombre;
+                    data.codigo = newMachine.codigo;
+                    data.prioridad = newMachine.prioridad;
+                    data.estado = newMachine.estado;
+                    data.id_section = newMachine.id_section;
+                    data.deshabilitado = newMachine.deshabilitado;
 
-                const [campus, section, custom] = newMachine.codigo.split('-');
-                campusId.value = campus;
-                sectionId.value = section;
-                customCodigo.value = custom;
-            }
-        }, { immediate: true });
+                    codigoMaquinaInput.value = newMachine.codigo || ''; // Asigna el valor inicial del código
+                    const [campus, section] = (newMachine.codigo || '').split('-');
+                    campusId.value = campus || '';
+                    sectionId.value = section || '';
+                }
+            },
+            { immediate: true }
+        );
 
 
         watch(() => props.mode, (newMode) => {
             isRegisterMode.value = newMode === 'register';
             modalTitle.value = isRegisterMode.value ? 'Registro de Nueva Máquina' : 'Editar Máquina';
+            initialLoad.value = true;
+            if (props.machine && props.machine.codigo) {
+                const [campus, section,] = props.machine.codigo.split('-');
+                campusId.value = campus;
+                sectionId.value = section;
+            }
+
         });
 
         const resetForm = () => {
@@ -132,8 +130,10 @@ export default {
             data.deshabilitado = false;
             campusId.value = '';
             sectionId.value = '';
-            customCodigo.value = '';
+            codigoMaquinaInput.value = ''; // Limpia el valor del input
+            initialLoad.value = true;
         };
+
 
         const close = () => {
             emit('close');
@@ -149,8 +149,24 @@ export default {
             data.id_section = id;
         };
 
-        const validateCustomCodigo = () => {
-            customCodigo.value = customCodigo.value.replace(/[^0-9]/g, '').slice(0, 3);
+
+        const validateCodigoMaquina = () => {
+            // Allow only numbers, hyphen, and enforce the 1-3-3 format using regex
+            codigoMaquinaInput.value = codigoMaquinaInput.value.replace(/[^0-9-]/g, '');
+            const parts = codigoMaquinaInput.value.split('-');
+            if (parts.length > 3) {
+                codigoMaquinaInput.value = parts.slice(0, 3).join('-');
+            }
+            if (parts.length > 0) {
+                parts[0] = parts[0].slice(0, 1);
+            }
+            if (parts.length > 1) {
+                parts[1] = parts[1].slice(0, 3);
+            }
+            if (parts.length > 2) {
+                parts[2] = parts[2].slice(0, 3);
+            }
+            codigoMaquinaInput.value = parts.join('-');
         };
 
         const submit = async () => {
@@ -159,8 +175,7 @@ export default {
                 if (!token) {
                     throw new Error('No se encontró el token.');
                 }
-
-                data.codigo = codigoMaquina.value;
+                data.codigo = codigoMaquinaInput.value;
                 console.log('Datos enviados:', {
                     nombre: data.nombre,
                     codigo: data.codigo,
@@ -169,7 +184,6 @@ export default {
                     id_section: data.id_section,
                     deshabilitado: data.deshabilitado
                 });
-
                 if (isRegisterMode.value) {
                     await axios.post(`${API_BASE_URL}/maquinas`, {
                         nombre: data.nombre,
@@ -206,16 +220,17 @@ export default {
             } catch (error) {
                 if (error.response) {
                     console.error('Error data:', error.response.data);
-                    alert('Error al registrar la máquina: ' + error.response.data.message);
+                    toast.error('Error al registrar la máquina: ' + error.response.data.message);
                 } else if (error.message === 'No se encontró el token.') {
-                    alert('No has iniciado sesión. Por favor, inicia sesión para registrar una máquina.');
+                    toast.error('No has iniciado sesión. Por favor, inicia sesión para registrar una máquina.');
                     // ... redirige al login si es necesario ...
                 } else {
                     console.error('Error:', error.message);
-                    alert('Error al registrar la máquina.');
+                    toast.error('Error al registrar la máquina.');
                 }
             }
         };
+
 
         return {
             isRegisterMode,
@@ -225,10 +240,8 @@ export default {
             close,
             handleCampusSelected,
             handleSectionSelected,
-            codigoMaquina,
-            codigoMaquinaPrefix,
-            customCodigo,
-            validateCustomCodigo,
+            codigoMaquinaInput,
+            validateCodigoMaquina,
             campusId,
             sectionId
         };
@@ -237,22 +250,5 @@ export default {
 </script>
 
 <style scoped>
-.codigo-maquina-wrapper {
-    display: flex;
-    align-items: center;
-}
-
-.codigo-maquina-prefix {
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    border-right: none;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem 0 0 0.375rem;
-    font-size: 1rem;
-}
-
-.codigo-maquina-input {
-    flex: 1;
-    border-radius: 0 0.375rem 0.375rem 0;
-}
+/* Your existing styles here */
 </style>
