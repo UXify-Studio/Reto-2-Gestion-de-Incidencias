@@ -15,6 +15,10 @@
             <h2 class="text-primary mb-1 fs-4">Mantenimientos</h2>
             <hr>
             <MantenimientosList />
+
+            <h2 class="text-primary mb-1 fs-4">Mantenimientos Hechos</h2>
+            <hr>
+            <MantenimientosHechosList />
         </div>
     </div>
     
@@ -26,6 +30,7 @@ import CuadrosDatos from '@/components/CuadrosDatos.vue';
 import IncidenciasList from '@/components/IncidenciasList.vue';
 import FiltroCampus from '@/components/FiltroCampus.vue';
 import MantenimientosList from '@/components/MantenimientosList.vue';
+import MantenimientosHechosList from '@/components/MantenimientosHechosList.vue';
 
 export default {
   name: 'MantenimientosView',
@@ -34,6 +39,7 @@ export default {
     IncidenciasList,
     FiltroCampus,
     MantenimientosList,
+    MantenimientosHechosList,
   },
 
   data() {
