@@ -90,4 +90,13 @@ class CampusController extends Controller
         $campus->save();
         return response()->json(['message' => 'Campus deshabilitado correctamente'], 200);
     }
+
+    public function enable($id)
+    {
+        $user = Campus::findOrFail($id);
+        $user->deshabilitado = 0;
+        $user->save();
+
+        return response()->json(['message' => 'Campus enabled successfully'], 200);
+    }
 }
