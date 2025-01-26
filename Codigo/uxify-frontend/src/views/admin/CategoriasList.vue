@@ -72,28 +72,35 @@ export default {
         }
 
         const fetchCategorias = async () => {
-           loading.value = true;
-           error.value = null;
-            try {
-                const response = await axios.get(`${API_BASE_URL}/categorias`);
-                categorias.value = response.data; // Direct assignment is fine since we update specific objects
-            } catch (err) {
-                error.value = err;
-                console.error('Error fetching categorías:', err);
-                toast.error('Error al cargar las categorías');
-            } finally {
-              loading.value = false;
-            }
-        };
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const token = sessionStorage.getItem('token');
+    if (!token) throw new Error('Token no disponible');
+
+    const response = await axios.get(`${API_BASE_URL}/categorias`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    categorias.value = response.data;
+  } catch (err) {
+    error.value = err;
+    console.error('Error fetching categorías:', err);
+    toast.error('Error al cargar las categorías');
+  } finally {
+    loading.value = false;
+  }
+};
+
 
         const updateCategoriaInList = (updatedCategoria) => {
             const index = categorias.value.findIndex(cat => cat.id === updatedCategoria.id);
             if (index !== -1) {
-                // Use Vue's reactivity system to update the object.
                 Object.assign(categorias.value[index], updatedCategoria);
-
-                // OR (alternative with spread syntax, might have performance considerations for very large lists)
-                // categorias.value = categorias.value.map(cat => cat.id === updatedCategoria.id ? { ...cat, ...updatedCategoria } : cat);
             }
         };
 

@@ -122,27 +122,38 @@ export default {
     },
     methods: {
         fetchUsers(page = 1) {
-            let url = `${API_BASE_URL}/users?page=${page}`;
+      let url = `${API_BASE_URL}/users?page=${page}`;
 
-            // Si hay un rol seleccionado, añadirlo como parámetro de la URL
-            if (this.selectedRole) {
-                url += `&role=${this.selectedRole}`;
-            }
+      // Si hay un rol seleccionado, añadirlo como parámetro de la URL
+      if (this.selectedRole) {
+        url += `&role=${this.selectedRole}`;
+      }
 
-            axios
-                .get(url)
-                .then((response) => {
-                    this.$emit('update:users', response.data.data);
-                    this.$emit('update:pagination', {
-                        current_page: response.data.current_page,
-                        last_page: response.data.last_page,
-                        per_page: response.data.per_page
-                    });
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        },
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found');
+        return;
+      }
+
+      axios
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          this.$emit('update:users', response.data.data);
+          this.$emit('update:pagination', {
+            current_page: response.data.current_page,
+            last_page: response.data.last_page,
+            per_page: response.data.per_page,
+          });
+        })
+        .catch((error) => {
+          console.error('Error al obtener usuarios:', error);
+        });
+    },
 
         // Método para manejar el cambio del rol en el filtro
         handleRoleChange(event) {

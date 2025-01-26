@@ -62,16 +62,27 @@ export default {
         };
 
         const fetchUsers = async (page = 1) => {
-            try {
-                const response = await axios.get(`${API_BASE_URL}/users?page=${page}`);
-                users.value = response.data.data;
-                pagination.current_page = response.data.current_page;
-                pagination.last_page = response.data.last_page;
-                pagination.per_page = response.data.per_page;
-            } catch (error) {
-                console.error(error);
-            }
-        };
+      try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token not found');
+        }
+
+        const response = await axios.get(`${API_BASE_URL}/users?page=${page}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        users.value = response.data.data;
+        pagination.value.current_page = response.data.current_page;
+        pagination.value.last_page = response.data.last_page;
+        pagination.value.per_page = response.data.per_page;
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    };
 
         const toggleUserStatus = async (user) => {
             try {

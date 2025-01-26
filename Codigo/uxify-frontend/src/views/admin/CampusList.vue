@@ -79,18 +79,26 @@ const getToken = () => {
 
 const fetchCampuses = async () => {
   try {
-    const token = getToken();
+    const token =sessionStorage.getItem('token');
+    if (!token) throw new Error('Token not found');
+
     const response = await axios.get(`${API_BASE_URL}/campus`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     });
-    campuses.value = response.data;
+
+    campuses.value = response.data; // Actualiza la lista de campus
   } catch (error) {
-    console.error("Error al obtener la lista de campus:", error);
+    console.error('Error al obtener la lista de campus:', error);
+
     if (error.message !== 'Token not found') {
       toast.error('Error al obtener la lista de campus.');
     }
   }
 };
+
 
 onMounted(fetchCampuses);
 
