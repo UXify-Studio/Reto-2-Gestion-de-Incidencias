@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show" :title="modalTitle" @close="close" class="z-6">
+  <Modal :show="show" :title="modalTitle" @close="close" class="z-10">
     <div class="d-flex justify-content-center mt-2 mb-3">
       <button
         type="button"
