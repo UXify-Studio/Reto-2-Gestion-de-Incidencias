@@ -58,30 +58,26 @@ class MantenimientoController extends Controller
                 'id_maquina.*' => 'exists:maquinas,id'
             ]);
 
-            $mantenimientos = [];
-            DB::transaction(function () use ($validatedData, &$mantenimientos) {
 
-                    $mantenimiento = Mantenimiento::create([
-                        'duracion' => $validatedData['duracion'],
-                        'fecha_inicio' => $validatedData['fecha_inicio'],
-                        'proxima_fecha' =>  $validatedData['proxima_fecha'],
-                        'descripcion' => $validatedData['descripcion'],
-                        'periodo' => $validatedData['periodo'],
-                        'id_maquina' => $validatedData['id_maquina'],
-                        'id_usuario' => auth()->user()->id,
-                    ]);
+            $mantenimiento = Mantenimiento::create([
+                'duracion' => $validatedData['duracion'],
+                'fecha_inicio' => $validatedData['fecha_inicio'],
+                'proxima_fecha' =>  $validatedData['proxima_fecha'],
+                'descripcion' => $validatedData['descripcion'],
+                'periodo' => $validatedData['periodo'],
+                'id_maquina' => $validatedData['id_maquina'],
+                'id_usuario' => auth()->user()->id,
+            ]);
 
-                    $mantenimientos[] = $mantenimiento;
 
-            });
 
-            return response()->json(['message' => 'Mantenimientos creados correctamente', 'mantenimientos' => $mantenimientos], 201);
+            return response()->json(['message' => 'Mantenimiento creado correctamente', 'mantenimiento' => $mantenimiento], 201);
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
             return response()->json(['errors' => $validationException->errors()], 422);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['error' => 'Error al crear los mantenimientos: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al crear el mantenimiento: ' . $e->getMessage()], 500);
         }
     }
 

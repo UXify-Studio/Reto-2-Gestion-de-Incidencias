@@ -33,6 +33,11 @@ const router = createRouter({
       component: () => import('../views/DetailsMantenimientoView.vue'),
       props: route => ({ id: route.query.id })
     },
+    { 
+      path: '/ayuda', 
+      component: () => import('../views/Ayuda.vue') ,
+      meta: { requiresAdmin: true },
+    },
 
     
     { 
@@ -76,9 +81,6 @@ const router = createRouter({
       component: () => import('../views/admin/SeccionesList.vue') ,
       meta: { requiresAdmin: true },
     },
-    
-    
-
   ],
 });
 
