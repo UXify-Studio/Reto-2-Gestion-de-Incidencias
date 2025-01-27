@@ -192,7 +192,7 @@ export default {
     ])
       .then((responses) => {
         this.categorias = responses[0].data;
-        this.maquinas = responses[1].data;
+        this.maquinas = responses[1].data;  
       })
       .catch((error) => {
         console.error('Error al cargar datos iniciales:', error);
