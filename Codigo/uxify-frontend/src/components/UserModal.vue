@@ -171,4 +171,7 @@ export default {
 </script>
 
 <style scoped>
+Modal {
+    z-index: 999;
+}
 </style>

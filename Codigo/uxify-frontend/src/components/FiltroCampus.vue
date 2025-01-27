@@ -46,6 +46,7 @@ export default {
         const campuses = ref([]);
         const selectedCampus = ref("");
         const selectedSection = ref("");
+        const token = sessionStorage.getItem('token');
 
         const sectionsStore = useSectionsStore();
         const sections = computed(() => sectionsStore.sections);
@@ -72,11 +73,18 @@ export default {
             emit("updateSelections", { campusId: null, sectionId: null });
         };
 
-        axios.get(`${API_BASE_URL}/campus`)
-            .then(response => {
-                campuses.value = response.data;
-            })
-            .catch(error => console.error(error));
+        axios
+          .get(`${API_BASE_URL}/campus`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          })
+          .then(response => {
+            campuses.value = response.data;
+          })
+          .catch(error => console.error(error));
+
 
         return {
             campuses,

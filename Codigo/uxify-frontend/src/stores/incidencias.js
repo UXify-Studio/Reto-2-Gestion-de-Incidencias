@@ -13,7 +13,13 @@ export const useIncidenciasStore = defineStore('incidencias', {
   actions: {
     async fetchIncidenciasTotal() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/incidencias/prioridad`);
+        const token = sessionStorage.getItem('token');
+        const response = await axios.get(`${API_BASE_URL}/incidencias/prioridad`,{
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         console.log("DATA: ", response.data);
         console.log('Inicidencias Prioridad Alta:', response.data.data.alta);
         console.log('Inicidencias Prioridad Media:', response.data.data.media);
@@ -24,7 +30,7 @@ export const useIncidenciasStore = defineStore('incidencias', {
         this.incidenciasAlta = response.data.data.alta;
         this.incidenciasMedia = response.data.data.media;
         this.incidenciasBaja = response.data.data.baja;
-        this.incidenciasResueltas = response.data.data.resueltas
+        this.incidenciasResueltas = response.data.data.resueltas;
         this.mantenimientos = response.data.data.mantenimientos;
 
       } catch (error) {
@@ -33,5 +39,3 @@ export const useIncidenciasStore = defineStore('incidencias', {
     },
   },
 });
-
-
