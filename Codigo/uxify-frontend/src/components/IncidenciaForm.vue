@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show" :title="modalTitle" @close="close" class="z-6">
+  <Modal :show="show" :title="modalTitle" @close="close">
     <div class="d-flex justify-content-center mt-2 mb-3">
       <button
         type="button"
@@ -136,6 +136,7 @@
 <script>
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
+import Modal from '@/components/Modal.vue';
 import { useToast } from 'vue-toastification';
 
 export default {
@@ -377,5 +378,9 @@ export default {
   overflow-y: auto;
   border: 1px solid #ced4da;
   padding: 5px;
+}
+
+.modal {
+  z-index: 1000;
 }
 </style>
