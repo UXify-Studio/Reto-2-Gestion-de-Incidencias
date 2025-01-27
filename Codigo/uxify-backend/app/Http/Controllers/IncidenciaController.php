@@ -52,7 +52,7 @@ class IncidenciaController extends Controller
         }
 
         //$result = $query->get();
-        $result = $query->paginate(12);
+        $result = $query->paginate(10);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -251,7 +251,10 @@ class IncidenciaController extends Controller
             ->select('inc.*', 'maq.prioridad', 'maq.estado as gravedad_incidencia', 'maq.nombre as nombre_maquina', 'cat.nombre as categoria')
             ->where('resuelta', 0)
             ->where('camp.id', $campus)
-            ->get();
+            ->orderBy('maq.estado', 'desc')
+            ->orderBy('maq.prioridad', 'asc')
+            ->orderBy('inc.fecha_creacion', 'desc')
+            ->paginate(10);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -275,7 +278,10 @@ class IncidenciaController extends Controller
             ->select('inc.*', 'maq.prioridad', 'maq.estado as gravedad_incidencia', 'maq.nombre as nombre_maquina', 'cat.nombre as categoria')
             ->where('resuelta', 0)
             ->where('sect.id', $section)
-            ->get();
+            ->orderBy('maq.estado', 'desc')
+            ->orderBy('maq.prioridad', 'asc')
+            ->orderBy('inc.fecha_creacion', 'desc')
+            ->paginate(10);
 
         if ($result->isNotEmpty()) {
             return response()->json([
