@@ -78,8 +78,8 @@ Route::controller(IncidenciaController::class)->group(function () {
     Route::get('/incidencias/campus/{campus}', 'getIncidenciasByCampus')->middleware('auth:api');
     Route::get('/incidencias/section/{section}', 'getIncidenciasBySection')->middleware('auth:api');
     Route::get('/incidencias/{id}', 'show')->middleware('auth:api');
-    Route::put('/incidencias/{id}/resuelta', 'marcarIncidenciaComoResuelta')->middleware('auth:api');
-    Route::put('/incidencias/{id}/comentario', 'actualizarComentario')->middleware('auth:api', 'tecnico');
+    Route::put('/incidencias/{id}/resuelta', 'marcarIncidenciaComoResuelta')->middleware('auth:api', 'adminOrTecnico');
+    Route::put('/incidencias/{id}/comentario', 'actualizarComentario')->middleware('auth:api', 'adminOrTecnico');
     Route::get('/incidencias/{id}/comentario', 'obtenerComentario')->middleware('auth:api');
     Route::get('/incidenciasCount', 'countIncidenciasEstados')->middleware('auth:api');
     Route::get('incidencias/latest', 'getUltimasIncidenciasPorPrioridad');

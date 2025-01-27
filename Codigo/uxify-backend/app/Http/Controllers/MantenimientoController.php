@@ -16,8 +16,8 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        $mantenimientosProximos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 0)->paginate(12);
-        $mantenimientosResueltos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 1)->paginate(12);
+        $mantenimientosProximos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 0)->paginate(10);
+        $mantenimientosResueltos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 1)->paginate(10);
 
         if ($mantenimientosProximos->isNotEmpty()) {
             return response()->json([
