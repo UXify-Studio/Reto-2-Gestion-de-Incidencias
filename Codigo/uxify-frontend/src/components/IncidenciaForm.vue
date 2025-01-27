@@ -319,8 +319,6 @@ export default {
                         'Authorization': `Bearer ${token}` // Incluir el token en la cabecera Authorization
                       }
                 });
-
-
               });
 
               // Esperar a que todas las promesas se resuelvan

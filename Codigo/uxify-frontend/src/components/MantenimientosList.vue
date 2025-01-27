@@ -46,7 +46,7 @@
                     <td class="fs-6 p-1 text-center align-middle">
                         <router-link :to="{ name: 'MantenimientosDetalles', query: { id: mantenimiento.id } }"
                             class="d-block text-decoration-none" style="color: inherit;">
-                            {{mantenimiento.proxima_fecha }}
+                            {{ formatDate(mantenimiento.proxima_fecha) }}
                         </router-link>
                     </td>
 
@@ -114,12 +114,27 @@ export default{
         mantenimientosStore.fetchMantenimientosProximos(page);
       }
     };
+    const formatDate = (dateString) => {
+      if (!dateString) return '';
+
+      try {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      } catch (error) {
+        console.error("Error formatting date:", error, dateString);
+        return 'Invalid Date Format';
+      }
+    };
 
     return {
       mantenimientos,
       pagination,
       goToPage,
       pages: computed(() => Array.from({ length: pagination.value.last_page }, (_, i) => i + 1)),
+      formatDate,
     };
   },
 }
