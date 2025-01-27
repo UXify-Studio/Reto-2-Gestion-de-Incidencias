@@ -82,8 +82,8 @@
           <nav aria-label="Page navigation">
             <ul class="pagination">
               <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
-                <button class="page-link" 
-                        :disabled="pagination.current_page === 1" 
+                <button class="page-link"
+                        :disabled="pagination.current_page === 1"
                         @click="fetchIncidencias(null, pagination.current_page - 1)">
                   Anterior
                 </button>
@@ -93,8 +93,8 @@
                 <button class="page-link" @click="fetchIncidencias(null, page)">{{ page }}</button>
               </li>
               <li class="page-item" :class="{ disabled: pagination.current_page === pagination.last_page }">
-                <button class="page-link" 
-                        :disabled="pagination.current_page === pagination.last_page" 
+                <button class="page-link"
+                        :disabled="pagination.current_page === pagination.last_page"
                         @click="fetchIncidencias(null, pagination.current_page + 1)">
                   Siguiente
                 </button>
@@ -139,6 +139,7 @@ export default {
         last_page: 1,
         per_page: 10,
       },
+      token: sessionStorage.getItem('token'),
     };
   },
   computed: {
@@ -175,8 +176,14 @@ export default {
       if (priority) {
         url += `&priority=${priority}`;
       }
+
       axios
-        .get(url)
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+          },
+        })
         .then((response) => {
           const apiResponse = response.data?.data;
           this.incidencias = apiResponse?.data || [];
@@ -194,6 +201,34 @@ export default {
     aplicarFiltro() {
       console.log("Campus ID:", this.selectedCampusId);
       console.log("Section ID:", this.selectedSectionId);
+
+      let url = `${API_BASE_URL}/incidencias`;
+      
+      if (this.selectedCampusId > 0) {
+        console.log('campus ID: ', this.selectedCampusId);
+        console.log('Section ID: ', this.selectedSectionId);
+        if ( this.selectedSectionId > 0){
+          url += `/section/${this.selectedSectionId}`;
+        } else {
+          url += `/campus/${this.selectedCampusId}`;
+        }
+        console.log('URL: ', url);
+        
+      }
+      
+      axios
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          this.incidencias = response.data.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     borrarFiltros() {
       this.selectedCampusId = null;

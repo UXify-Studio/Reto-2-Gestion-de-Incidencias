@@ -67,8 +67,14 @@ export default {
   },
 
   created() {
+    const token = sessionStorage.getItem('token');
     axios
-      .get(`${API_BASE_URL}/campus`)
+      .get(`${API_BASE_URL}/campus`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         this.campuses = response.data;
       })

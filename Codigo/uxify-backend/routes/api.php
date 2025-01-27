@@ -31,6 +31,7 @@ Route::controller(CategoriaController::class)->group(function () {
 
 Route::controller(MaquinaController::class)->group(function () {
     Route::get('/maquinas', 'index')->middleware('auth:api', 'admin');
+    Route::post('/maquinas', 'store')->middleware('auth:api', 'admin');
     Route::get('/maquinasCount', 'countMaquinas')->middleware('auth:api', 'admin');
     Route::get('/maquinasTD', 'getMaquinasTD')->middleware('auth:api', 'admin');
     Route::put('/maquinas/{id}/enable', 'enable')->middleware('auth:api', 'admin');
@@ -92,11 +93,11 @@ Route::controller(AuthController::class)->prefix('auth')->group(function()  {
     Route::post('logout', 'logout')->middleware('auth:api');
     Route::post('refresh', 'refresh')->middleware('auth:api');
     Route::get('me', 'me')->middleware('auth:api');
-    Route::get('/users', 'index')->middleware('auth:api', 'admin');
-    Route::get('/usersCount', 'countUsers')->middleware('auth:api', 'admin');
 });
 
 Route::controller(UserController::class)->group(function () {
+    Route::get('/users', 'index')->middleware('auth:api', 'admin');
+    Route::get('/usersCount', 'countUsers')->middleware('auth:api', 'admin');
     Route::post('/store', 'store')->middleware('auth:api', 'admin');
     Route::put('/users/{id}', 'update')->middleware('auth:api', 'admin');
     Route::put('/users/{id}/enable', 'enable')->middleware('auth:api', 'admin');

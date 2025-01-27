@@ -4,13 +4,19 @@ import { API_BASE_URL } from '@/config.js';
 
 export const useIncidenciasCountStore = defineStore('incidenciasCount', {
   state: () => ({
-    incidenciasPendiente: null, // Cambiado a null
-    incidenciasActivas: null, // Cambiado a null
+    incidenciasPendiente: null,
+    incidenciasActivas: null,
   }),
   actions: {
     async fetchIncidenciasCount() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/incidenciasCount`);
+          const token = sessionStorage.getItem('token');
+        const response = await axios.get(`${API_BASE_URL}/incidenciasCount`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         console.log("INCIDENCIAS DATA: ", response.data.data);
         this.incidenciasPendiente = response.data.data.IncidenciasPendiente;
         this.incidenciasActivas = response.data.data.incidenciasActivo;

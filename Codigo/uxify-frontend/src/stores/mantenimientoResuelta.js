@@ -10,7 +10,13 @@ export const useMantenimientosCountStore = defineStore('mantenimientosCount', {
   actions: {
     async fetchMantenimientosCount() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/mantenimientosCount`);
+        const token = sessionStorage.getItem('token');
+        const response = await axios.get(`${API_BASE_URL}/mantenimientosCount`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         console.log("MANTENIMIENTOS DATA: ", response.data.data);
 
         this.MantenimientoHechos = response.data.data.MantenimientoTotal;

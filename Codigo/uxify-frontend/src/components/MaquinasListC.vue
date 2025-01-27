@@ -17,9 +17,9 @@
                     <td class="align-middle">{{ maquina.nombre }}</td>
                     <td class="align-middle">{{ maquina.prioridad }}</td>
                     <td class="align-middle">
-                        <span class="badge text-bg-success" v-if="maquina.estado === 0">Operativa</span>
-                        <span class="badge text-bg-danger" v-if="maquina.estado === 1">Fuera de Servicio</span>
-                        <span class="badge text-bg-resueltos text-white" v-if="maquina.estado === 2">En
+                        <span class="badge text-bg-success" v-if="maquina.estado === 1">Operativa</span>
+                        <span class="badge text-bg-danger" v-if="maquina.estado === 2">Fuera de Servicio</span>
+                        <span class="badge text-bg-resueltos text-white" v-if="maquina.estado === 3">En
                             Mantenimiento</span>
                     </td>
                     <td class="align-middle">{{ maquina.section.campus.nombre }}</td>
