@@ -96,9 +96,27 @@ class MaquinaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Maquina $maquina)
+    public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'codigo' => 'required|string|max:255',
+            'id_section' => 'required|exists:sections,id',
+            'nombre' => 'required|string|max:255',
+            'prioridad' => 'required|integer|between:1,3',
+            'estado' => 'required|integer|between:1,3',
+        ]);
+
+        $machine = Maquina::findOrFail($id);
+
+        $machine->codigo = $validatedData['codigo'];
+        $machine->id_section = $validatedData['id_section'];
+        $machine->nombre = $validatedData['nombre'];
+        $machine->prioridad = $validatedData['prioridad'];
+        $machine->estado = $validatedData['estado'];
+
+        $machine->save();
+
+        return response()->json(['success' => true, 'message' => 'Máquina actualizada correctamente', 'data' => $machine]);
     }
 
     /**

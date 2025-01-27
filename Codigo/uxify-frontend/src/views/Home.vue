@@ -8,7 +8,7 @@
             :resetFilters="resetFilters"
             @updateSelections="handleSelections"
           />
-          <button class="btn btn-dark" @click="aplicarFiltro">Aplicar Filtro</button>
+          <button class="btn btn-dark" @click="aplicarFiltro(1)">Aplicar Filtro</button>
           <button class="btn btn-dark" @click="borrarFiltros">Borrar Filtros</button>
         </div>
       </div>
@@ -82,20 +82,20 @@
           <nav aria-label="Page navigation">
             <ul class="pagination">
               <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
-                <button class="page-link" 
-                        :disabled="pagination.current_page === 1" 
-                        @click="fetchIncidencias(null, pagination.current_page - 1)">
+                <button class="page-link"
+                        :disabled="pagination.current_page === 1"
+                        @click="selectedCampusId == null && selectedSectionId == null ? fetchIncidencias(null, pagination.current_page - 1) : aplicarFiltro(pagination.current_page - 1)">
                   Anterior
                 </button>
               </li>
               <li class="page-item" v-for="page in pages" :key="page"
                 :class="{ active: page === pagination.current_page }">
-                <button class="page-link" @click="fetchIncidencias(null, page)">{{ page }}</button>
+                <button class="page-link" @click="selectedCampusId == null && selectedSectionId == null ? fetchIncidencias(null, page) : aplicarFiltro(page)">{{ page }}</button>
               </li>
               <li class="page-item" :class="{ disabled: pagination.current_page === pagination.last_page }">
-                <button class="page-link" 
-                        :disabled="pagination.current_page === pagination.last_page" 
-                        @click="fetchIncidencias(null, pagination.current_page + 1)">
+                <button class="page-link"
+                        :disabled="pagination.current_page === pagination.last_page"
+                        @click="selectedCampusId == null && selectedSectionId == null ? fetchIncidencias(null, pagination.current_page + 1) : aplicarFiltro(pagination.current_page + 1)">
                   Siguiente
                 </button>
               </li>
@@ -119,6 +119,7 @@ import IncidenciasList from '@/components/IncidenciasList.vue';
 import FiltroCampus from '@/components/FiltroCampus.vue';
 import MantenimientosList from '@/components/MantenimientosList.vue';
 import { API_BASE_URL } from '@/config.js';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'Home',
@@ -139,6 +140,8 @@ export default {
         last_page: 1,
         per_page: 10,
       },
+      token: sessionStorage.getItem('token'),
+      toast: useToast(),
     };
   },
   computed: {
@@ -175,8 +178,16 @@ export default {
       if (priority) {
         url += `&priority=${priority}`;
       }
+
+      console.log('URL fetchIncidencias:', url);
+
       axios
-        .get(url)
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+          },
+        })
         .then((response) => {
           const apiResponse = response.data?.data;
           this.incidencias = apiResponse?.data || [];
@@ -191,9 +202,49 @@ export default {
           this.incidencias = [];
         });
     },
-    aplicarFiltro() {
+    aplicarFiltro(page = 1) {
       console.log("Campus ID:", this.selectedCampusId);
       console.log("Section ID:", this.selectedSectionId);
+
+      let url = `${API_BASE_URL}/incidencias`;
+      
+      if (this.selectedCampusId > 0) {
+        console.log('campus ID: ', this.selectedCampusId);
+        console.log('Section ID: ', this.selectedSectionId);
+        if ( this.selectedSectionId > 0){
+          url += `/section/${this.selectedSectionId}`;
+        } else {
+          url += `/campus/${this.selectedCampusId}`;
+        }
+
+        url += `?page=${page}`;
+        console.log('URL aplicarFiltro: ', url);
+        
+      }
+      
+      axios
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          const apiResponse = response.data?.data;
+          this.incidencias = apiResponse?.data || [];
+          this.pagination = {
+            current_page: apiResponse.current_page,
+            last_page: apiResponse.last_page,
+            per_page: apiResponse.per_page,
+          };
+        })
+        .catch((error) => {
+          //console.error(error);
+          this.toast.warning('No se encontraron incidencias para el filtro seleccionado.', {
+              position: 'top-right',
+            });
+            return;
+        });
     },
     borrarFiltros() {
       this.selectedCampusId = null;
@@ -203,6 +254,7 @@ export default {
         this.resetFilters = false;
       }, 0);
       this.$router.push('/home');
+      this.fetchIncidencias();
     },
     handleSelections({ campusId, sectionId }) {
       this.selectedCampusId = campusId;

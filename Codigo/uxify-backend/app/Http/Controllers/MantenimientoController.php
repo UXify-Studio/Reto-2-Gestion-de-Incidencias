@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mantenimiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -15,8 +16,22 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        $mantenimientos = Mantenimiento::with('usuario', 'maquina')->get();
-        return response()->json(['mantenimientos' => $mantenimientos]);
+        $mantenimientosProximos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 0)->paginate(10);
+        $mantenimientosResueltos = Mantenimiento::with('usuario', 'maquina')->where('resuelta', 1)->paginate(10);
+
+        if ($mantenimientosProximos->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'mantenimientos' => $mantenimientosProximos,
+                'mantenimientosResueltos' => $mantenimientosResueltos
+
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontraron incidencias.'
+        ], 404);
     }
 
     /**
@@ -39,10 +54,11 @@ class MantenimientoController extends Controller
                 'proxima_fecha' => 'required|date',
                 'descripcion' => 'required|string',
                 'periodo' => 'required|string',
-                'id_maquina' => 'required|exists:maquinas,id'
+                'id_maquina' => 'required|integer',
+                'id_maquina.*' => 'exists:maquinas,id'
             ]);
 
-            // Crear el mantenimiento, incluyendo explícitamente 'fecha_inicio' y 'id_usuario'
+
             $mantenimiento = Mantenimiento::create([
                 'duracion' => $validatedData['duracion'],
                 'fecha_inicio' => $validatedData['fecha_inicio'],
@@ -50,14 +66,17 @@ class MantenimientoController extends Controller
                 'descripcion' => $validatedData['descripcion'],
                 'periodo' => $validatedData['periodo'],
                 'id_maquina' => $validatedData['id_maquina'],
-                'id_usuario' => auth()->user()->id, // Añadir el ID del usuario autenticado
+                'id_usuario' => auth()->user()->id,
             ]);
+
+
 
             return response()->json(['message' => 'Mantenimiento creado correctamente', 'mantenimiento' => $mantenimiento], 201);
 
         } catch (\Illuminate\Validation\ValidationException $validationException) {
             return response()->json(['errors' => $validationException->errors()], 422);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['error' => 'Error al crear el mantenimiento: ' . $e->getMessage()], 500);
         }
     }
@@ -191,5 +210,20 @@ class MantenimientoController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error al marcar la incidencia como resuelta: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function countMantenimiento()
+    {
+        $MantenimeitnoHechos = Mantenimiento::where('resuelta',1)->count();
+        $MantenimeitnoProximos = Mantenimiento::where('resuelta',0)->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'MantenimientoTotal' => $MantenimeitnoHechos,
+                'MantenimientoProximos' => $MantenimeitnoProximos
+            ]
+        ]);
+
     }
 }

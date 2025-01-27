@@ -52,7 +52,7 @@ class IncidenciaController extends Controller
         }
 
         //$result = $query->get();
-        $result = $query->paginate(12);
+        $result = $query->paginate(10);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -251,7 +251,10 @@ class IncidenciaController extends Controller
             ->select('inc.*', 'maq.prioridad', 'maq.estado as gravedad_incidencia', 'maq.nombre as nombre_maquina', 'cat.nombre as categoria')
             ->where('resuelta', 0)
             ->where('camp.id', $campus)
-            ->get();
+            ->orderBy('maq.estado', 'desc')
+            ->orderBy('maq.prioridad', 'asc')
+            ->orderBy('inc.fecha_creacion', 'desc')
+            ->paginate(10);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -275,7 +278,10 @@ class IncidenciaController extends Controller
             ->select('inc.*', 'maq.prioridad', 'maq.estado as gravedad_incidencia', 'maq.nombre as nombre_maquina', 'cat.nombre as categoria')
             ->where('resuelta', 0)
             ->where('sect.id', $section)
-            ->get();
+            ->orderBy('maq.estado', 'desc')
+            ->orderBy('maq.prioridad', 'asc')
+            ->orderBy('inc.fecha_creacion', 'desc')
+            ->paginate(10);
 
         if ($result->isNotEmpty()) {
             return response()->json([
@@ -338,4 +344,20 @@ class IncidenciaController extends Controller
             return response()->json(['success' => false, 'message' => 'Error al obtener el comentario: ' . $e->getMessage()], 500);
         }
     }
+
+    public function countIncidenciasEstados()
+    {
+        $IncidenciasPendiente = Incidencia::where('estado',0)->count();
+        $incidenciasActivo = Incidencia::where('estado', 1)->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'IncidenciasPendiente' => $IncidenciasPendiente,
+                'incidenciasActivo' => $incidenciasActivo
+            ]
+        ]);
+
+    }
+
 }

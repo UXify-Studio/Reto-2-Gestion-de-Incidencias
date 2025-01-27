@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="show" :title="modalTitle" @close="close">
+    <Modal :show="show" :title="modalTitle" @close="close"class="z-3">
         <form @submit.prevent="submit">
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
@@ -171,4 +171,7 @@ export default {
 </script>
 
 <style scoped>
+Modal {
+    z-index: 999;
+}
 </style>

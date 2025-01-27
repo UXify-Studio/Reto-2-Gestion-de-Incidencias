@@ -18,79 +18,74 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::controller(UserController::class)->group(function () {
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/usersCount', [UserController::class, 'countUsers']);
-});
-
 Route::controller(CategoriaController::class)->group(function () {
-    Route::get('/categorias', 'index');
+    Route::get('/categorias', 'index')->middleware('auth:api','admin');
     Route::post('/categorias', 'store')->middleware('auth:api','admin');
     //Route::get('/categorias/{id}', 'show')->middleware('auth:api','admin');
     Route::put('/categorias/{id}', 'update')->middleware('auth:api','admin');
     //Route::delete('/categorias/{id}', 'destroy')->middleware('auth:api','admin');
     Route::put('/categorias/{id}/enable',  'enable')->middleware('auth:api','admin');
     Route::put('/categorias/{id}/disable',  'disable')->middleware('auth:api','admin');
+    Route::get('categorias/prioridad', 'getIncidenciasPorPrioridad');
 });
 
 Route::controller(MaquinaController::class)->group(function () {
-    Route::get('/maquinas', [MaquinaController::class, 'index'])->middleware('auth:api', 'admin');
-    Route::get('/maquinasCount', [MaquinaController::class, 'countMaquinas'])->middleware('auth:api', 'admin');
-    Route::get('/maquinasTD', [MaquinaController::class, 'getMaquinasTD'])->middleware('auth:api', 'admin');
-    Route::put('/maquinas/{id}/enable', [MaquinaController::class, 'enable'])->middleware('auth:api', 'admin');
-    Route::put('/maquinas/{id}/disable', [MaquinaController::class, 'disable'])->middleware('auth:api', 'admin');
+    Route::get('/maquinas', 'index')->middleware('auth:api', 'admin');
+    Route::post('/maquinas', 'store')->middleware('auth:api', 'admin');
+    Route::get('/maquinasCount', 'countMaquinas')->middleware('auth:api', 'admin');
+    Route::get('/maquinasTD', 'getMaquinasTD')->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}/enable', 'enable')->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}/disable', 'disable')->middleware('auth:api', 'admin');
+    Route::put('/maquinas/{id}','update')->middleware('auth:api', 'admin');
+    Route::get('/maquinas/{id}/estados', 'estdoMaquinaPorId');
 });
 
 Route::controller(MantenimientoController::class)->group(function () {
-    Route::get('/mantenimientos', [MantenimientoController::class, 'index']);
-//    Route::middleware('auth:api')->post('/mantenimientosCreate', [MantenimientoController::class, 'store']);
-    Route::post('/mantenimientosCreate', [MantenimientoController::class, 'store'])->middleware('auth:api');
-    Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
-    Route::put('/mantenimientos/{id}', [MantenimientoController::class, 'update']);
-    Route::get('/mantenimientos/{id}', [MantenimientoController::class, 'show']);
-    Route::put('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'actualizarComentario']);
-    Route::get('/mantenimientos/{id}/comentario', [MantenimientoController::class, 'obtenerComentario']);
+    Route::get('/mantenimientos', 'index');
+    Route::post('/mantenimientosCreate', 'store')->middleware('auth:api');
+    Route::get('/mantenimientos/{id}', 'show')->middleware('auth:api');
+    Route::put('/mantenimientos/{id}', 'update')->middleware('auth:api', 'tecnico');
+    Route::put('/mantenimientos/{id}/comentario', 'actualizarComentario')->middleware('auth:api', 'tecnico');
+    Route::get('/mantenimientos/{id}/comentario', 'obtenerComentario')->middleware('auth:api');
+    Route::get('/mantenimientosCount', 'countMantenimiento')->middleware('auth:api');
+    Route::put('/mantenimientos/{id}/resuelto', 'marcarMantenimientoComoResuelta')->middleware('auth:api');
 });
 
 Route::controller(CampusController::class)->group(function () {
-    Route::get('/campus', [CampusController::class, 'index']);
-    Route::post('/campus', [CampusController::class, 'store']);
-    Route::get('/campus/{campus}', [CampusController::class, 'show']);
-    Route::put('/campus/{campus}', [CampusController::class, 'update']);
-    Route::put('/campus/{campus}/disable', [CampusController::class, 'disable']);
+    Route::get('/campus', 'index')->middleware('auth:api', 'admin');
+    Route::post('/campus', 'store')->middleware('auth:api', 'admin');
+    Route::get('/campus/{campus}', 'show')->middleware('auth:api', 'admin');
+    Route::put('/campus/{campus}', 'update')->middleware('auth:api', 'admin');
+    Route::put('/campus/{campus}/enable', 'enable')->middleware('auth:api', 'admin');
+    Route::put('/campus/{campus}/disable', 'disable')->middleware('auth:api', 'admin');
 });
 
 Route::controller(SectionController::class)->group(function () {
-    route::get('/secciones', [SectionController::class, 'index']);
-    Route::post('/secciones', [SectionController::class, 'store']);
-    Route::get('/secciones/{seccion}', [SectionController::class, 'show']);
-    Route::put('/secciones/{seccion}', [SectionController::class, 'update']);
-    Route::put('/secciones/{seccion}/disable', [SectionController::class, 'disable']);
-    Route::get('/sectionByCampus/{campus}', [SectionController::class, 'getSectionsByCampus']);
+    Route::get('/secciones', 'index');
+    Route::post('/secciones', 'store');
+    Route::get('/secciones/{seccion}', 'show');
+    Route::put('/secciones/{seccion}', 'update');
+    Route::put('/secciones/{seccion}/disable', 'disable');
+    Route::get('/sectionByCampus/{campus}', 'getSectionsByCampus');
+    Route::get('/seccionesConCampus', 'getSectionsWithCampus');
 });
 
 Route::controller(IncidenciaController::class)->group(function () {
-    Route::get('/incidencias', [IncidenciaController::class, 'index']);
-    Route::post('/incidencias', [IncidenciaController::class, 'store']);
-    Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
-    Route::get('incidencias/prioridad', [IncidenciaController::class, 'countIncidenciasPorPrioridad']);
-    Route::get('incidencias/campus/{campus}', [IncidenciaController::class, 'getIncidenciasByCampus']);
-    Route::get('incidencias/section/{section}', [IncidenciaController::class, 'getIncidenciasBySection']);
-    Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->middleware('auth:api');
-    Route::put('/incidencias/{id}/resuelta', [IncidenciaController::class, 'marcarIncidenciaComoResuelta'])->middleware('auth:api');
-    Route::put('/incidencias/{id}/comentario', [IncidenciaController::class, 'actualizarComentario']);
-    Route::get('/incidencias/{id}/comentario', [IncidenciaController::class, 'obtenerComentario']);
+    Route::get('/incidencias', 'index')->middleware('auth:api');
+    Route::post('/incidencias', 'store')->middleware('auth:api');
+    Route::get('/incidencias/latest', 'getUltimasIncidenciasPorPrioridad')->middleware('auth:api');
+    Route::get('/incidencias/prioridad', 'countIncidenciasPorPrioridad')->middleware('auth:api');
+    Route::get('/incidencias/campus/{campus}', 'getIncidenciasByCampus')->middleware('auth:api');
+    Route::get('/incidencias/section/{section}', 'getIncidenciasBySection')->middleware('auth:api');
+    Route::get('/incidencias/{id}', 'show')->middleware('auth:api');
+    Route::put('/incidencias/{id}/resuelta', 'marcarIncidenciaComoResuelta')->middleware('auth:api', 'adminOrTecnico');
+    Route::put('/incidencias/{id}/comentario', 'actualizarComentario')->middleware('auth:api', 'adminOrTecnico');
+    Route::get('/incidencias/{id}/comentario', 'obtenerComentario')->middleware('auth:api');
+    Route::get('/incidenciasCount', 'countIncidenciasEstados')->middleware('auth:api');
+    Route::get('incidencias/latest', 'getUltimasIncidenciasPorPrioridad');
 });
 
 Route::get('/roles', [RolController::class, 'index']);
-
-Route::get('/seccionesConCampus', [SectionController::class, 'getSectionsWithCampus']);
-
-Route::get('categorias/prioridad', [CategoriaController::class, 'getIncidenciasPorPrioridad']);
-
-Route::get('incidencias/latest', [IncidenciaController::class, 'getUltimasIncidenciasPorPrioridad']);
-
-Route::get('/maquinas/{id}/estados', [MaquinaController::class, 'estdoMaquinaPorId']);
 
 Route::controller(AuthController::class)->prefix('auth')->group(function()  {
     Route::post('login', 'login');
@@ -101,27 +96,25 @@ Route::controller(AuthController::class)->prefix('auth')->group(function()  {
 });
 
 Route::controller(UserController::class)->group(function () {
+    Route::get('/users', 'index')->middleware('auth:api', 'admin');
+    Route::get('/usersCount', 'countUsers')->middleware('auth:api', 'admin');
     Route::post('/store', 'store')->middleware('auth:api', 'admin');
     Route::put('/users/{id}', 'update')->middleware('auth:api', 'admin');
-    Route::put('/users/{id}/enable', [UserController::class, 'enable'])->middleware('auth:api', 'admin');
-    Route::put('/users/{id}/disable', [UserController::class, 'disable'])->middleware('auth:api', 'admin');
+    Route::put('/users/{id}/enable', 'enable')->middleware('auth:api', 'admin');
+    Route::put('/users/{id}/disable', 'disable')->middleware('auth:api', 'admin');
 });
 
-Route::post('/timer', [IncidenciaTecnicoController::class, 'store']);
-Route::put('/timer/{id}', [IncidenciaTecnicoController::class, 'update']);
-Route::get('/timer/latest', [IncidenciaTecnicoController::class, 'getLatestIncidenciaTecnico']);
-Route::get('/timer/{id}/tiempototal', [IncidenciaTecnicoController::class, 'calcularTiempoTrabajado']);
-Route::get('/incidencias/{id}/estado', [IncidenciaTecnicoController::class, 'obtenerEstadoIncidencia']);
+Route::controller(IncidenciaTecnicoController::class)->group(function () {
+    Route::post('/timer', 'store');
+    Route::put('/timer/{id}', 'update');
+    Route::get('/timer/latest', 'getLatestIncidenciaTecnico');
+    Route::get('/timer/{id}/tiempototal', 'calcularTiempoTrabajado');
+    Route::get('/incidencias/{id}/estado', 'obtenerEstadoIncidencia');
+});
 
-Route::post('/mantenimiento/timer', [MantenimientoTecnicoController::class, 'store']);
-Route::put('/mantenimiento/timer/{id}', [MantenimientoTecnicoController::class, 'update']);
-Route::get('/mantenimiento/timer/latest', [MantenimientoTecnicoController::class, 'getLatestMantenimientoTecnico']);
-Route::get('/mantenimiento/timer/{id}/tiempototal', [MantenimientoTecnicoController::class, 'calcularTiempoTrabajado']);
-
-Route::put('/mantenimientos/{id}/resuelto', [MantenimientoController::class, 'marcarMantenimientoComoResuelta'])->middleware('auth:api');
-
-//Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-//    Route::get('/admin/users', [UserController::class, 'index']);
-//    Route::post('/admin/users', [UserController::class, 'store']);
-//    // Otras rutas de administrador
-//});
+Route::controller(MantenimientoTecnicoController::class)->group(function () {
+    Route::post('/mantenimiento/timer', 'store');
+    Route::put('/mantenimiento/timer/{id}', 'update');
+    Route::get('/mantenimiento/timer/latest', 'getLatestMantenimientoTecnico');
+    Route::get('/mantenimiento/timer/{id}/tiempototal', 'calcularTiempoTrabajado');
+});

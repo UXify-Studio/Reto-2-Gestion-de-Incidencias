@@ -12,7 +12,18 @@ export const useUsersStore = defineStore('users', {
   actions: {
     async fetchUsersTotal() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/usersCount`);
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token not found');
+        }
+
+        const response = await axios.get(`${API_BASE_URL}/usersCount`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
         console.log('Usuarios totales:', response.data.total);
         console.log('Usuarios Admin:', response.data.admin);
         console.log('Usuarios Tecnocos:', response.data.tecnico);
@@ -29,5 +40,3 @@ export const useUsersStore = defineStore('users', {
     },
   },
 });
-
-

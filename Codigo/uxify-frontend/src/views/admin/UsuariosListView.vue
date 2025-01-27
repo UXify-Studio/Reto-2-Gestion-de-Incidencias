@@ -63,13 +63,24 @@ export default {
 
         const fetchUsers = async (page = 1) => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/users?page=${page}`);
+                const token = sessionStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Token not found');
+                }
+
+                const response = await axios.get(`${API_BASE_URL}/users?page=${page}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
                 users.value = response.data.data;
-                pagination.current_page = response.data.current_page;
-                pagination.last_page = response.data.last_page;
-                pagination.per_page = response.data.per_page;
+                  pagination.current_page = response.data.current_page;
+                    pagination.last_page = response.data.last_page;
+                    pagination.per_page = response.data.per_page;
+
             } catch (error) {
-                console.error(error);
+                console.error('Error al obtener usuarios:', error);
             }
         };
 
