@@ -74,6 +74,11 @@ export default {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
+                users.value = response.data.data;
+                  pagination.current_page = response.data.current_page;
+                    pagination.last_page = response.data.last_page;
+                    pagination.per_page = response.data.per_page;
+
             } catch (error) {
                 console.error('Error al obtener usuarios:', error);
             }

@@ -64,16 +64,16 @@
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
-                            <button class="page-link" @click="fetchUsers(pagination.current_page - 1)">
+                            <button class="page-link"  :disabled="pagination.current_page === 1" @click="fetchUsers(pagination.current_page - 1)">
                                 Anterior
                             </button>
                         </li>
-                        <li class="page-item" v-for="page in pagination.last_page" :key="page"
+                        <li class="page-item" v-for="page in pages" :key="page"
                             :class="{ active: page === pagination.current_page }">
                             <button class="page-link" @click="fetchUsers(page)">{{ page }}</button>
                         </li>
                         <li class="page-item" :class="{ disabled: pagination.current_page === pagination.last_page }">
-                            <button class="page-link" @click="fetchUsers(pagination.current_page + 1)">
+                            <button class="page-link" :disabled="pagination.current_page === pagination.last_page" @click="fetchUsers(pagination.current_page + 1)">
                                 Siguiente
                             </button>
                         </li>
@@ -105,11 +105,17 @@ export default {
             })
         }
     },
-    data() {
+        data() {
         return {
-            selectedRole: this.$route.query.role || '', // Obtener el filtro desde la URL
+           selectedRole: this.$route.query.role || '',
+           token: sessionStorage.getItem('token'),
         };
     },
+      computed: {
+      pages() {
+        return Array.from({ length: this.pagination.last_page }, (_, i) => i + 1);
+        },
+      },
     watch: {
         // Observar cambios en la ruta y ejecutar fetchUsers cuando cambie el filtro
         '$route.query.role'(newValue) {
@@ -121,16 +127,16 @@ export default {
         this.fetchUsers(); // Fetch inicial de usuarios
     },
     methods: {
-        fetchUsers(page = 1) {
+          fetchUsers(page = 1) {
       let url = `${API_BASE_URL}/users?page=${page}`;
 
       // Si hay un rol seleccionado, añadirlo como parámetro de la URL
       if (this.selectedRole) {
         url += `&role=${this.selectedRole}`;
       }
+    
 
-      const token = sessionStorage.getItem('token');
-      if (!token) {
+      if (!this.token) {
         console.error('Token not found');
         return;
       }
@@ -139,7 +145,7 @@ export default {
         .get(url, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${this.token}`,
           },
         })
         .then((response) => {
@@ -172,7 +178,7 @@ export default {
 }
 
 .icon-small-2 {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
 }
 </style>
