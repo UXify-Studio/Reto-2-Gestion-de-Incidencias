@@ -1,16 +1,5 @@
 <template>
     <div>
-        <!-- Filtro de roles -->
-        <div class="mb-3">
-            <label for="roleFilter" class="form-label">Filtrar por Rol</label>
-            <select id="roleFilter" class="form-select" v-model="selectedRole" @change="handleRoleChange">
-                <option value="">Todos</option>
-                <option value="Administrador">Administrador</option>
-                <option value="Tecnico">Técnico</option>
-                <option value="Operario">Operario</option>
-            </select>
-        </div>
-
         <!-- Tabla de usuarios -->
         <table class="table table-striped table-hover align-middle">
             <thead class="table-dark">
