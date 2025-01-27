@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mantenimiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -53,25 +54,25 @@ class MantenimientoController extends Controller
                 'proxima_fecha' => 'required|date',
                 'descripcion' => 'required|string',
                 'periodo' => 'required|string',
-                'id_maquina' => 'required|array',
+                'id_maquina' => 'required|integer',
                 'id_maquina.*' => 'exists:maquinas,id'
             ]);
 
             $mantenimientos = [];
             DB::transaction(function () use ($validatedData, &$mantenimientos) {
-                foreach ($validatedData['id_maquina'] as $maquinaId) {
+
                     $mantenimiento = Mantenimiento::create([
                         'duracion' => $validatedData['duracion'],
                         'fecha_inicio' => $validatedData['fecha_inicio'],
                         'proxima_fecha' =>  $validatedData['proxima_fecha'],
                         'descripcion' => $validatedData['descripcion'],
                         'periodo' => $validatedData['periodo'],
-                        'id_maquina' => $maquinaId,
+                        'id_maquina' => $validatedData['id_maquina'],
                         'id_usuario' => auth()->user()->id,
                     ]);
 
                     $mantenimientos[] = $mantenimiento;
-                }
+
             });
 
             return response()->json(['message' => 'Mantenimientos creados correctamente', 'mantenimientos' => $mantenimientos], 201);
