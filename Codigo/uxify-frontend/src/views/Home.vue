@@ -78,7 +78,7 @@
       </table>
       <!-- Paginación -->
       <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col d-flex justify-content-center" style="z-index:1;position:relative;">
           <nav aria-label="Page navigation">
             <ul class="pagination">
               <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
