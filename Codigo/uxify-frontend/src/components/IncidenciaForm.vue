@@ -1,7 +1,7 @@
 <template>
   <Modal :show="show" :title="modalTitle" @close="close">
 
-    <div class="d-flex justify-content-center mt-2 mb-3">
+    <div class="d-flex justify-content-center mt-2 mb-3 z-5">
       <button
         type="button"
         class="btn btn-outline-secondary mx-2"

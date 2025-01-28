@@ -1,5 +1,5 @@
 <template>
-    <div v-if="show" class="modal-overlay" @click.self="close">
+    <div v-if="show" class="modal-overlay" @click.self="close" style="z-index:9999999;">
         <div class="modal-container">
             <div class="modal-header">
                 <h5 class="modal-title">{{ title }}</h5>
