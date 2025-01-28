@@ -2,13 +2,13 @@
   <div>
     <CuadrosDatos />
     <div class="container mt-2z">
-      <div class="row mb-3">
-        <div class="col d-flex align-items-center">
+      <div class="row mb-3 py-3">
+        <div class="col d-flex align-items-center gap-2">
           <FiltroCampus
             :resetFilters="resetFilters"
             @updateSelections="handleSelections"
           />
-          <button class="btn btn-dark" @click="aplicarFiltro(1)">Aplicar Filtro</button>
+          <button class="btn btn-dark" @click="aplicarFiltro(1)">Aplicar Fitro</button>
           <button class="btn btn-dark" @click="borrarFiltros">Borrar Filtros</button>
         </div>
       </div>

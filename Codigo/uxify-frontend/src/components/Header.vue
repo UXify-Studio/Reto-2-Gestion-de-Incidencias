@@ -14,7 +14,7 @@
             <i class="bi bi-bell me-3">
               <img src="../assets/Notifi.png" class="icon" alt="Notification">
             </i>
-            <router-link to="/register" class="text-white me-3">
+            <router-link to="/home" class="text-white me-3">
               <i class="bi bi-gear">
                 <img src="../assets/Config.png" class="icon" alt="Settings">
               </i>
