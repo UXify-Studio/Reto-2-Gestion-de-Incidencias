@@ -85,7 +85,7 @@
               v-model="mantenimiento.maquinas"
               class="form-check-input"
             />
-            <label class="form-check-label" :for="`maquina-${maquina.id}`">
+            <label class="form-check-label px-2" :for="`maquina-${maquina.id}`">
               {{ maquina.codigo }} - {{ maquina.nombre }}
             </label>
           </div>

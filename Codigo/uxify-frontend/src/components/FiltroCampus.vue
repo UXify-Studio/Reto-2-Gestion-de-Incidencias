@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="d-flex justify-content-between gap-2">
         <!-- Selector de Campus -->
         <select name="campuses" class="form-control" @change="handleCampusChange" v-model="selectedCampus">
             <option disabled selected value="">Selecciona un campus</option>
