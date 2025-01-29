@@ -14,8 +14,8 @@
               <button class="btn btn-dark w-100" @click="borrarFiltros">Borrar Filtros</button>
             </div>
           </div>
-          
         </div>
+
       </div>
       <h2 class="text-primary mb-1 fs-4">Incidencias <span v-if="priorityText">{{ priorityText }}</span></h2>
       <hr>
@@ -27,7 +27,8 @@
               <th class="p-1 text-center align-middle">Título</th>
               <th class="p-1 text-center align-middle">Maquina</th>
               <th class="p-1 text-center align-middle">Prioridad</th>
-              <th class="p-1 text-center align-middle">Estado</th>
+              <th class="p-1 text-center align-middle">Gravedad Inicidencia</th>
+              <th class="p-1 text-center align-middle">Estado Inicidencia</th>
               <th class="p-1 text-center align-middle">Fec. creación</th>
               <th class="p-1 text-center align-middle">Categoría</th>
             </tr>
@@ -65,6 +66,14 @@
                   class="d-block text-decoration-none" style="color: inherit;">
                   <span v-if="incidencia.gravedad_incidencia === 1" class="badge bg-danger">Parada</span>
                   <span v-else class="badge bg-success">Operativa</span>
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  <span v-if="incidencia.estado === 0" class="badge bg-warning">Pendiente</span>
+                  <span v-else-if="incidencia.estado === 1" class="badge bg-success">En curso</span>
+                  <span v-else class="badge bg-warning">Parada</span>
                 </router-link>
               </td>
               <td class="fs-6 p-1 text-center align-middle">
