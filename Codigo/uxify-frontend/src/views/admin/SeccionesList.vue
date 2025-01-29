@@ -125,7 +125,7 @@ const fetchSecciones = async () => {
 const fetchCampuses = async () => {
   try {
       const token = getToken();
-      const response = await axios.get(`${API_BASE_URL}/campus`, {
+      const response = await axios.get(`${API_BASE_URL}/campusSelect`, {
           headers: { Authorization: `Bearer ${token}` },
       });
       campuses.value = response.data;

@@ -181,7 +181,7 @@ export default {
     }
 
     Promise.all([
-      axios.get(`${API_BASE_URL}/categorias`, {
+      axios.get(`${API_BASE_URL}/categoriasSelect`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
