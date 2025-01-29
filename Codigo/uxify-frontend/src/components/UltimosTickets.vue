@@ -2,7 +2,8 @@
   <div class="container mt-2z">
     <h2 class="text-primary mb-1 fs-4">Últimos tickets</h2>
     <hr>
-    <table class="table table-bordered table-striped">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
       <thead class="table-light">
         <tr>
           <th class="p-1 text-center align-middle">ID Ticket</th>
@@ -29,6 +30,8 @@
         </tr>
       </tbody>
     </table>
+    </div>
+    
   </div>
 </template>
 
