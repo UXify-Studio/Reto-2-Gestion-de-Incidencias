@@ -1,7 +1,8 @@
 <template>
     <div>
-        <table class="table">
-            <thead>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
                     <th>Nombre</th>
                     <th>Prioridad</th>
@@ -40,6 +41,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: currentPage === 1 }">

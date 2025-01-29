@@ -1,7 +1,8 @@
 <template>
     <div>
         <!-- Tabla de usuarios -->
-        <table class="table table-striped table-hover align-middle">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>Nombre</th>
@@ -46,6 +47,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
 
         <!-- Paginación -->
         <div class="row">

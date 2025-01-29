@@ -1,84 +1,100 @@
 <template>
   <div>
     <CuadrosDatos />
-    <div class="container mt-2z">
-      <div class="row mb-3">
-        <div class="col d-flex align-items-center">
-          <FiltroCampus
-            :resetFilters="resetFilters"
-            @updateSelections="handleSelections"
-          />
-          <button class="btn btn-dark" @click="aplicarFiltro(1)">Aplicar Filtro</button>
-          <button class="btn btn-dark" @click="borrarFiltros">Borrar Filtros</button>
+    <div class="container mt-2">
+      <div class="row mb-3 py-3">
+        <div class="col-12 d-flex flex-wrap align-items-center gap-2">
+          <div class="row w-100">
+            <FiltroCampus
+              :resetFilters="resetFilters"
+              @updateSelections="handleSelections"
+            />
+            <div class="col-12 col-lg-6 d-flex flex-column gap-2">
+              <button class="btn btn-dark w-100" @click="aplicarFiltro(1)">Aplicar Filtro</button>
+              <button class="btn btn-dark w-100" @click="borrarFiltros">Borrar Filtros</button>
+            </div>
+          </div>
         </div>
+
       </div>
       <h2 class="text-primary mb-1 fs-4">Incidencias <span v-if="priorityText">{{ priorityText }}</span></h2>
       <hr>
-      <table class="table table-bordered table-striped">
-        <thead class="table-light">
-          <tr>
-            <th class="p-1 text-center align-middle">ID Incidencia</th>
-            <th class="p-1 text-center align-middle">Título</th>
-            <th class="p-1 text-center align-middle">Maquina</th>
-            <th class="p-1 text-center align-middle">Prioridad</th>
-            <th class="p-1 text-center align-middle">Estado</th>
-            <th class="p-1 text-center align-middle">Fec. creación</th>
-            <th class="p-1 text-center align-middle">Categoría</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="incidencia in incidencias" :key="incidencia.id">
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                {{ incidencia.id }}
-              </router-link>
-            </td>
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                {{ incidencia.titulo }}
-              </router-link>
-            </td>
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                {{ incidencia.nombre_maquina }}
-              </router-link>
-            </td>
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                <span v-if="incidencia.prioridad === 1" class="badge bg-danger">Alta</span>
-                <span v-else-if="incidencia.prioridad === 2" class="badge bg-warning">Media</span>
-                <span v-else class="badge bg-success">Baja</span>
-              </router-link>
-            </td>
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                <span v-if="incidencia.gravedad_incidencia === 1" class="badge bg-danger">Parada</span>
-                <span v-else class="badge bg-success">Operativa</span>
-              </router-link>
-            </td>
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                {{ incidencia.fecha_creacion }}
-              </router-link>
-            </td>
-            <td class="fs-6 p-1 text-center align-middle">
-              <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
-                class="d-block text-decoration-none" style="color: inherit;">
-                {{ incidencia.categoria }}
-              </router-link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead class="table-light">
+            <tr>
+              <th class="p-1 text-center align-middle">ID Incidencia</th>
+              <th class="p-1 text-center align-middle">Título</th>
+              <th class="p-1 text-center align-middle">Maquina</th>
+              <th class="p-1 text-center align-middle">Prioridad</th>
+              <th class="p-1 text-center align-middle">Gravedad Inicidencia</th>
+              <th class="p-1 text-center align-middle">Estado Inicidencia</th>
+              <th class="p-1 text-center align-middle">Fec. creación</th>
+              <th class="p-1 text-center align-middle">Categoría</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="incidencia in incidencias" :key="incidencia.id">
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  {{ incidencia.id }}
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  {{ incidencia.titulo }}
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  {{ incidencia.nombre_maquina }}
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  <span v-if="incidencia.prioridad === 1" class="badge bg-danger">Alta</span>
+                  <span v-else-if="incidencia.prioridad === 2" class="badge bg-warning">Media</span>
+                  <span v-else class="badge bg-success">Baja</span>
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  <span v-if="incidencia.gravedad_incidencia === 1" class="badge bg-danger">Parada</span>
+                  <span v-else class="badge bg-success">Operativa</span>
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  <span v-if="incidencia.estado === 0" class="badge bg-warning">Pendiente</span>
+                  <span v-else-if="incidencia.estado === 1" class="badge bg-success">En curso</span>
+                  <span v-else class="badge bg-warning">Parada</span>
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  {{ incidencia.fecha_creacion }}
+                </router-link>
+              </td>
+              <td class="fs-6 p-1 text-center align-middle">
+                <router-link :to="{ name: 'IncidenciaDetalles', query: { id: incidencia.id } }"
+                  class="d-block text-decoration-none" style="color: inherit;">
+                  {{ incidencia.categoria }}
+                </router-link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <!-- Paginación -->
       <div class="row">
-        <div class="col d-flex justify-content-center">
+        <div class="col-12 d-flex justify-content-center" style="z-index:1;position:relative;">
           <nav aria-label="Page navigation">
             <ul class="pagination">
               <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">

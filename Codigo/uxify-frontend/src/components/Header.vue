@@ -3,6 +3,9 @@
     <div class="container-fluid">
       <div class="row align-items-center">
         <div class="col-md-6 d-flex align-items-center">
+          <button class="btn btn-link text-white d-md-none" @click="toggleSidebar">
+            <img src="../assets/list.svg" alt="Toggle Sidebar"></img>
+          </button>
           <h1 class="ms-2 mb-0 fs-5">
             <router-link to="/home" class="navbar-brand text-white text-decoration-none">
               UXify Workshop Software
@@ -11,16 +14,8 @@
         </div>
         <div class="col-md-6 d-flex justify-content-end">
           <div class="d-flex align-items-center">
-            <i class="bi bi-bell me-3">
-              <img src="../assets/Notifi.png" class="icon" alt="Notification">
-            </i>
-            <router-link to="/register" class="text-white me-3">
-              <i class="bi bi-gear">
-                <img src="../assets/Config.png" class="icon" alt="Settings">
-              </i>
-            </router-link>
             <a @click.prevent="logout" class="text-white" href="#">
-              <i class="bi bi-power">
+              <i class="bi">
                 <img src="../assets/Session.png" class="icon" alt="Logout">
               </i>
             </a>
@@ -34,23 +29,37 @@
 <script>
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { defineComponent } from 'vue';
 
-export default {
-  setup() {
+export default defineComponent({
+  setup(_, { emit }) {
     const router = useRouter();
     const toast = useToast();
 
+    const toggleSidebar = () => {
+      emit('toggleSidebar');
+    };
+
     const logout = () => {
       sessionStorage.removeItem('token');
+      toast.success('Sesión cerrada correctamente');
       router.push('/login');
-      toast.success('Logout Exitoso', {
-        position: 'top-right',
-      });
     };
 
     return {
+      toggleSidebar,
       logout,
     };
   },
-};
+});
 </script>
+
+<style scoped>
+.bg-head-color {
+  background-color: #343a40;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+}
+</style>

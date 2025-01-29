@@ -44,11 +44,45 @@ export default {
             const seconds = totalTime.value % 60;
             return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         });
+        //`${API_BASE_URL}/mantenimiento/timer/${idMantenimientoTecnico.value}`
 
-        const handleBeforeUnload = (event) => {
+        const handleBeforeUnload = async (event) => {
             if (isRunning.value) {
                 event.preventDefault();
                 event.returnValue = '';
+
+                try {
+                    if (!idMantenimientoTecnico.value) {
+                        console.warn('El ID de la incidencia técnico no está disponible. Intentando obtenerlo...');
+                        await getLatestMantenimientoTecnico();
+                    }
+
+                    if (idMantenimientoTecnico.value) {
+                        const data = {
+                            fecha_fin: new Date().toISOString(),
+                            comentario: 'Incidencia parada por cierre de ventana',
+                        };
+
+                        const token = sessionStorage.getItem('token');
+                        const response = await fetch(`${API_BASE_URL}/mantenimiento/timer/${idMantenimientoTecnico.value}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            body: JSON.stringify(data),
+                            keepalive: true, // Permite que la solicitud continúe después de cerrar la ventana
+                        });
+
+                        if (!response.ok) {
+                            console.error('Error al actualizar la incidencia:', response.statusText);
+                        }
+                    } else {
+                        console.error('No se pudo obtener el ID de la incidencia técnico antes de cerrar la ventana.');
+                    }
+                } catch (error) {
+                    console.error('Error durante el cierre de la ventana:', error);
+                }
             }
         };
 
