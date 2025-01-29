@@ -43,7 +43,7 @@ export default {
           </i>
         </div>
         <div class="col">
-          <span class="d-sm-none">Inicio</span>
+          <span class="d-none d-md-block">Inicio</span>
         </div>
       </router-link>
       <router-link to="/estadisticas"
@@ -54,18 +54,18 @@ export default {
           </i>
         </div>
         <div class="col">
-          <span class="d-sm-none">Estadisticas</span>
+          <span class="d-none d-md-block">Estadisticas</span>
         </div>
       </router-link>
       <div class="menu-item row d-flex align-items-center py-2 px-3 text-decoration-none text-primary cursor-pointer"
         @click="toggleGestionSubmenu">
         <div class="col-auto">
           <i class="bi bi-list me-2">
-            <img src="../assets/Administracion.png" alt="Administración" class="menu-icon">
+            <img src="../assets/Administracion.png" alt="Administración" class="menu-icon ">
           </i>
         </div>
         <div class="col">
-          <span class="d-sm-none">Administración</span>
+          <span class="d-none d-md-block">Administración</span>
         </div>
         <div class="col-auto">
           <i :class="showGestionSubmenu ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
@@ -80,7 +80,7 @@ export default {
             </i>
           </div>
           <div class="col">
-            <span class="d-sm-none">Gestión de Usuarios</span>
+            <span class="d-none d-md-block">Gestión de Usuarios</span>
           </div>
         </router-link>
         <router-link to="/gestion/maquinas"
@@ -91,7 +91,7 @@ export default {
             </i>
           </div>
           <div class="col">
-            <span class="d-sm-none">Gestión de Máquinas</span>
+            <span class="d-none d-md-block">Gestión de Máquinas</span>
           </div>
         </router-link>
         <router-link to="/gestion/categorias"
@@ -102,7 +102,7 @@ export default {
             </i>
           </div>
           <div class="col">
-            <span class="d-sm-none">Gestión de Categorías</span>
+            <span class="d-none d-md-block">Gestión de Categorías</span>
           </div>
         </router-link>
         <router-link to="/gestion/campus"
@@ -113,7 +113,7 @@ export default {
             </i>
           </div>
           <div class="col">
-            <span class="d-sm-none">Gestión de Campus</span>
+            <span class="d-none d-md-block">Gestión de Campus</span>
           </div>
         </router-link>
         <router-link to="/gestion/secciones"
@@ -124,7 +124,7 @@ export default {
             </i>
           </div>
           <div class="col">
-            <span class="d-sm-none">Gestión de Secciones</span>
+            <span class="d-none d-md-block">Gestión de Secciones</span>
           </div>
         </router-link>
       </div>
@@ -136,7 +136,7 @@ export default {
           </i>
         </div>
         <div class="col">
-          <span class="d-sm-none">Ayuda</span>
+          <span class="d-none d-md-block">Ayuda</span>
         </div>
       </router-link>
     </nav>

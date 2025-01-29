@@ -99,51 +99,55 @@ export default {
         };
 
         const submit = async () => {
-            try {
-                const token = sessionStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            throw new Error('No token found');
+        }
+        if (isRegisterMode.value) {
+            await axios.post(`${API_BASE_URL}/auth/register`, {
+                name: data.name,
+                username: data.username,
+                email: data.email,
+                password: data.password,
+                id_rol: data.id_rol
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
-                if (isRegisterMode.value) {
-                    await axios.post(`${API_BASE_URL}/auth/register`, {
-                        name: data.name,
-                        username: data.username,
-                        email: data.email,
-                        password: data.password,
-                        id_rol: data.id_rol
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    toast.success('Registro exitoso');
-                } else {
-                    await axios.put(`${API_BASE_URL}/users/${data.id}`, {
-                        name: data.name,
-                        username: data.username,
-                        email: data.email,
-                        id_rol: data.id_rol
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    toast.success('Actualización exitosa');
+            });
+            toast.success('Registro exitoso');
+        } else {
+            await axios.put(`${API_BASE_URL}/users/${data.id}`, {
+                name: data.name,
+                username: data.username,
+                email: data.email,
+                id_rol: data.id_rol
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
-                emit('update-users');
-                close();
-            } catch (error) {
-                if (error.response) {
-                    console.error('Error data:', error.response.data);
-                    toast.error('Error al registrar el usuario: ' + error.response.data.message);
-                } else {
-                    console.error('Error:', error.message);
-                    toast.error('Error al registrar el usuario');
-                }
+            });
+            toast.success('Actualización exitosa');
+        }
+        emit('update-users');
+        close();
+    } catch (error) {
+        if (error.response) {
+            console.error('Error data:', error.response.data);
+            // Recorriendo los errores del backend
+            const errorMessages = error.response.data.errors;
+            for (let field in errorMessages) {
+                toast.error(`${field}: ${errorMessages[field].join(', ')}`);
             }
-        };
+        } else {
+            toast.error('Error al registrar el usuario');
+        }
+    }
+};
+
 
         return {
             isRegisterMode,
