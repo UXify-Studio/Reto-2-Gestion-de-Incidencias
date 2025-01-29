@@ -13,7 +13,8 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <table class="table table-striped table-hover align-middle">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
           <thead class="table-dark">
             <tr>
               <th class="align-middle p-2 px-4">Nombre</th>
@@ -43,6 +44,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
     </div>
     <nav aria-label="Page navigation example">
