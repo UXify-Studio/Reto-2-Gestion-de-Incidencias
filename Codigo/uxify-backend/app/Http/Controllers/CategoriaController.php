@@ -15,7 +15,12 @@ class   CategoriaController extends Controller
     public function index(Request $request)
     {
         $categorias = Categoria::all();
+        return response()->json($categorias);
+    }
 
+    public function listaSelect()
+    {
+        $categorias = Categoria::where('deshabilitado', '=', 0)->get();
         return response()->json($categorias);
     }
 
