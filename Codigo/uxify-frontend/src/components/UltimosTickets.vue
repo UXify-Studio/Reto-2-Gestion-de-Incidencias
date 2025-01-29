@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-2z">
-    <h2 class="text-primary mb-1 fs-4">Últimos tickets</h2>
+    <h2 class="text-primary mb-1 fs-4">Ultimas Incidencias</h2>
     <hr>
     <table class="table table-bordered table-striped">
       <thead class="table-light">

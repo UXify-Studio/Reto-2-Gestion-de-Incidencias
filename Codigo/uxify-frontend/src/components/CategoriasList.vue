@@ -2,7 +2,7 @@
     <div class="col-12">
         <div v-if="loading">Cargando categorías...</div>
         <div v-else-if="error">Error al cargar las categorías: {{ error.message }}</div>
-        <div v-else>
+        <div v-else class="table-responsive">
             <table class="table table-striped table-hover align-middle">
                 <thead class="table-dark">
                     <tr>
