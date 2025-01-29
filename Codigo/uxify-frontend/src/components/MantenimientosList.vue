@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-responsive">
     <table class="table table-bordered table-striped">
             <thead class="table-light">
             <tr>
@@ -49,7 +49,6 @@
                             {{ formatDate(mantenimiento.proxima_fecha) }}
                         </router-link>
                     </td>
-
                 </tr>
             </tbody>
         </table>
@@ -83,6 +82,7 @@
       </div>
   </div>
 </template>
+
 
 <script>
 import { computed, onMounted } from 'vue';
