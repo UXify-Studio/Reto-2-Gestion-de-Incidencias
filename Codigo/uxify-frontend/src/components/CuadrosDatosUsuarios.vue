@@ -1,16 +1,15 @@
 <template>
-  <div class="text-white py-2">
+  <Container class="text-white py-2">
     <div class="container-fluid">
       <div class="row align-items-center p-2">
-        <div class="col-12">
-          <div class="d-flex gap-2">
-            <!-- Enlace para "Usuarios Totales" (sin filtro) -->
-            <router-link
+        <!-- Enlace para "Usuarios Totales" (sin filtro) -->
+        <div class="col-lg-3 col-md-6 col-12 mb-2">
+          <router-link
               :to="{ path: 'users', query: { role: '' } }"
               class="card text-white bg-danger w-100 text-decoration-none"
             >
               <div
-                class="card-body text-center p-2 d-flex flex-column justify-content-center"
+                class="card-body text-center p-3 d-flex flex-column justify-content-center"
               >
                 <img
                   src="../assets/totalUsers.svg"
@@ -21,9 +20,10 @@
                 <h3 class="card-title mb-0 display-6">{{ usersTotal > 0 ? usersTotal : 'Cargando...' }}</h3>
               </div>
             </router-link>
-
-            <!-- Enlace para "Usuarios Administradores" -->
-            <router-link
+        </div>
+        <!-- Enlace para "Usuarios Administradores" -->
+        <div class="col-lg-3 col-md-6 col-12 mb-2">
+          <router-link
               :to="{ path: 'users', query: { role: 'Administrador' } }"
               class="card text-white bg-warning w-100 text-decoration-none"
             >
@@ -39,9 +39,10 @@
                 <h3 class="card-title mb-0 display-6">{{ usersAdmin > 0 ? usersAdmin : 'Cargando...' }}</h3>
               </div>
             </router-link>
-
-            <!-- Enlace para "Usuarios Técnicos" -->
-            <router-link
+        </div>
+        <!-- Enlace para "Usuarios Técnicos" -->
+        <div class="col-lg-3 col-md-6 col-12 mb-2">
+          <router-link
               :to="{ path: 'users', query: { role: 'Tecnico' } }"
               class="card text-white bg-success w-100 text-decoration-none"
             >
@@ -57,9 +58,10 @@
                 <h3 class="card-title mb-0 display-6">{{ usersTecnico > 0 ? usersTecnico : 'Cargando...' }}</h3>
               </div>
             </router-link>
-
-            <!-- Enlace para "Usuarios Operarios" -->
-            <router-link
+        </div>
+        <!-- Enlace para "Usuarios Operarios" -->
+        <div class="col-lg-3 col-md-6 col-12 mb-2">
+          <router-link
               :to="{ path: 'users', query: { role: 'Operario' } }"
               class="card text-white bg-resueltos w-100 text-decoration-none"
             >
@@ -75,11 +77,10 @@
                 <h3 class="card-title mb-0 display-6">{{ usersOperario > 0 ? usersOperario : 'Cargando...' }}</h3>
               </div>
             </router-link>
-          </div>
-        </div>
+        </div>  
       </div>
     </div>
-  </div>
+  </Container>
 </template>
 
 <script>
