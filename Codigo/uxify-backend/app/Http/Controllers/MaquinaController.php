@@ -18,11 +18,11 @@ class MaquinaController extends Controller
 
     public function index()
     {
-        $maquinas = Maquina::with('section.campus')->paginate(8); // Adjust the number of items per page as needed
+        $maquinas = Maquina::with('section.campus')->paginate(8);
         return response()->json($maquinas);
     }
     public function getMaquinasTD(){
-        $maquinasTodas = Maquina::all();
+        $maquinasTodas = Maquina::where('deshabilitado', '=', 0)->get();
         return response()->json($maquinasTodas);
     }
     public function estdoMaquinaPorId(Request $request, $id)

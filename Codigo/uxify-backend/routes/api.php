@@ -20,6 +20,7 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(CategoriaController::class)->group(function () {
     Route::get('/categorias', 'index')->middleware('auth:api','admin');
+    Route::get('/categoriasSelect', 'listaSelect')->middleware('auth:api','admin');
     Route::post('/categorias', 'store')->middleware('auth:api','admin');
     //Route::get('/categorias/{id}', 'show')->middleware('auth:api','admin');
     Route::put('/categorias/{id}', 'update')->middleware('auth:api','admin');
@@ -52,7 +53,8 @@ Route::controller(MantenimientoController::class)->group(function () {
 });
 
 Route::controller(CampusController::class)->group(function () {
-    Route::get('/campus', 'index')->middleware('auth:api', 'admin');
+    Route::get('/campus', 'index')->middleware('auth:api');
+    Route::get('/campusSelect', 'listSelect')->middleware('auth:api');
     Route::post('/campus', 'store')->middleware('auth:api', 'admin');
     Route::get('/campus/{campus}', 'show')->middleware('auth:api', 'admin');
     Route::put('/campus/{campus}', 'update')->middleware('auth:api', 'admin');

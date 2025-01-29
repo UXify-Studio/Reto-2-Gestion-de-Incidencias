@@ -14,7 +14,7 @@ class SectionController extends Controller
      */
     public function index()
     {
-        $secciones = Section::all();
+        $secciones = Section::where('deshabilitado', '=', 0)->get();
         return response()->json($secciones);
 
     }
@@ -114,7 +114,7 @@ class SectionController extends Controller
     }
 
     public function getSectionsByCampus($campus){
-        $seccionesPorCampus = Section::where('id_campus', $campus)->get();
+        $seccionesPorCampus = Section::where('id_campus', $campus)->where('deshabilitado', '=', 0)->get();
 
         return response()->json(['sections' => $seccionesPorCampus]);
     }

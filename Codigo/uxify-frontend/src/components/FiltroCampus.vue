@@ -1,24 +1,24 @@
 <template>
-    <div class="d-flex justify-content-between gap-2">
-        <!-- Selector de Campus -->
-        <select name="campuses" class="form-control" @change="handleCampusChange" v-model="selectedCampus">
-            <option disabled selected value="">Selecciona un campus</option>
-            <option
-                v-for="campus in campuses"
-                :key="campus.id"
-                :value="campus.id"
-            >
-                {{ campus.nombre }}
-            </option>
-        </select>
+    <div class="col-12 col-lg-6 d-flex flex-column gap-2">
+      <!-- Selector de Campus -->
+      <select name="campuses" class="form-control" @change="handleCampusChange" v-model="selectedCampus">
+          <option disabled selected value="">Selecciona un campus</option>
+          <option
+              v-for="campus in campuses"
+              :key="campus.id"
+              :value="campus.id"
+          >
+              {{ campus.nombre }}
+          </option>
+      </select>
 
-        <!-- Selector de Secciones -->
-        <select name="sections" class="form-control" @change="handleSectionChange" v-model="selectedSection">
-            <option disabled value="">Selecciona una seccion</option>
-            <option v-for="section in sections" :key="section.id" :value="section.id">
-                {{ section.nombre }}
-            </option>
-        </select>
+      <!-- Selector de Secciones -->
+      <select name="sections" class="form-control" @change="handleSectionChange" v-model="selectedSection">
+          <option disabled value="">Selecciona una sección</option>
+          <option v-for="section in sections" :key="section.id" :value="section.id">
+              {{ section.nombre }}
+          </option>
+      </select>
     </div>
 </template>
 
@@ -74,7 +74,7 @@ export default {
         };
 
         axios
-          .get(`${API_BASE_URL}/campus`, {
+          .get(`${API_BASE_URL}/campusSelect`, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,

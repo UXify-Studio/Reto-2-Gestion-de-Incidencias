@@ -16,6 +16,13 @@ class CampusController extends Controller
     {
         $campus = Campus::all();
         return response()->json($campus);
+
+    }
+
+    public function listSelect()
+    {
+        $campus = Campus::where('deshabilitado', '=', 0)->get();
+        return response()->json($campus);
     }
 
     /**
