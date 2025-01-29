@@ -3,47 +3,61 @@
   <Container class="text-white py-2">
     <div class="container-fluid">
       <div class="row align-items-center p-2">
-        <div class="col-md-12 d-flex justify-content-end pb-3">
-          <button @click="showModal = true" class="btn btn-primary ">Añadir Ticket</button>
+        <div class="col-12 d-flex justify-content-end pb-3">
+          <button @click="showModal = true" class="btn btn-primary">Añadir Ticket</button>
         </div>
         <div class="col-12">
-          <div class="d-flex gap-2 " >
-            <router-link :to="{ path: '/home', query: { priority: '1' } }"
-             class="card text-white bg-danger w-100 text-decoration-none">
-                <div class="card-body text-center p-2 d-flex flex-column justify-content-center">
-                    <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                    <p class="mb-1">Incidencias Prioridad 1</p>
-                    <h3 class="card-title mb-0 display-6">{{ incidenciasAlta >= 0 ? incidenciasAlta : 'Cargando...' }}</h3>
-                </div>
-            </router-link>
-            <router-link :to="{ path: '/home', query: { priority: '2' } }" class="card text-white bg-warning w-100 text-decoration-none">  
+          <div class="row g-2">
+            <div class="col-12 col-md-6 col-lg">
+              <router-link :to="{ path: '/home', query: { priority: '1' } }"
+                class="card text-white bg-danger text-decoration-none">
                 <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
-                    <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                    <p class="mb-1">Incidencias Prioridad 2</p>
-                    <h3 class="card-title mb-0 display-6">{{ incidenciasMedia >= 0 ? incidenciasMedia : 'Cargando...' }}</h3>
+                  <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                  <p class="mb-1">Incidencias Prioridad 1</p>
+                  <h3 class="card-title mb-0 display-6">{{ incidenciasAlta >= 0 ? incidenciasAlta : 'Cargando...' }}</h3>
                 </div>
-            </router-link>
-            <router-link :to="{ path: '/home', query: { priority: '3' } }" class="card text-white bg-success w-100 text-decoration-none"> 
-                <div class="card-body text-center p-3 d-flex flex-column justify-content-center ">
-                    <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                    <p class="mb-1">Incidencias Prioridad 3</p>
-                    <h3 class="card-title mb-0 display-6">{{ incidenciasBaja >= 0 ? incidenciasBaja : 'Cargando...' }}</h3>
-                </div>
-            </router-link>
-            <router-link :to="{ path: '/home', query: { priority: '0' } }" class="card text-white bg-resueltos w-100 text-decoration-none">
+              </router-link>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+              <router-link :to="{ path: '/home', query: { priority: '2' } }" 
+                class="card text-white bg-warning text-decoration-none">
                 <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
-                    <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                    <p class="mb-1">Incidencias Resueltos</p>
-                    <h3 class="card-title mb-0 display-6">{{ incidenciasResueltas >= 0 ? incidenciasResueltas : 'Cargando...' }}</h3>
+                  <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                  <p class="mb-1">Incidencias Prioridad 2</p>
+                  <h3 class="card-title mb-0 display-6">{{ incidenciasMedia >= 0 ? incidenciasMedia : 'Cargando...' }}</h3>
                 </div>
-            </router-link>
-            <router-link :to="{ path: '/mantenimientos' }" class="card text-white bg-mantenimiento w-100 text-decoration-none"> 
+              </router-link>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+              <router-link :to="{ path: '/home', query: { priority: '3' } }" 
+                class="card text-white bg-success text-decoration-none">
                 <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
-                    <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
-                    <p class="mb-1">Mantenimientos Preventivos</p>
-                    <h3 class="card-title mb-0 display-6">{{ mantenimientos >= 0 ? mantenimientos : 'Cargando...' }}</h3>
+                  <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                  <p class="mb-1">Incidencias Prioridad 3</p>
+                  <h3 class="card-title mb-0 display-6">{{ incidenciasBaja >= 0 ? incidenciasBaja : 'Cargando...' }}</h3>
                 </div>
-            </router-link>
+              </router-link>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+              <router-link :to="{ path: '/home', query: { priority: '0' } }" 
+                class="card text-white bg-resueltos text-decoration-none">
+                <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
+                  <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                  <p class="mb-1">Incidencias Resueltas</p>
+                  <h3 class="card-title mb-0 display-6">{{ incidenciasResueltas >= 0 ? incidenciasResueltas : 'Cargando...' }}</h3>
+                </div>
+              </router-link>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+              <router-link :to="{ path: '/mantenimientos' }" 
+                class="card text-white bg-mantenimiento text-decoration-none">
+                <div class="card-body text-center p-3 d-flex flex-column justify-content-center">
+                  <img src="../assets/Prioridad.png" alt="Icono" class="icono-tarjeta mb-2">
+                  <p class="mb-1">Mantenimientos Preventivos</p>
+                  <h3 class="card-title mb-0 display-6">{{ mantenimientos >= 0 ? mantenimientos : 'Cargando...' }}</h3>
+                </div>
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -54,6 +68,7 @@
     </Modal>
   </Container>
 </template>
+
 
 <script>
 import TicketForm from './IncidenciaForm.vue';
